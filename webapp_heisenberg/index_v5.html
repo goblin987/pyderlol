@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Heisenberg's Lab</title>
+    
+    <!-- Premium Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ═══════════════════════════════════════════════════════════════════════════
+           🎨 BREAKING BAD PREMIUM COLOR SYSTEM
+           ═══════════════════════════════════════════════════════════════════════════ */
+        :root {
+            /* Signature Greens - Walter White Chemistry */
+            --heisenberg-green: #00FF87;
+            --heisenberg-green-dark: #00CC6A;
+            --heisenberg-glow: 0 0 30px rgba(0, 255, 135, 0.4);
+            
+            /* Blue Meth Crystal */
+            --crystal-blue: #4FC3F7;
+            --crystal-blue-light: #81D4FA;
+            --crystal-glow: 0 0 25px rgba(79, 195, 247, 0.5);
+            
+            /* Desert Tones - New Mexico */
+            --desert-orange: #FF6B35;
+            --desert-sand: #C4A35A;
+            --desert-brown: #8B4513;
+            
+            /* Warning & Danger */
+            --hazmat-yellow: #FFD700;
+            --danger-red: #FF3333;
+            
+            /* Surfaces */
+            --void: #000000;
+            --bg-deep: #050505;
+            --bg-dark: #0A0A0A;
+            --bg-surface: #111111;
+            --bg-card: #1A1A1A;
+            --bg-elevated: #222222;
+            
+            /* Text */
+            --text-bright: #FFFFFF;
+            --text-primary: #E0E0E0;
+            --text-secondary: #888888;
+            --text-muted: #555555;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════
+           🔧 RESET & BASE
+           ═══════════════════════════════════════════════════════════════════════════ */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--void);
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        .hidden { display: none !important; }
+
+        /* ═══════════════════════════════════════════════════════════════════════════
+           🎬 CINEMATIC INTRO - Breaking Bad Style
+           ═══════════════════════════════════════════════════════════════════════════ */
+        .intro {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Animated Desert Gradient Background */
+        .intro-bg {
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(ellipse at 50% 120%, rgba(139, 69, 19, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(0, 255, 135, 0.05) 0%, transparent 30%),
+                linear-gradient(180deg, 
+                    #000000 0%, 
+                    #050505 30%,
+                    #0a0805 60%,
+                    #0f0a05 100%
+                );
+            animation: bgPulse 8s ease-in-out infinite;
+        }
+
+        @keyframes bgPulse {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.1); }
+        }
+
+        /* Floating Smoke Particles */
+        .smoke-container {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .smoke {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(ellipse at center, 
+                rgba(0, 255, 135, 0.08) 0%, 
+                transparent 70%
+            );
+            border-radius: 50%;
+            filter: blur(40px);
+            animation: smokeFloat 12s ease-in-out infinite;
+        }
+
+        .smoke:nth-child(1) { left: 10%; bottom: -100px; animation-delay: 0s; }
+        .smoke:nth-child(2) { left: 30%; bottom: -100px; animation-delay: 2s; }
+        .smoke:nth-child(3) { left: 50%; bottom: -100px; animation-delay: 4s; }
+        .smoke:nth-child(4) { left: 70%; bottom: -100px; animation-delay: 6s; }
+        .smoke:nth-child(5) { left: 85%; bottom: -100px; animation-delay: 8s; }
+
+        @keyframes smokeFloat {
+            0% { 
+                transform: translateY(0) scale(0.5);
+                opacity: 0;
+            }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.3; }
+            100% { 
+                transform: translateY(-100vh) scale(2);
+                opacity: 0;
+            }
+        }
+
+        /* Chemical Formulas Floating */
+        .formula-float {
+            position: absolute;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 14px;
+            color: rgba(0, 255, 135, 0.15);
+            animation: formulaDrift 20s linear infinite;
+            white-space: nowrap;
+        }
+
+        @keyframes formulaDrift {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100vw); }
+        }
+
+        /* PERIODIC TABLE LOGO - The Iconic Br Ba */
+        .logo-container {
+            position: relative;
+            z-index: 10;
+            animation: logoIntro 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s both;
+        }
+
+        @keyframes logoIntro {
+            0% { 
+                opacity: 0;
+                transform: scale(0.3) rotateY(90deg);
+                filter: blur(20px);
+            }
+            100% { 
+                opacity: 1;
+                transform: scale(1) rotateY(0);
+                filter: blur(0);
+            }
+        }
+
+        .periodic-logo {
+            display: flex;
+            gap: 6px;
+            perspective: 1000px;
+        }
+
+        .element-card {
+            width: 85px;
+            height: 100px;
+            background: linear-gradient(145deg, 
+                rgba(20, 40, 20, 0.95) 0%, 
+                rgba(10, 20, 10, 0.98) 100%
+            );
+            border: 2px solid var(--heisenberg-green);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 
+                var(--heisenberg-glow),
+                inset 0 1px 0 rgba(255,255,255,0.1),
+                0 10px 40px rgba(0, 0, 0, 0.8);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .element-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 40%,
+                rgba(255,255,255,0.03) 50%,
+                transparent 60%
+            );
+            animation: cardShine 4s ease-in-out infinite;
+        }
+
+        @keyframes cardShine {
+            0%, 100% { transform: translateX(-100%) rotate(45deg); }
+            50% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        .element-card:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 
+                0 0 50px rgba(0, 255, 135, 0.6),
+                inset 0 1px 0 rgba(255,255,255,0.1),
+                0 20px 60px rgba(0, 0, 0, 0.9);
+        }
+
+        .atomic-number {
+            position: absolute;
+            top: 8px;
+            left: 10px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 14px;
+            font-weight: 300;
+            color: var(--text-secondary);
+        }
+
+        .element-symbol {
+            font-family: 'Oswald', sans-serif;
+            font-size: 48px;
+            font-weight: 500;
+            line-height: 1;
+            text-shadow: 0 0 20px currentColor;
+        }
+
+        .element-card.bromine .element-symbol { color: #CD5C5C; }
+        .element-card.barium .element-symbol { color: var(--heisenberg-green); }
+
+        .element-name {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 11px;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Title & Quote */
+        .intro-text {
+            text-align: center;
+            margin-top: 40px;
+            z-index: 10;
+        }
+
+        .title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 32px;
+            font-weight: 300;
+            letter-spacing: 12px;
+            text-transform: uppercase;
+            color: var(--text-bright);
+            animation: titleReveal 1s ease 1.8s both;
+            text-shadow: 0 0 30px rgba(255,255,255,0.3);
+        }
+
+        @keyframes titleReveal {
+            0% { opacity: 0; transform: translateY(20px); letter-spacing: 30px; }
+            100% { opacity: 1; transform: translateY(0); letter-spacing: 12px; }
+        }
+
+        .quote {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 16px;
+            font-weight: 300;
+            color: var(--text-secondary);
+            margin-top: 12px;
+            font-style: italic;
+            animation: quoteReveal 1s ease 2.2s both;
+        }
+
+        @keyframes quoteReveal {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* Enter Button - Glowing CTA */
+        .enter-btn {
+            margin-top: 50px;
+            padding: 18px 60px;
+            background: linear-gradient(180deg, 
+                var(--heisenberg-green) 0%, 
+                var(--heisenberg-green-dark) 100%
+            );
+            border: none;
+            border-radius: 4px;
+            font-family: 'Oswald', sans-serif;
+            font-size: 18px;
+            font-weight: 500;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: #000;
+            cursor: pointer;
+            position: relative;
+            z-index: 10;
+            animation: btnReveal 0.8s ease 2.8s both;
+            box-shadow: 
+                var(--heisenberg-glow),
+                0 4px 0 #006B35,
+                0 8px 20px rgba(0,0,0,0.5);
+            transition: all 0.2s ease;
+            overflow: hidden;
+        }
+
+        .enter-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: 0.5s;
+        }
+
+        .enter-btn:hover::before {
+            left: 100%;
+        }
+
+        .enter-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 0 50px rgba(0, 255, 135, 0.6),
+                0 6px 0 #006B35,
+                0 15px 40px rgba(0,0,0,0.5);
+        }
+
+        .enter-btn:active {
+            transform: translateY(2px);
+            box-shadow: 
+                0 0 20px rgba(0, 255, 135, 0.4),
+                0 2px 0 #006B35;
+        }
+
+        @keyframes btnReveal {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Intro Exit Animation */
+        .intro.fade-out {
+            animation: introExit 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes introExit {
+            0% { opacity: 1; }
+            100% { 
+                opacity: 0;
+                transform: scale(1.1);
+                filter: blur(10px);
+            }
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════
+           🏠 MAIN APPLICATION
+           ═══════════════════════════════════════════════════════════════════════════ */
+        .app {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Layered Background System */
+        .background-system {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Base Desert Sky Gradient */
+        .bg-gradient {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg,
+                #000000 0%,
+                #050302 20%,
+                #0a0805 40%,
+                #12100a 60%,
+                #1a150f 80%,
+                #251a10 100%
+            );
+        }
+
+        /* Horizon Glow */
+        .bg-horizon {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40%;
+            background: radial-gradient(ellipse 120% 100% at 50% 100%,
+                rgba(255, 107, 53, 0.08) 0%,
+                rgba(139, 69, 19, 0.04) 40%,
+                transparent 70%
+            );
+        }
+
+        /* RV Silhouette */
+        .rv-layer {
+            position: absolute;
+            bottom: 15%;
+            right: 5%;
+            width: 120px;
+            height: 60px;
+            opacity: 0.15;
+        }
+
+        .rv-body {
+            width: 100%;
+            height: 45px;
+            background: #000;
+            border-radius: 5px 15px 5px 5px;
+            position: relative;
+        }
+
+        .rv-body::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 10px;
+            right: 35px;
+            height: 15px;
+            background: rgba(79, 195, 247, 0.2);
+            border-radius: 2px;
+        }
+
+        .rv-wheels {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 15px;
+            margin-top: -5px;
+        }
+
+        .rv-wheel {
+            width: 18px;
+            height: 18px;
+            background: #000;
+            border-radius: 50%;
+        }
+
+        /* Floating Crystal Particles */
+        .crystal-particle {
+            position: absolute;
+            width: 4px;
+            height: 8px;
+            background: var(--crystal-blue);
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            opacity: 0;
+            box-shadow: var(--crystal-glow);
+            animation: crystalRise 15s linear infinite;
+        }
+
+        @keyframes crystalRise {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            5% { opacity: 0.6; }
+            95% { opacity: 0.3; }
+            100% {
+                transform: translateY(-20vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Subtle Scanlines */
+        .scanlines {
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent 0px,
+                transparent 2px,
+                rgba(0, 0, 0, 0.03) 2px,
+                rgba(0, 0, 0, 0.03) 4px
+            );
+            pointer-events: none;
+        }
+
+        /* Film Grain Overlay */
+        .film-grain {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0.04;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            animation: grainShift 0.5s steps(10) infinite;
+        }
+
+        @keyframes grainShift {
+            0%, 100% { transform: translate(0, 0); }
+            10% { transform: translate(-2%, -2%); }
+            20% { transform: translate(2%, 1%); }
+            30% { transform: translate(-1%, 2%); }
+            40% { transform: translate(1%, -1%); }
+            50% { transform: translate(-2%, 1%); }
+            60% { transform: translate(2%, -2%); }
+            70% { transform: translate(-1%, -1%); }
+            80% { transform: translate(1%, 2%); }
+            90% { transform: translate(-2%, -1%); }
+        }
+
+        /* Vignette */
+        .vignette {
+            position: fixed;
+            inset: 0;
+            z-index: 9998;
+            pointer-events: none;
+            background: radial-gradient(ellipse at center,
+                transparent 0%,
+                transparent 50%,
+                rgba(0, 0, 0, 0.4) 100%
+            );
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════
+           📱 HEADER
+           ═══════════════════════════════════════════════════════════════════════════ */
+        .header {
+            position: relative;
+            z-index: 100;
+            padding: 16px;
+            background: linear-gradient(180deg, 
+                rgba(0, 0, 0, 0.9) 0%, 
+                rgba(0, 0, 0, 0.7) 70%,
+                transparent 100%
+            );
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Heat Level Indicator */
+        .heat-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 14px;
+            background: rgba(20, 20, 20, 0.9);
+            border: 1px solid rgba(255, 51, 51, 0.3);
+            border-radius: 6px;
+        }
+
+        .heat-icon {
+            width: 24px;
+            height: 24px;
+            position: relative;
+        }
+
+        .heat-bar-bg {
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 51, 51, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .heat-bar-fill {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 25%;
+            background: linear-gradient(0deg, var(--danger-red), var(--hazmat-yellow));
+            animation: heatPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes heatPulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        .heat-text {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 11px;
+            color: var(--danger-red);
+            letter-spacing: 1px;
+        }
+
+        /* Balance Display */
+        .balance-display {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, 
+                rgba(0, 40, 20, 0.9) 0%, 
+                rgba(0, 20, 10, 0.95) 100%
+            );
+            border: 1px solid rgba(0, 255, 135, 0.3);
+            border-radius: 6px;
+            box-shadow: 0 0 20px rgba(0, 255, 135, 0.1);
+        }
+
+        .balance-icon {
+            font-size: 20px;
+        }
+
+        .balance-amount {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--heisenberg-green);
+            text-shadow: 0 0 10px rgba(0, 255, 135, 0.5);
+        }
+
+        /* Location Selectors */
+        .location-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .location-select {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 14px;
+            background: rgba(15, 15, 15, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .location-select:hover {
+            border-color: var(--heisenberg-green);
+            background: rgba(0, 255, 135, 0.05);
+        }
+
+        .location-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .location-label {
+            font-size: 10px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+        }
+
+        .location-value {
+            font-family: 'Oswald', sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--text-bright);
+        }
+
+        .location-arrow {
+            color: var(--text-muted);
+            font-size: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .location-select:hover .location-arrow {
+            transform: translateY(2px);
+            color: var(--heisenberg-green);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════
+           🛒 CONTENT AREA
+           ═══════════════════════════════════════════════════════════════════════════ */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 20px 16px 100px;
+            position: relative;
+            z-index: 10;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .content::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .content::-webkit-scrollbar-thumb {
+            background: var(--heisenberg-green);
+            border-radius: 2px;
+        }
+
+        /* Section Header */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .section-icon {
+            font-size: 20px;
+        }
+
+        .section-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 18px;
+            font-weight: 400;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--text-primary);
+        }
+
+        .batch-count {
+            margin-left: auto;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 12px;
+            color: var(--heisenberg-green);
+            padding: 4px 10px;
+            background: rgba(0, 255, 135, 0.1);
+            border-radius: 4px;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════
+           💎 PRODUCT CARDS - Premium Glass Morphism
+           ═══════════════════════════════════════════════════════════════════════════ */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .product-card {
+            position: relative;
+            background: linear-gradient(145deg, 
+                rgba(30, 30, 30, 0.9) 0%, 
+                rgba(20, 20, 20, 0.95) 100%
+            );
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60%;
+            background: linear-gradient(180deg, 
+                rgba(255, 255, 255, 0.03) 0%, 
+                transparent 100%
+            );
+            pointer-events: none;
+        }
+
+        .product-card:hover {
+            transform: translateY(-6px) scale(1.02);
+            border-color: var(--crystal-blue);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                0 0 30px rgba(79, 195, 247, 0.15);
+        }
+
+        .product-card:active {
+            transform: translateY(-2px) scale(1.01);
+        }
+
+        /* Purity Badge */
+        .purity-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: rgba(0, 255, 135, 0.15);
+            color: var(--heisenberg-green);
+            border: 1px solid rgba(0, 255, 135, 0.3);
+        }
+
+        .purity-badge.premium {
+            background: linear-gradient(135deg, rgba(79, 195, 247, 0.2), rgba(0, 255, 135, 0.2));
+            border-color: var(--crystal-blue);
+            color: var(--crystal-blue);
+            animation: premiumPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes premiumPulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(79, 195, 247, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(79, 195, 247, 0.5); }
+        }
+
+        /* Product Emoji/Icon */
+        .product-emoji {
+            font-size: 48px;
+            text-align: center;
+            margin: 20px 0 15px;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .product-emoji {
+            transform: scale(1.1);
+        }
+
+        /* Product Name */
+        .product-name {
+            font-family: 'Oswald', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            text-align: center;
+            color: var(--text-bright);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Product Description */
+        .product-desc {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            text-align: center;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Purity Bar */
+        .purity-bar-container {
+            margin: 14px 0;
+        }
+
+        .purity-bar-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 9px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .purity-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .purity-fill {
+            height: 100%;
+            background: linear-gradient(90deg, 
+                var(--heisenberg-green) 0%, 
+                var(--crystal-blue) 100%
+            );
+            border-radius: 3px;
+            position: relative;
+            box-shadow: 0 0 10px rgba(0, 255, 135, 0.5);
+        }
+
+        .purity-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(255, 255, 255, 0.3) 50%, 
+                transparent 100%
+            );
+            animation: purityShine 2s ease-in-out infinite;
+        }
+
+        @keyframes purityShine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Price & Stock */
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 12px;
+        }
+
+        .product-price {
+            font-family: 'Oswald', sans-serif;
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--heisenberg-green);
+            text-shadow: 0 0 15px rgba(0, 255, 135, 0.4);
+        }
+
+        .product-stock {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            color: var(--text-secondary);
+            padding: 3px 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        .product-stock.low {
+            color: var(--desert-orange);
+            background: rgba(255, 107, 53, 0.1);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════
+           🧭 BOTTOM NAVIGATION
+           ═══════════════════════════════════════════════════════════════════════════ */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: linear-gradient(180deg, 
+                rgba(10, 10, 10, 0.95) 0%, 
+                rgba(5, 5, 5, 0.98) 100%
+            );
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding-bottom: env(safe-area-inset-bottom);
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: var(--heisenberg-green);
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px var(--heisenberg-green);
+        }
+
+        .nav-item.active::before {
+            width: 30px;
+        }
+
+        .nav-icon {
+            font-size: 22px;
+            opacity: 0.4;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item.active .nav-icon {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .nav-label {
+            font-family: 'Oswald', sans-serif;
+            font-size: 10px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            transition: color 0.3s ease;
+        }
+
+        .nav-item.active .nav-label {
+            color: var(--heisenberg-green);
+        }
+
+        /* Cart Badge */
+        .cart-badge {
+            position: absolute;
+            top: 2px;
+            right: 8px;
+            width: 18px;
+            height: 18px;
+            background: var(--danger-red);
+            border-radius: 50%;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: badgePop 0.3s ease;
+        }
+
+        @keyframes badgePop {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Cinematic Overlays -->
+    <div class="film-grain"></div>
+    <div class="vignette"></div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════════
+         🎬 INTRO SCREEN
+         ═══════════════════════════════════════════════════════════════════════════ -->
+    <div class="intro" id="intro">
+        <div class="intro-bg"></div>
+        
+        <!-- Floating Smoke -->
+        <div class="smoke-container">
+            <div class="smoke"></div>
+            <div class="smoke"></div>
+            <div class="smoke"></div>
+            <div class="smoke"></div>
+            <div class="smoke"></div>
+        </div>
+
+        <!-- Chemical Formulas -->
+        <div class="formula-float" style="top: 15%;">C₁₀H₁₅N • CH₄ • H₂SO₄ • P₄ • Li • NH₃</div>
+        <div class="formula-float" style="top: 45%; animation-delay: -10s;">HI • I₂ • C₆H₅CH₃ • NaOH • C₂H₆O</div>
+        <div class="formula-float" style="top: 75%; animation-delay: -5s;">CH₃COOH • H₃PO₄ • Br₂ • Ba(OH)₂</div>
+
+        <!-- Periodic Table Logo -->
+        <div class="logo-container">
+            <div class="periodic-logo">
+                <div class="element-card bromine">
+                    <span class="atomic-number">35</span>
+                    <span class="element-symbol">Br</span>
+                    <span class="element-name">Bromine</span>
+                </div>
+                <div class="element-card barium">
+                    <span class="atomic-number">56</span>
+                    <span class="element-symbol">Ba</span>
+                    <span class="element-name">Barium</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Title & Quote -->
+        <div class="intro-text">
+            <h1 class="title">Heisenberg's Lab</h1>
+            <p class="quote">"I am the one who knocks."</p>
+        </div>
+
+        <!-- Enter Button -->
+        <button class="enter-btn" id="enterBtn">Enter the Lab</button>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════════
+         🏠 MAIN APPLICATION
+         ═══════════════════════════════════════════════════════════════════════════ -->
+    <div class="app hidden" id="app">
+        <!-- Background System -->
+        <div class="background-system">
+            <div class="bg-gradient"></div>
+            <div class="bg-horizon"></div>
+            <div class="rv-layer">
+                <div class="rv-body"></div>
+                <div class="rv-wheels">
+                    <div class="rv-wheel"></div>
+                    <div class="rv-wheel"></div>
+                </div>
+            </div>
+            <div class="scanlines"></div>
+            <div id="crystalContainer"></div>
+        </div>
+
+        <!-- Header -->
+        <header class="header">
+            <div class="header-top">
+                <div class="heat-indicator">
+                    <div class="heat-icon">
+                        <div class="heat-bar-bg">
+                            <div class="heat-bar-fill"></div>
+                        </div>
+                    </div>
+                    <span class="heat-text">DEA: LOW</span>
+                </div>
+
+                <div class="balance-display">
+                    <span class="balance-icon">💵</span>
+                    <span class="balance-amount">€1,240,000</span>
+                </div>
+            </div>
+
+            <div class="location-row">
+                <div class="location-select">
+                    <div class="location-info">
+                        <span class="location-label">City</span>
+                        <span class="location-value">Albuquerque</span>
+                    </div>
+                    <span class="location-arrow">▼</span>
+                </div>
+                <div class="location-select">
+                    <div class="location-info">
+                        <span class="location-label">District</span>
+                        <span class="location-value">Desert Lab</span>
+                    </div>
+                    <span class="location-arrow">▼</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <main class="content" id="content">
+            <div class="section-header">
+                <span class="section-icon">🧪</span>
+                <h2 class="section-title">Available Batches</h2>
+                <span class="batch-count">12 ITEMS</span>
+            </div>
+
+            <div class="products-grid">
+                <!-- Product 1 - Blue Sky -->
+                <div class="product-card">
+                    <span class="purity-badge premium">99.1%</span>
+                    <div class="product-emoji">💎</div>
+                    <div class="product-name">Blue Sky</div>
+                    <div class="product-desc">C₁₀H₁₅N • PURE</div>
+                    <div class="purity-bar-container">
+                        <div class="purity-bar-label">
+                            <span>Purity</span>
+                            <span>99.1%</span>
+                        </div>
+                        <div class="purity-bar">
+                            <div class="purity-fill" style="width: 99.1%"></div>
+                        </div>
+                    </div>
+                    <div class="product-footer">
+                        <span class="product-price">€120</span>
+                        <span class="product-stock">IN STOCK</span>
+                    </div>
+                </div>
+
+                <!-- Product 2 - Chili P -->
+                <div class="product-card">
+                    <span class="purity-badge">96.2%</span>
+                    <div class="product-emoji">🌶️</div>
+                    <div class="product-name">Chili P</div>
+                    <div class="product-desc">PINKMAN SPECIAL</div>
+                    <div class="purity-bar-container">
+                        <div class="purity-bar-label">
+                            <span>Purity</span>
+                            <span>96.2%</span>
+                        </div>
+                        <div class="purity-bar">
+                            <div class="purity-fill" style="width: 96.2%"></div>
+                        </div>
+                    </div>
+                    <div class="product-footer">
+                        <span class="product-price">€45</span>
+                        <span class="product-stock low">8 LEFT</span>
+                    </div>
+                </div>
+
+                <!-- Product 3 - Pollos Blend -->
+                <div class="product-card">
+                    <span class="purity-badge">97.8%</span>
+                    <div class="product-emoji">🐔</div>
+                    <div class="product-name">Pollos Blend</div>
+                    <div class="product-desc">LOS POLLOS HERMANOS</div>
+                    <div class="purity-bar-container">
+                        <div class="purity-bar-label">
+                            <span>Purity</span>
+                            <span>97.8%</span>
+                        </div>
+                        <div class="purity-bar">
+                            <div class="purity-fill" style="width: 97.8%"></div>
+                        </div>
+                    </div>
+                    <div class="product-footer">
+                        <span class="product-price">€70</span>
+                        <span class="product-stock">15 READY</span>
+                    </div>
+                </div>
+
+                <!-- Product 4 - Madrigal -->
+                <div class="product-card">
+                    <span class="purity-badge">91.0%</span>
+                    <div class="product-emoji">💊</div>
+                    <div class="product-name">Madrigal Tabs</div>
+                    <div class="product-desc">INDUSTRIAL GRADE</div>
+                    <div class="purity-bar-container">
+                        <div class="purity-bar-label">
+                            <span>Purity</span>
+                            <span>91.0%</span>
+                        </div>
+                        <div class="purity-bar">
+                            <div class="purity-fill" style="width: 91%"></div>
+                        </div>
+                    </div>
+                    <div class="product-footer">
+                        <span class="product-price">€35</span>
+                        <span class="product-stock">STOCKED</span>
+                    </div>
+                </div>
+
+                <!-- Product 5 - Vamonos -->
+                <div class="product-card">
+                    <span class="purity-badge premium">98.5%</span>
+                    <div class="product-emoji">🚐</div>
+                    <div class="product-name">Vamonos Pest</div>
+                    <div class="product-desc">MOBILE LAB BATCH</div>
+                    <div class="purity-bar-container">
+                        <div class="purity-bar-label">
+                            <span>Purity</span>
+                            <span>98.5%</span>
+                        </div>
+                        <div class="purity-bar">
+                            <div class="purity-fill" style="width: 98.5%"></div>
+                        </div>
+                    </div>
+                    <div class="product-footer">
+                        <span class="product-price">€95</span>
+                        <span class="product-stock">LIMITED</span>
+                    </div>
+                </div>
+
+                <!-- Product 6 - Car Wash -->
+                <div class="product-card">
+                    <span class="purity-badge">89.3%</span>
+                    <div class="product-emoji">🚗</div>
+                    <div class="product-name">A1A Special</div>
+                    <div class="product-desc">CAR WASH CLEAN</div>
+                    <div class="purity-bar-container">
+                        <div class="purity-bar-label">
+                            <span>Purity</span>
+                            <span>89.3%</span>
+                        </div>
+                        <div class="purity-bar">
+                            <div class="purity-fill" style="width: 89.3%"></div>
+                        </div>
+                    </div>
+                    <div class="product-footer">
+                        <span class="product-price">€28</span>
+                        <span class="product-stock">BULK</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <div class="nav-item active">
+                <span class="nav-icon">🔬</span>
+                <span class="nav-label">Lab</span>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">🗺️</span>
+                <span class="nav-label">Turf</span>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">🛢️</span>
+                <span class="nav-label">Barrel</span>
+                <span class="cart-badge">3</span>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">👤</span>
+                <span class="nav-label">Profile</span>
+            </div>
+        </nav>
+    </div>
+
+    <script>
+        // ═══════════════════════════════════════════════════════════════════════════
+        // 🎮 INTRO HANDLER
+        // ═══════════════════════════════════════════════════════════════════════════
+        const intro = document.getElementById('intro');
+        const app = document.getElementById('app');
+        const enterBtn = document.getElementById('enterBtn');
+
+        enterBtn.addEventListener('click', () => {
+            // Haptic feedback for Telegram
+            if (window.Telegram?.WebApp?.HapticFeedback) {
+                window.Telegram.WebApp.HapticFeedback.impactOccurred('heavy');
+            }
+
+            intro.classList.add('fade-out');
+
+            setTimeout(() => {
+                intro.classList.add('hidden');
+                app.classList.remove('hidden');
+                initializeApp();
+            }, 1000);
+        });
+
+        // ═══════════════════════════════════════════════════════════════════════════
+        // 🎨 APP INITIALIZATION
+        // ═══════════════════════════════════════════════════════════════════════════
+        function initializeApp() {
+            createCrystalParticles();
+            setupScrollParallax();
+            setupProductCards();
+            setupNavigation();
+        }
+
+        // Create floating crystal particles
+        function createCrystalParticles() {
+            const container = document.getElementById('crystalContainer');
+            const particleCount = 20;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'crystal-particle';
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.animationDelay = `${Math.random() * 15}s`;
+                particle.style.animationDuration = `${12 + Math.random() * 8}s`;
+                particle.style.transform = `scale(${0.5 + Math.random() * 1})`;
+                container.appendChild(particle);
+            }
+        }
+
+        // Parallax scrolling effect
+        function setupScrollParallax() {
+            const content = document.getElementById('content');
+            const bgHorizon = document.querySelector('.bg-horizon');
+            const rvLayer = document.querySelector('.rv-layer');
+
+            content.addEventListener('scroll', () => {
+                const scrollY = content.scrollTop;
+                const parallaxSpeed = 0.3;
+
+                if (bgHorizon) {
+                    bgHorizon.style.transform = `translateY(${scrollY * parallaxSpeed}px)`;
+                }
+                if (rvLayer) {
+                    rvLayer.style.transform = `translateY(${scrollY * (parallaxSpeed * 0.5)}px)`;
+                }
+            });
+        }
+
+        // Product card interactions
+        function setupProductCards() {
+            const cards = document.querySelectorAll('.product-card');
+
+            cards.forEach(card => {
+                card.addEventListener('click', () => {
+                    // Haptic feedback
+                    if (window.Telegram?.WebApp?.HapticFeedback) {
+                        window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+                    }
+
+                    // Visual feedback
+                    card.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        card.style.transform = '';
+                    }, 150);
+                });
+            });
+        }
+
+        // Navigation
+        function setupNavigation() {
+            const navItems = document.querySelectorAll('.nav-item');
+
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    // Haptic feedback
+                    if (window.Telegram?.WebApp?.HapticFeedback) {
+                        window.Telegram.WebApp.HapticFeedback.selectionChanged();
+                    }
+
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    item.classList.add('active');
+                });
+            });
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════════
+        // 📱 TELEGRAM WEBAPP INTEGRATION
+        // ═══════════════════════════════════════════════════════════════════════════
+        if (window.Telegram?.WebApp) {
+            const tg = window.Telegram.WebApp;
+            tg.expand();
+            tg.enableClosingConfirmation();
+            
+            // Set header color to match theme
+            tg.setHeaderColor('#000000');
+            tg.setBackgroundColor('#000000');
+        }
+    </script>
+</body>
+</html>
+
