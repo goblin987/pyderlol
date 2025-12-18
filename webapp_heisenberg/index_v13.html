@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#0a1a0a">
+    <title>Breaking Bad Shop</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;600;700&family=JetBrains+Mono:wght@400;700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --hazmat-yellow: #F5C518;
+            --crystal-blue: #00B4D8;
+            --lab-green: #2ECC71;
+            --money-green: #27AE60;
+            --danger-red: #E74C3C;
+            --bb-green: #1B5E20;
+            --bb-green-light: #2E7D32;
+            --bg-dark: #0a0a0a;
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --nav-height: 70px;
+            --touch-min: 48px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { height: 100%; overflow: hidden; }
+        body {
+            font-family: 'Roboto Condensed', sans-serif;
+            background: #050505;
+            color: #f0f0f0;
+            -webkit-font-smoothing: antialiased;
+            user-select: none;
+        }
+        .hidden { display: none !important; }
+
+        /* ═══════════════════════════════════════════════════════════════
+           SOPHISTICATED GREEN SMOKE BACKGROUND WITH CHEMICAL ELEMENTS
+           Like the Breaking Bad TV Series Intro
+           ═══════════════════════════════════════════════════════════════ */
+        .bb-background {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0;
+            background: linear-gradient(180deg, 
+                #0a1a0a 0%, 
+                #050a05 30%,
+                #030503 60%,
+                #000000 100%);
+            overflow: hidden;
+        }
+
+        /* Deep green smoke layers */
+        .smoke-layer {
+            position: absolute;
+            width: 100%; height: 100%;
+            pointer-events: none;
+        }
+        .smoke-layer.l1 {
+            background: radial-gradient(ellipse 200% 100% at 20% 100%, rgba(30,120,50,0.15) 0%, transparent 50%);
+            animation: smokeL1 25s ease-in-out infinite;
+        }
+        .smoke-layer.l2 {
+            background: radial-gradient(ellipse 150% 80% at 80% 90%, rgba(46,125,50,0.12) 0%, transparent 60%);
+            animation: smokeL2 20s ease-in-out infinite;
+        }
+        .smoke-layer.l3 {
+            background: radial-gradient(ellipse 100% 50% at 50% 80%, rgba(27,94,32,0.2) 0%, transparent 50%);
+            animation: smokeL3 15s ease-in-out infinite;
+        }
+        @keyframes smokeL1 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-30px,-20px) scale(1.1); } }
+        @keyframes smokeL2 { 0%,100% { transform: translate(0,0); opacity: 0.8; } 50% { transform: translate(20px,10px); opacity: 1; } }
+        @keyframes smokeL3 { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-30px); } }
+
+        /* Floating Chemical Elements - Like TV Intro */
+        .chem-elements {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .chem-el {
+            position: absolute;
+            font-family: 'JetBrains Mono', monospace;
+            color: rgba(46, 204, 113, 0.4);
+            text-shadow: 0 0 15px rgba(46, 204, 113, 0.3);
+            animation: chemFloat 12s ease-in-out infinite;
+        }
+        .chem-el.e1 { top: 8%; left: 5%; font-size: 1.1em; animation-delay: 0s; }
+        .chem-el.e2 { top: 15%; right: 8%; font-size: 0.9em; animation-delay: 2s; }
+        .chem-el.e3 { top: 25%; left: 12%; font-size: 1em; animation-delay: 1s; }
+        .chem-el.e4 { top: 35%; right: 15%; font-size: 0.85em; animation-delay: 3s; }
+        .chem-el.e5 { top: 45%; left: 8%; font-size: 0.95em; animation-delay: 1.5s; }
+        .chem-el.e6 { top: 55%; right: 5%; font-size: 1.1em; animation-delay: 2.5s; }
+        .chem-el.e7 { top: 65%; left: 15%; font-size: 0.9em; animation-delay: 0.5s; }
+        .chem-el.e8 { top: 75%; right: 12%; font-size: 1em; animation-delay: 3.5s; }
+        .chem-el.e9 { top: 85%; left: 20%; font-size: 0.85em; animation-delay: 4s; }
+        .chem-el.e10 { top: 92%; right: 20%; font-size: 0.9em; animation-delay: 1.2s; }
+        @keyframes chemFloat {
+            0%, 100% { opacity: 0.3; transform: translateY(0) rotate(0deg); }
+            25% { opacity: 0.6; }
+            50% { opacity: 0.4; transform: translateY(-20px) rotate(5deg); }
+            75% { opacity: 0.5; }
+        }
+
+        /* Floating bubbles */
+        .bubble {
+            position: absolute;
+            bottom: -20px;
+            background: radial-gradient(circle at 30% 30%, rgba(46,204,113,0.5), transparent 70%);
+            border-radius: 50%;
+            animation: bubbleRise 6s ease-in infinite;
+        }
+        .bubble:nth-child(1) { left: 8%; width: 10px; height: 10px; animation-delay: 0s; }
+        .bubble:nth-child(2) { left: 20%; width: 6px; height: 6px; animation-delay: 1.5s; animation-duration: 5s; }
+        .bubble:nth-child(3) { left: 35%; width: 12px; height: 12px; animation-delay: 0.8s; animation-duration: 7s; }
+        .bubble:nth-child(4) { left: 50%; width: 8px; height: 8px; animation-delay: 2.2s; animation-duration: 5.5s; }
+        .bubble:nth-child(5) { left: 65%; width: 7px; height: 7px; animation-delay: 1s; }
+        .bubble:nth-child(6) { left: 80%; width: 9px; height: 9px; animation-delay: 3s; animation-duration: 6.5s; }
+        .bubble:nth-child(7) { left: 92%; width: 5px; height: 5px; animation-delay: 0.5s; animation-duration: 4.5s; }
+        @keyframes bubbleRise {
+            0% { transform: translateY(0) scale(1); opacity: 0; }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-100vh) scale(0.3); opacity: 0; }
+        }
+
+        /* Film grain */
+        .grain {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.03;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        /* Vignette */
+        .vignette {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 9998;
+            background: radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,0.6) 100%);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           INTRO SCREEN - Like TV Series
+           ═══════════════════════════════════════════════════════════════ */
+        .intro {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .intro-logo {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: baseline;
+            margin-bottom: 20px;
+            animation: logoIn 1.2s cubic-bezier(0.34,1.56,0.64,1) 0.5s both;
+        }
+        @keyframes logoIn { 0% { opacity: 0; transform: scale(0.5); } 100% { opacity: 1; transform: scale(1); } }
+
+        .logo-text {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.8em;
+            color: #1B5E20;
+            letter-spacing: 2px;
+        }
+        .logo-box {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(180deg, #2E7D32 0%, #1B5E20 100%);
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin: 0 2px;
+            min-width: 45px;
+            box-shadow: 0 0 20px rgba(46,125,50,0.5);
+            position: relative;
+        }
+        .logo-box .num {
+            position: absolute;
+            top: 2px; left: 4px;
+            font-family: 'JetBrains Mono';
+            font-size: 0.25em;
+            color: rgba(255,255,255,0.6);
+        }
+        .logo-box .sym {
+            font-family: 'Bebas Neue';
+            font-size: 1.1em;
+            color: white;
+            line-height: 1;
+        }
+        .logo-box .name {
+            font-family: 'Roboto Condensed';
+            font-size: 0.2em;
+            color: rgba(255,255,255,0.7);
+            text-transform: uppercase;
+        }
+
+        .intro-subtitle {
+            font-family: 'Oswald';
+            font-size: 1em;
+            color: rgba(255,255,255,0.6);
+            letter-spacing: 8px;
+            margin-bottom: 30px;
+            animation: fadeUp 1s ease 1s both;
+        }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        .intro-btn {
+            padding: 18px 50px;
+            background: linear-gradient(180deg, #2E7D32, #1B5E20);
+            border: none;
+            border-radius: 12px;
+            font-family: 'Oswald';
+            font-size: 1.1em;
+            font-weight: 600;
+            color: white;
+            letter-spacing: 4px;
+            cursor: pointer;
+            animation: fadeUp 1s ease 1.5s both;
+            box-shadow: 0 6px 0 #0D3D12, 0 10px 30px rgba(0,0,0,0.5), 0 0 40px rgba(46,125,50,0.4);
+            min-height: var(--touch-min);
+        }
+        .intro-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #0D3D12; }
+
+        .intro.fade-out { animation: fadeOut 0.6s ease forwards; }
+        @keyframes fadeOut { to { opacity: 0; pointer-events: none; } }
+
+        /* ═══════════════════════════════════════════════════════════════
+           MAIN APP
+           ═══════════════════════════════════════════════════════════════ */
+        .app {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           ANIMATED HEADER - Breaking Bad Style with Characters
+           ═══════════════════════════════════════════════════════════════ */
+        .header {
+            background: linear-gradient(180deg, 
+                rgba(10,20,10,0.95) 0%, 
+                rgba(5,10,5,0.9) 100%);
+            backdrop-filter: blur(15px);
+            border-bottom: 2px solid rgba(46,125,50,0.4);
+            padding: 0;
+            position: relative;
+            z-index: 100;
+            overflow: hidden;
+        }
+
+        /* Desert/RV silhouette background in header */
+        .header-bg {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 100%;
+            background: linear-gradient(180deg, transparent 0%, rgba(194,154,108,0.08) 100%);
+            pointer-events: none;
+        }
+
+        /* Main header content with characters */
+        .header-main {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            position: relative;
+        }
+
+        /* Animated Walter White silhouette */
+        .walter {
+            width: 55px;
+            height: 70px;
+            position: relative;
+            animation: walterBreathe 4s ease-in-out infinite;
+        }
+        @keyframes walterBreathe { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+
+        .walter-head {
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(180deg, #D4A574 0%, #C4956A 100%);
+            border-radius: 50% 50% 45% 45%;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: walterHead 3s ease-in-out infinite;
+        }
+        @keyframes walterHead { 0%,100% { transform: translateX(-50%) rotate(0deg); } 50% { transform: translateX(-50%) rotate(-3deg); } }
+
+        .walter-glasses {
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 28px;
+            height: 8px;
+            display: flex;
+            gap: 2px;
+        }
+        .walter-lens {
+            width: 12px;
+            height: 8px;
+            background: rgba(0,0,0,0.8);
+            border: 1px solid #333;
+            border-radius: 2px;
+        }
+        .walter-goatee {
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 8px;
+            background: #3E2723;
+            border-radius: 0 0 50% 50%;
+        }
+        .walter-body {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 45px;
+            height: 35px;
+            background: linear-gradient(180deg, #5D4037 0%, #4E342E 100%);
+            border-radius: 8px 8px 0 0;
+        }
+        .walter-arm {
+            position: absolute;
+            bottom: 5px;
+            width: 10px;
+            height: 25px;
+            background: #5D4037;
+            border-radius: 5px;
+        }
+        .walter-arm.left {
+            left: -5px;
+            transform-origin: top center;
+            animation: armSwing 3s ease-in-out infinite;
+        }
+        .walter-arm.right {
+            right: -5px;
+            transform-origin: top center;
+            animation: armSwing 3s ease-in-out infinite 0.5s;
+        }
+        @keyframes armSwing { 0%,100% { transform: rotate(5deg); } 50% { transform: rotate(-5deg); } }
+
+        /* Center Logo */
+        .header-logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: logoPulse 4s ease-in-out infinite;
+        }
+        @keyframes logoPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+
+        .header-logo-row {
+            display: flex;
+            align-items: baseline;
+        }
+        .header-logo .logo-text {
+            font-size: 1.6em;
+            color: #2E7D32;
+        }
+        .header-logo .logo-box {
+            padding: 2px 5px;
+            min-width: 28px;
+        }
+        .header-logo .logo-box .sym {
+            font-size: 0.9em;
+        }
+        .header-logo .logo-box .num {
+            font-size: 0.15em;
+        }
+        .header-logo-sub {
+            font-family: 'JetBrains Mono';
+            font-size: 0.5em;
+            color: var(--crystal-blue);
+            letter-spacing: 2px;
+            margin-top: 2px;
+        }
+
+        /* Animated Jesse silhouette */
+        .jesse {
+            width: 55px;
+            height: 70px;
+            position: relative;
+            animation: jesseBreathe 4s ease-in-out infinite 0.5s;
+        }
+        @keyframes jesseBreathe { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+
+        .jesse-head {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(180deg, #E8C9A0 0%, #D4B896 100%);
+            border-radius: 50%;
+            position: absolute;
+            top: 3px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: jesseHead 3.5s ease-in-out infinite;
+        }
+        @keyframes jesseHead { 0%,100% { transform: translateX(-50%) rotate(0deg); } 50% { transform: translateX(-50%) rotate(5deg); } }
+
+        .jesse-beanie {
+            position: absolute;
+            top: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 34px;
+            height: 18px;
+            background: linear-gradient(180deg, #8B0000 0%, #5D0000 100%);
+            border-radius: 15px 15px 0 0;
+        }
+        .jesse-goggles {
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 10px;
+            background: #C62828;
+            border-radius: 5px;
+            border: 2px solid #8B0000;
+        }
+        .jesse-body {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 45px;
+            height: 35px;
+            background: linear-gradient(180deg, #FDD835 0%, #F9A825 100%);
+            border-radius: 8px 8px 0 0;
+        }
+        .jesse-arm {
+            position: absolute;
+            bottom: 5px;
+            width: 10px;
+            height: 25px;
+            background: #FDD835;
+            border-radius: 5px;
+        }
+        .jesse-arm.left {
+            left: -5px;
+            transform-origin: top center;
+            animation: armSwing 3.5s ease-in-out infinite;
+        }
+        .jesse-arm.right {
+            right: -5px;
+            transform-origin: top center;
+            animation: armSwing 3.5s ease-in-out infinite 0.3s;
+        }
+
+        /* User info row */
+        .user-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 16px;
+            background: rgba(0,0,0,0.3);
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .avatar {
+            width: 40px; height: 40px;
+            background: linear-gradient(135deg, var(--hazmat-yellow), #C9A000);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em;
+        }
+        .user-details .name { font-family: 'Oswald'; font-size: 0.95em; font-weight: 600; }
+        .user-details .rank { font-family: 'JetBrains Mono'; font-size: 0.55em; color: var(--crystal-blue); }
+        .balance {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: linear-gradient(135deg, rgba(39,174,96,0.2), rgba(39,174,96,0.1));
+            border: 1px solid rgba(39,174,96,0.3);
+            border-radius: 10px;
+        }
+        .balance-icon { font-size: 1.1em; }
+        .balance-amount { font-family: 'JetBrains Mono'; font-size: 1em; font-weight: 700; color: var(--money-green); }
+
+        /* Sound toggle */
+        .sound-btn {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            width: 32px; height: 32px;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9em;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           CONTENT
+           ═══════════════════════════════════════════════════════════════ */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            padding-bottom: calc(var(--nav-height) + var(--safe-bottom) + 20px);
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .section { display: none; animation: sectionIn 0.3s ease; }
+        .section.active { display: block; }
+        @keyframes sectionIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .section-title {
+            font-family: 'Oswald';
+            font-size: 1em;
+            color: var(--hazmat-yellow);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+        }
+
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 12px;
+            -webkit-overflow-scrolling: touch;
+        }
+        .filters::-webkit-scrollbar { display: none; }
+        .filter-btn {
+            padding: 12px 18px;
+            background: rgba(30,30,30,0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 10px;
+            color: rgba(255,255,255,0.7);
+            font-family: 'Oswald';
+            font-size: 0.85em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            min-height: var(--touch-min);
+            cursor: pointer;
+        }
+        .filter-btn.active {
+            background: linear-gradient(135deg, var(--hazmat-yellow), #C9A000);
+            color: #000;
+        }
+
+        /* Product cards */
+        .products {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .card {
+            background: rgba(25,25,25,0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
+            padding: 12px;
+            position: relative;
+        }
+        .card:active { transform: scale(0.98); transition: transform 0.1s; }
+
+        .card-badge {
+            position: absolute;
+            top: 8px; left: 8px;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-family: 'JetBrains Mono';
+            font-size: 0.55em;
+            font-weight: 700;
+        }
+        .card-badge.high { background: rgba(0,180,216,0.2); color: var(--crystal-blue); border: 1px solid rgba(0,180,216,0.4); }
+        .card-badge.med { background: rgba(245,197,24,0.2); color: var(--hazmat-yellow); border: 1px solid rgba(245,197,24,0.4); }
+
+        .card-icon {
+            text-align: center;
+            font-size: 2.5em;
+            padding: 16px 0 10px;
+        }
+        .card-icon.crystal { filter: drop-shadow(0 0 12px rgba(0,180,216,0.6)); }
+
+        .card-name { font-family: 'Oswald'; font-size: 0.9em; text-transform: uppercase; }
+        .card-formula { font-family: 'JetBrains Mono'; font-size: 0.6em; color: var(--crystal-blue); margin-bottom: 8px; }
+
+        .card-purity { margin-bottom: 10px; }
+        .purity-row { display: flex; justify-content: space-between; font-family: 'JetBrains Mono'; font-size: 0.5em; color: #666; margin-bottom: 3px; }
+        .purity-val { color: var(--crystal-blue); font-weight: 700; }
+        .purity-bar { width: 100%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+        .purity-fill { height: 100%; background: linear-gradient(90deg, var(--crystal-blue), #C4E538); border-radius: 2px; }
+
+        .card-footer { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .card-price { font-family: 'JetBrains Mono'; font-size: 1.1em; font-weight: 700; color: var(--money-green); }
+        .card-stock { font-family: 'JetBrains Mono'; font-size: 0.55em; color: #666; }
+
+        .add-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(180deg, var(--hazmat-yellow), #C9A000);
+            border: none;
+            border-radius: 8px;
+            font-family: 'Oswald';
+            font-size: 0.8em;
+            color: #000;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            min-height: var(--touch-min);
+            box-shadow: 0 3px 0 #8B6914;
+        }
+        .add-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 #8B6914; }
+        .add-btn:disabled { opacity: 0.5; }
+
+        /* Cart items */
+        .empty-cart { text-align: center; padding: 50px 20px; color: #666; }
+        .empty-cart .icon { font-size: 3.5em; margin-bottom: 15px; opacity: 0.5; }
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px;
+            background: rgba(30,30,30,0.7);
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+        .cart-icon { font-size: 2em; }
+        .cart-info { flex: 1; }
+        .cart-name { font-family: 'Oswald'; font-size: 0.9em; }
+        .cart-details { font-family: 'JetBrains Mono'; font-size: 0.6em; color: #666; }
+        .cart-price { font-family: 'JetBrains Mono'; font-size: 1em; font-weight: 700; color: var(--money-green); }
+        .cart-remove {
+            width: 36px; height: 36px;
+            background: rgba(231,76,60,0.2);
+            border: 1px solid rgba(231,76,60,0.4);
+            border-radius: 50%;
+            color: var(--danger-red);
+            cursor: pointer;
+        }
+
+        .cart-summary {
+            margin-top: 16px;
+            padding: 16px;
+            background: rgba(30,30,30,0.7);
+            border-radius: 14px;
+        }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 8px; color: rgba(255,255,255,0.7); }
+        .summary-row.total { padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); font-family: 'Oswald'; font-size: 1.1em; }
+        .summary-row.total span:last-child { color: var(--money-green); font-weight: 700; }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 16px;
+            margin-top: 14px;
+            background: linear-gradient(180deg, var(--lab-green), var(--money-green));
+            border: none;
+            border-radius: 12px;
+            font-family: 'Bebas Neue';
+            font-size: 1.1em;
+            color: white;
+            letter-spacing: 4px;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #1E8449;
+        }
+        .checkout-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #1E8449; }
+
+        /* Bottom Nav */
+        .nav {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            height: calc(var(--nav-height) + var(--safe-bottom));
+            padding-bottom: var(--safe-bottom);
+            background: linear-gradient(180deg, rgba(15,20,15,0.98), rgba(5,10,5,0.99));
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(46,125,50,0.3);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1000;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px 16px;
+            cursor: pointer;
+            position: relative;
+            min-height: var(--touch-min);
+        }
+        .nav-icon { font-size: 1.4em; margin-bottom: 3px; filter: grayscale(100%) brightness(0.5); }
+        .nav-label { font-family: 'Oswald'; font-size: 0.55em; color: #666; text-transform: uppercase; }
+        .nav-item.active .nav-icon { filter: none; transform: scale(1.1) translateY(-2px); }
+        .nav-item.active .nav-label { color: var(--hazmat-yellow); }
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 6px;
+            width: 24px; height: 3px;
+            background: var(--hazmat-yellow);
+            border-radius: 2px;
+            box-shadow: 0 0 8px var(--hazmat-yellow);
+        }
+        .nav-badge {
+            position: absolute;
+            top: 4px; right: 8px;
+            min-width: 18px; height: 18px;
+            background: var(--danger-red);
+            border-radius: 9px;
+            font-family: 'JetBrains Mono';
+            font-size: 0.55em;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 6px var(--danger-red);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 80px; left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 20px;
+            background: rgba(20,20,20,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            border-left: 4px solid var(--lab-green);
+            font-family: 'Oswald';
+            font-size: 0.85em;
+            color: white;
+            z-index: 10000;
+            animation: toastIn 0.3s ease;
+        }
+        @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(-15px); } }
+
+        /* Success overlay */
+        .success {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(ellipse at center, rgba(0,180,216,0.2) 0%, rgba(0,0,0,0.98) 70%);
+            z-index: 5000;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .success.active { display: flex; }
+        .success-crystals { font-size: 2.5em; animation: bounce 0.5s ease; margin-bottom: 20px; }
+        @keyframes bounce { 0% { transform: scale(0); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }
+        .success-title { font-family: 'Bebas Neue'; font-size: 2em; color: var(--crystal-blue); letter-spacing: 4px; }
+        .success-quote { font-family: 'Oswald'; color: rgba(255,255,255,0.7); margin-top: 12px; }
+        .success-xp { margin-top: 18px; padding: 8px 20px; background: var(--lab-green); border-radius: 20px; font-family: 'JetBrains Mono'; font-weight: 700; }
+
+        /* Particles */
+        .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9997; }
+        .particle { position: absolute; border-radius: 50%; animation: particleFly 0.8s ease-out forwards; }
+        .particle.blue { background: var(--crystal-blue); box-shadow: 0 0 6px var(--crystal-blue); }
+        .particle.green { background: var(--lab-green); box-shadow: 0 0 6px var(--lab-green); }
+        @keyframes particleFly { 0% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0); } }
+
+        /* Profile */
+        .profile-card {
+            text-align: center;
+            padding: 25px;
+            background: rgba(30,30,30,0.7);
+            border-radius: 16px;
+            margin-bottom: 16px;
+        }
+        .profile-avatar { width: 80px; height: 80px; background: linear-gradient(135deg, var(--hazmat-yellow), #C9A000); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5em; margin: 0 auto 12px; }
+        .profile-name { font-family: 'Bebas Neue'; font-size: 1.6em; letter-spacing: 3px; }
+        .profile-rank { font-family: 'JetBrains Mono'; font-size: 0.65em; color: var(--crystal-blue); margin-top: 5px; }
+        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .stat { padding: 14px; background: rgba(30,30,30,0.7); border-radius: 12px; text-align: center; }
+        .stat-val { display: block; font-family: 'Bebas Neue'; font-size: 1.4em; color: var(--crystal-blue); }
+        .stat-label { font-size: 0.6em; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="grain"></div>
+    <div class="vignette"></div>
+    
+    <!-- Breaking Bad Background -->
+    <div class="bb-background">
+        <div class="smoke-layer l1"></div>
+        <div class="smoke-layer l2"></div>
+        <div class="smoke-layer l3"></div>
+        <div class="chem-elements">
+            <span class="chem-el e1">C₁₀H₁₅N</span>
+            <span class="chem-el e2">H₂SO₄</span>
+            <span class="chem-el e3">NaOH</span>
+            <span class="chem-el e4">HCl</span>
+            <span class="chem-el e5">CH₃NH₂</span>
+            <span class="chem-el e6">P₂O₅</span>
+            <span class="chem-el e7">C₆H₁₂O₆</span>
+            <span class="chem-el e8">NH₃</span>
+            <span class="chem-el e9">KMnO₄</span>
+            <span class="chem-el e10">Al₂O₃</span>
+        </div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+    </div>
+    <div class="particles"></div>
+
+    <!-- INTRO -->
+    <div class="intro" id="intro">
+        <div class="intro-logo">
+            <span class="logo-text">B</span>
+            <span class="logo-box"><span class="num">35</span><span class="sym">r</span><span class="name">Bromine</span></span>
+            <span class="logo-text">eaking</span>
+        </div>
+        <div class="intro-logo">
+            <span class="logo-text">S</span>
+            <span class="logo-box"><span class="num">67</span><span class="sym">h</span><span class="name">Holmium</span></span>
+            <span class="logo-text">op</span>
+        </div>
+        <p class="intro-subtitle">HEISENBERG'S LAB</p>
+        <button class="intro-btn" id="enter-btn">⚗️ ENTER ⚗️</button>
+    </div>
+
+    <!-- MAIN APP -->
+    <div class="app hidden" id="app">
+        <header class="header">
+            <div class="header-bg"></div>
+            <button class="sound-btn" id="sound-btn">🔊</button>
+            
+            <div class="header-main">
+                <!-- Animated Walter -->
+                <div class="walter">
+                    <div class="walter-head">
+                        <div class="walter-glasses">
+                            <div class="walter-lens"></div>
+                            <div class="walter-lens"></div>
+                        </div>
+                        <div class="walter-goatee"></div>
+                    </div>
+                    <div class="walter-body">
+                        <div class="walter-arm left"></div>
+                        <div class="walter-arm right"></div>
+                    </div>
+                </div>
+
+                <!-- Logo -->
+                <div class="header-logo">
+                    <div class="header-logo-row">
+                        <span class="logo-text">B</span>
+                        <span class="logo-box"><span class="num">35</span><span class="sym">r</span></span>
+                        <span class="logo-text">eaking</span>
+                    </div>
+                    <div class="header-logo-row">
+                        <span class="logo-text">S</span>
+                        <span class="logo-box"><span class="num">67</span><span class="sym">h</span></span>
+                        <span class="logo-text">op</span>
+                    </div>
+                    <div class="header-logo-sub">99.1% PURE</div>
+                </div>
+
+                <!-- Animated Jesse -->
+                <div class="jesse">
+                    <div class="jesse-head">
+                        <div class="jesse-beanie"></div>
+                        <div class="jesse-goggles"></div>
+                    </div>
+                    <div class="jesse-body">
+                        <div class="jesse-arm left"></div>
+                        <div class="jesse-arm right"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="user-row">
+                <div class="user-info">
+                    <div class="avatar">👨‍🔬</div>
+                    <div class="user-details">
+                        <div class="name">PINKMAN</div>
+                        <div class="rank">LVL 3 • DISTRIBUTOR</div>
+                    </div>
+                </div>
+                <div class="balance">
+                    <span class="balance-icon">💰</span>
+                    <span class="balance-amount" id="balance">€420.69</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="content">
+            <section class="section active" id="sec-lab">
+                <h2 class="section-title">📋 Available Batches</h2>
+                <div class="filters">
+                    <button class="filter-btn active" data-f="all">ALL</button>
+                    <button class="filter-btn" data-f="crystal">💎 CRYSTAL</button>
+                    <button class="filter-btn" data-f="green">🌿 GREEN</button>
+                    <button class="filter-btn" data-f="pills">💊 PILLS</button>
+                </div>
+                <div class="products" id="products"></div>
+            </section>
+
+            <section class="section" id="sec-turf">
+                <h2 class="section-title">🗺️ Distribution Turf</h2>
+                <div class="empty-cart"><span class="icon">🗺️</span><p>Territory map coming soon...</p></div>
+            </section>
+
+            <section class="section" id="sec-barrel">
+                <h2 class="section-title">🛢️ Your Barrel <span id="cart-count" style="color:#666;font-size:0.8em;margin-left:8px;">0 items</span></h2>
+                <div id="cart-items"><div class="empty-cart"><div class="icon">🛢️</div><p>Your barrel is empty</p></div></div>
+                <div id="cart-summary" style="display:none;">
+                    <div class="cart-summary">
+                        <div class="summary-row"><span>Subtotal:</span><span id="subtotal">€0.00</span></div>
+                        <div class="summary-row total"><span>TOTAL:</span><span id="total">€0.00</span></div>
+                        <button class="checkout-btn" id="checkout-btn">🚐 COOK THE ORDER 🚐</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="sec-profile">
+                <h2 class="section-title">👤 Cook Profile</h2>
+                <div class="profile-card">
+                    <div class="profile-avatar">👨‍🔬</div>
+                    <div class="profile-name">PINKMAN</div>
+                    <div class="profile-rank">DISTRIBUTOR • ⭐⭐⭐☆☆</div>
+                </div>
+                <div class="stats">
+                    <div class="stat"><span class="stat-val">12</span><span class="stat-label">Cooks</span></div>
+                    <div class="stat"><span class="stat-val">€1,247</span><span class="stat-label">Spent</span></div>
+                    <div class="stat"><span class="stat-val">99.1%</span><span class="stat-label">Purity</span></div>
+                </div>
+            </section>
+        </main>
+
+        <nav class="nav">
+            <div class="nav-item active" data-s="lab"><span class="nav-icon">🔬</span><span class="nav-label">Lab</span></div>
+            <div class="nav-item" data-s="turf"><span class="nav-icon">🗺️</span><span class="nav-label">Turf</span></div>
+            <div class="nav-item" data-s="barrel"><span class="nav-icon">🛢️</span><span class="nav-label">Barrel</span><span class="nav-badge hidden" id="cart-badge">0</span></div>
+            <div class="nav-item" data-s="profile"><span class="nav-icon">👤</span><span class="nav-label">Profile</span></div>
+        </nav>
+    </div>
+
+    <div class="success" id="success">
+        <div class="success-crystals">💎💎💎💎💎</div>
+        <h2 class="success-title">BATCH DELIVERED</h2>
+        <p class="success-quote">"Yeah, Science, Bitch!"</p>
+        <div class="success-xp">+50 XP</div>
+    </div>
+
+    <script>
+        const products = [
+            { id: 1, name: 'Blue Sky', formula: 'C₁₀H₁₅N', icon: '💎', cat: 'crystal', purity: 99.1, price: 80, stock: 12 },
+            { id: 2, name: 'Chili P', formula: 'C₁₀H₁₅N+', icon: '🌿', cat: 'green', purity: 96.2, price: 45, stock: 8 },
+            { id: 3, name: 'Madrigal', formula: 'C₂₀H₂₅N₃O', icon: '💊', cat: 'pills', purity: 91, price: 35, stock: 20 },
+            { id: 4, name: "Cap'n Cook", formula: 'C₁₂H₁₇NO', icon: '🍄', cat: 'green', purity: 88.5, price: 55, stock: 3 },
+            { id: 5, name: 'Los Pollos', formula: 'C₁₀H₁₅N', icon: '🐔', cat: 'crystal', purity: 97.8, price: 70, stock: 15 },
+            { id: 6, name: 'Vamonos', formula: 'C₁₀H₁₅N', icon: '🧪', cat: 'crystal', purity: 95.5, price: 60, stock: 0 }
+        ];
+        let cart = [];
+        let soundOn = true;
+        let audioCtx = null;
+
+        function initAudio() { if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); if(audioCtx.state==='suspended') audioCtx.resume(); }
+        function playClick() { if(!soundOn||!audioCtx)return; const o=audioCtx.createOscillator(),g=audioCtx.createGain(); o.connect(g); g.connect(audioCtx.destination); o.frequency.setValueAtTime(600,audioCtx.currentTime); o.frequency.exponentialRampToValueAtTime(300,audioCtx.currentTime+0.05); g.gain.setValueAtTime(0.1,audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+0.05); o.start(); o.stop(audioCtx.currentTime+0.05); }
+        function playSuccess() { if(!soundOn||!audioCtx)return; [523,659,784].forEach((f,i)=>{setTimeout(()=>{const o=audioCtx.createOscillator(),g=audioCtx.createGain(); o.connect(g); g.connect(audioCtx.destination); o.frequency.setValueAtTime(f,audioCtx.currentTime); g.gain.setValueAtTime(0.15,audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+0.25); o.start(); o.stop(audioCtx.currentTime+0.25);},i*80);}); }
+        function haptic(t='light') { if('vibrate'in navigator) navigator.vibrate({light:10,medium:20,success:[20,30,20]}[t]||10); }
+        function burst(x,y,n=12) { const c=document.querySelector('.particles'); for(let i=0;i<n;i++){const p=document.createElement('div');p.className='particle '+(Math.random()>0.5?'blue':'green');const s=4+Math.random()*8,a=Math.random()*Math.PI*2,d=30+Math.random()*70;p.style.cssText=`left:${x}px;top:${y}px;width:${s}px;height:${s}px;--tx:${Math.cos(a)*d}px;--ty:${Math.sin(a)*d-30}px;`;c.appendChild(p);setTimeout(()=>p.remove(),800);} }
+        function toast(m) { document.querySelectorAll('.toast').forEach(t=>t.remove()); const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),300);},2000); }
+
+        function renderProducts(f='all') {
+            const g=document.getElementById('products');
+            const list=f==='all'?products:products.filter(p=>p.cat===f);
+            g.innerHTML=list.map(p=>`
+                <div class="card" data-id="${p.id}">
+                    <span class="card-badge ${p.purity>=95?'high':'med'}">${p.purity}%</span>
+                    <div class="card-icon ${p.cat==='crystal'?'crystal':''}">${p.icon}</div>
+                    <div class="card-name">${p.name}</div>
+                    <div class="card-formula">${p.formula}</div>
+                    <div class="card-purity"><div class="purity-row"><span>PURITY</span><span class="purity-val">${p.purity}%</span></div><div class="purity-bar"><div class="purity-fill" style="width:${p.purity}%"></div></div></div>
+                    <div class="card-footer"><span class="card-price">€${p.price.toFixed(2)}</span><span class="card-stock">${p.stock===0?'SOLD OUT':p.stock+' left'}</span></div>
+                    <button class="add-btn" data-id="${p.id}" ${p.stock===0?'disabled':''}>${p.stock>0?'🛢️ ADD TO BARREL':'UNAVAILABLE'}</button>
+                </div>
+            `).join('');
+            g.querySelectorAll('.add-btn').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();addToCart(parseInt(b.dataset.id),e);}));
+        }
+
+        function addToCart(id,e) {
+            const p=products.find(x=>x.id===id);if(!p||p.stock===0)return;
+            const ex=cart.find(x=>x.id===id);if(ex)ex.qty++;else cart.push({...p,qty:1});
+            playSuccess();haptic('success');
+            const r=e.target.getBoundingClientRect();burst(r.left+r.width/2,r.top,15);
+            updateCartUI();toast(p.name+' added!');
+        }
+        function removeFromCart(id) { cart=cart.filter(x=>x.id!==id);playClick();haptic('light');updateCartUI(); }
+        function updateCartUI() {
+            const b=document.getElementById('cart-badge'),c=document.getElementById('cart-count'),t=cart.reduce((s,x)=>s+x.qty,0);
+            b.textContent=t;b.classList.toggle('hidden',t===0);c.textContent=t+' item'+(t!==1?'s':'');
+            renderCart();
+        }
+        function renderCart() {
+            const c=document.getElementById('cart-items'),s=document.getElementById('cart-summary');
+            if(cart.length===0){c.innerHTML='<div class="empty-cart"><div class="icon">🛢️</div><p>Your barrel is empty</p></div>';s.style.display='none';return;}
+            c.innerHTML=cart.map(x=>`<div class="cart-item"><div class="cart-icon">${x.icon}</div><div class="cart-info"><div class="cart-name">${x.name}</div><div class="cart-details">${x.purity}% • Qty: ${x.qty}</div></div><div class="cart-price">€${(x.price*x.qty).toFixed(2)}</div><button class="cart-remove" onclick="removeFromCart(${x.id})">✕</button></div>`).join('');
+            const sub=cart.reduce((s,x)=>s+x.price*x.qty,0);
+            document.getElementById('subtotal').textContent='€'+sub.toFixed(2);
+            document.getElementById('total').textContent='€'+sub.toFixed(2);
+            s.style.display='block';
+        }
+        function navigate(sec) {
+            document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.s===sec));
+            document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id==='sec-'+sec));
+            playClick();haptic('light');
+        }
+
+        document.addEventListener('DOMContentLoaded',()=>{
+            document.getElementById('enter-btn').addEventListener('click',()=>{
+                initAudio();playSuccess();haptic('success');
+                document.getElementById('intro').classList.add('fade-out');
+                setTimeout(()=>{document.getElementById('intro').style.display='none';document.getElementById('app').classList.remove('hidden');},600);
+            });
+            document.querySelectorAll('.nav-item').forEach(n=>n.addEventListener('click',()=>navigate(n.dataset.s)));
+            document.querySelectorAll('.filter-btn').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.filter-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderProducts(b.dataset.f);playClick();}));
+            document.getElementById('sound-btn').addEventListener('click',()=>{soundOn=!soundOn;document.getElementById('sound-btn').textContent=soundOn?'🔊':'🔇';if(soundOn)initAudio();});
+            document.getElementById('checkout-btn').addEventListener('click',()=>{
+                if(cart.length===0)return;
+                document.getElementById('success').classList.add('active');playSuccess();haptic('success');
+                for(let i=0;i<5;i++)setTimeout(()=>burst(window.innerWidth/2+(Math.random()-0.5)*200,window.innerHeight/2+(Math.random()-0.5)*200,20),i*200);
+                cart=[];updateCartUI();
+                setTimeout(()=>{document.getElementById('success').classList.remove('active');navigate('lab');},3000);
+            });
+            renderProducts();
+        });
+        window.removeFromCart=removeFromCart;
+    </script>
+</body>
+</html>
+
