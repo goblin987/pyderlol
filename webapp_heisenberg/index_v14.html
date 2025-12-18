@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#000000">
+    <title>Breaking Bad</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --accent: #2ECC71;
+            --accent-dim: rgba(46,204,113,0.15);
+            --blue: #00B4D8;
+            --gold: #D4AF37;
+            --danger: #E74C3C;
+            --text: #FFFFFF;
+            --text-dim: rgba(255,255,255,0.5);
+            --card-bg: rgba(255,255,255,0.03);
+            --card-border: rgba(255,255,255,0.06);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { height: 100%; overflow: hidden; }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: #000;
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            user-select: none;
+        }
+        .hidden { display: none !important; }
+
+        /* ═══════════════════════════════════════════════════════════════
+           ULTRA-REALISTIC GREEN SMOKE BACKGROUND
+           Inspired by Adobe Stock video reference
+           ═══════════════════════════════════════════════════════════════ */
+        .smoke-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        /* Base glow */
+        .smoke-glow {
+            position: absolute;
+            width: 100%; height: 100%;
+            background: radial-gradient(ellipse 80% 50% at 50% 100%, rgba(30,80,30,0.4) 0%, transparent 70%);
+        }
+
+        /* Realistic smoke layers using CSS */
+        .smoke {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            left: -50%;
+            top: -50%;
+            background: 
+                radial-gradient(ellipse 25% 35% at 30% 80%, rgba(34,139,34,0.35) 0%, transparent 50%),
+                radial-gradient(ellipse 30% 40% at 70% 75%, rgba(46,139,87,0.3) 0%, transparent 50%),
+                radial-gradient(ellipse 20% 30% at 50% 85%, rgba(60,179,113,0.25) 0%, transparent 50%),
+                radial-gradient(ellipse 35% 25% at 20% 70%, rgba(46,204,113,0.2) 0%, transparent 50%),
+                radial-gradient(ellipse 25% 35% at 80% 80%, rgba(34,139,34,0.3) 0%, transparent 50%);
+            filter: blur(40px);
+            animation: smokeFlow 20s ease-in-out infinite;
+        }
+        .smoke.layer2 {
+            background: 
+                radial-gradient(ellipse 30% 40% at 40% 75%, rgba(46,139,87,0.25) 0%, transparent 50%),
+                radial-gradient(ellipse 25% 30% at 60% 80%, rgba(34,139,34,0.3) 0%, transparent 50%),
+                radial-gradient(ellipse 35% 25% at 25% 85%, rgba(60,179,113,0.2) 0%, transparent 50%);
+            filter: blur(60px);
+            animation: smokeFlow2 25s ease-in-out infinite;
+        }
+        .smoke.layer3 {
+            background: 
+                radial-gradient(ellipse 40% 50% at 50% 70%, rgba(46,204,113,0.15) 0%, transparent 60%);
+            filter: blur(80px);
+            animation: smokeFlow3 30s ease-in-out infinite;
+        }
+
+        @keyframes smokeFlow {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.8; }
+            25% { transform: translate(5%, -3%) scale(1.05); opacity: 1; }
+            50% { transform: translate(-3%, -5%) scale(1.1); opacity: 0.9; }
+            75% { transform: translate(-5%, 2%) scale(1.03); opacity: 1; }
+        }
+        @keyframes smokeFlow2 {
+            0%, 100% { transform: translate(0, 0) scale(1.1); opacity: 0.7; }
+            33% { transform: translate(-8%, -4%) scale(1); opacity: 0.9; }
+            66% { transform: translate(6%, -2%) scale(1.15); opacity: 0.8; }
+        }
+        @keyframes smokeFlow3 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-10%, -8%) scale(1.2); }
+        }
+
+        /* Particle wisps */
+        .wisp {
+            position: absolute;
+            background: radial-gradient(circle, rgba(46,204,113,0.6) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(3px);
+            animation: wispFloat 8s ease-in-out infinite;
+        }
+        .wisp:nth-child(1) { width: 6px; height: 6px; left: 20%; bottom: 10%; animation-delay: 0s; }
+        .wisp:nth-child(2) { width: 4px; height: 4px; left: 35%; bottom: 15%; animation-delay: 1s; animation-duration: 6s; }
+        .wisp:nth-child(3) { width: 8px; height: 8px; left: 50%; bottom: 8%; animation-delay: 2s; animation-duration: 10s; }
+        .wisp:nth-child(4) { width: 5px; height: 5px; left: 65%; bottom: 12%; animation-delay: 0.5s; animation-duration: 7s; }
+        .wisp:nth-child(5) { width: 7px; height: 7px; left: 80%; bottom: 10%; animation-delay: 1.5s; animation-duration: 9s; }
+        @keyframes wispFloat {
+            0% { transform: translateY(0) scale(1); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.2; }
+            100% { transform: translateY(-60vh) scale(0.3); opacity: 0; }
+        }
+
+        /* Subtle vignette */
+        .vignette {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.7) 100%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           INTRO - Clean & Premium
+           ═══════════════════════════════════════════════════════════════ */
+        .intro {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .intro-logo {
+            margin-bottom: 60px;
+            animation: logoReveal 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+        }
+        @keyframes logoReveal { 
+            0% { opacity: 0; transform: scale(0.9) translateY(20px); } 
+            100% { opacity: 1; transform: scale(1) translateY(0); } 
+        }
+
+        .logo-main {
+            display: flex;
+            align-items: baseline;
+            gap: 2px;
+            font-size: 2.4em;
+            font-weight: 300;
+            letter-spacing: -1px;
+        }
+        .logo-element {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            background: linear-gradient(180deg, #2E7D32 0%, #1B5E20 100%);
+            padding: 6px 10px 8px;
+            border-radius: 4px;
+            margin: 0 1px;
+            box-shadow: 0 4px 20px rgba(46,125,50,0.4);
+        }
+        .logo-element .num {
+            font-size: 0.25em;
+            font-weight: 400;
+            opacity: 0.7;
+            margin-bottom: -2px;
+        }
+        .logo-element .sym {
+            font-size: 1em;
+            font-weight: 600;
+        }
+
+        .intro-sub {
+            font-size: 0.75em;
+            font-weight: 400;
+            letter-spacing: 12px;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-top: 20px;
+            animation: fadeIn 1s ease 0.8s both;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .intro-btn {
+            margin-top: 50px;
+            padding: 16px 48px;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50px;
+            font-family: inherit;
+            font-size: 0.85em;
+            font-weight: 500;
+            color: var(--text);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            animation: fadeIn 1s ease 1.2s both;
+            transition: all 0.3s ease;
+        }
+        .intro-btn:active {
+            background: rgba(255,255,255,0.1);
+            transform: scale(0.98);
+        }
+
+        .intro.fade-out { animation: fadeOut 0.5s ease forwards; }
+        @keyframes fadeOut { to { opacity: 0; pointer-events: none; } }
+
+        /* ═══════════════════════════════════════════════════════════════
+           APP CONTAINER
+           ═══════════════════════════════════════════════════════════════ */
+        .app {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           HEADER - Ultra Clean 2030 Style
+           ═══════════════════════════════════════════════════════════════ */
+        .header {
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .header-element {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px; height: 32px;
+            background: linear-gradient(180deg, #2E7D32, #1B5E20);
+            border-radius: 3px;
+            font-size: 0.85em;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(46,125,50,0.3);
+        }
+        .header-title {
+            font-size: 1em;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        .header-balance {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+        }
+        .header-balance span {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           CONTENT
+           ═══════════════════════════════════════════════════════════════ */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            padding-bottom: calc(80px + var(--safe-bottom));
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .section { display: none; }
+        .section.active { display: block; animation: sectionIn 0.4s ease; }
+        @keyframes sectionIn { from { opacity: 0; transform: translateY(15px); } }
+
+        /* Category Pills */
+        .categories {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 20px;
+            margin-bottom: 4px;
+        }
+        .categories::-webkit-scrollbar { display: none; }
+        .cat-btn {
+            padding: 10px 20px;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 25px;
+            font-family: inherit;
+            font-size: 0.8em;
+            font-weight: 500;
+            color: var(--text-dim);
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .cat-btn.active {
+            background: var(--text);
+            border-color: var(--text);
+            color: #000;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           PRODUCT CARDS - Minimal & Clean
+           ═══════════════════════════════════════════════════════════════ */
+        .products {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .product {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+        .product:active {
+            transform: scale(0.98);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .product-icon {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8em;
+            background: rgba(0,180,216,0.1);
+            border-radius: 12px;
+        }
+        .product-icon.crystal { 
+            background: linear-gradient(135deg, rgba(0,180,216,0.15), rgba(0,180,216,0.05));
+            box-shadow: inset 0 0 20px rgba(0,180,216,0.1);
+        }
+
+        .product-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .product-name {
+            font-size: 0.95em;
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+        .product-meta {
+            font-size: 0.75em;
+            color: var(--text-dim);
+        }
+        .product-meta .purity {
+            color: var(--blue);
+            font-weight: 500;
+        }
+
+        .product-right {
+            text-align: right;
+        }
+        .product-price {
+            font-size: 1em;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 6px;
+        }
+        .product-add {
+            width: 36px;
+            height: 36px;
+            background: var(--accent);
+            border: none;
+            border-radius: 50%;
+            color: #000;
+            font-size: 1.2em;
+            font-weight: 300;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: auto;
+            transition: transform 0.15s ease;
+        }
+        .product-add:active { transform: scale(0.9); }
+        .product-add:disabled { 
+            background: rgba(255,255,255,0.1); 
+            color: var(--text-dim);
+            cursor: not-allowed;
+        }
+
+        /* Out of stock */
+        .product.out-of-stock {
+            opacity: 0.5;
+        }
+        .product.out-of-stock .product-meta::after {
+            content: ' • Sold out';
+            color: var(--danger);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           CART
+           ═══════════════════════════════════════════════════════════════ */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        .empty-state .icon {
+            font-size: 3em;
+            margin-bottom: 16px;
+            opacity: 0.3;
+        }
+        .empty-state p {
+            color: var(--text-dim);
+            font-size: 0.9em;
+        }
+
+        .cart-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 16px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+        }
+        .cart-item-icon { font-size: 1.6em; }
+        .cart-item-info { flex: 1; }
+        .cart-item-name { font-size: 0.9em; font-weight: 500; }
+        .cart-item-qty { font-size: 0.75em; color: var(--text-dim); }
+        .cart-item-price { font-size: 0.95em; font-weight: 600; color: var(--accent); }
+        .cart-item-remove {
+            width: 32px; height: 32px;
+            background: rgba(231,76,60,0.15);
+            border: none;
+            border-radius: 50%;
+            color: var(--danger);
+            font-size: 0.9em;
+            cursor: pointer;
+        }
+
+        .cart-total {
+            margin-top: 24px;
+            padding: 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+        }
+        .cart-total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        .cart-total-row span:first-child { color: var(--text-dim); }
+        .cart-total-row span:last-child { font-weight: 600; }
+        .cart-total-row.final {
+            padding-top: 16px;
+            border-top: 1px solid var(--card-border);
+            font-size: 1.1em;
+        }
+        .cart-total-row.final span:last-child { color: var(--accent); }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 18px;
+            margin-top: 16px;
+            background: var(--accent);
+            border: none;
+            border-radius: 14px;
+            font-family: inherit;
+            font-size: 0.95em;
+            font-weight: 600;
+            color: #000;
+            cursor: pointer;
+            transition: transform 0.15s ease;
+        }
+        .checkout-btn:active { transform: scale(0.98); }
+
+        /* ═══════════════════════════════════════════════════════════════
+           PROFILE
+           ═══════════════════════════════════════════════════════════════ */
+        .profile-header {
+            text-align: center;
+            padding: 30px 0;
+        }
+        .profile-avatar {
+            width: 80px; height: 80px;
+            background: linear-gradient(135deg, var(--gold), #B8860B);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2em;
+            margin: 0 auto 16px;
+        }
+        .profile-name { font-size: 1.3em; font-weight: 600; }
+        .profile-rank { font-size: 0.8em; color: var(--text-dim); margin-top: 4px; }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .stat-card {
+            padding: 16px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            text-align: center;
+        }
+        .stat-value { font-size: 1.3em; font-weight: 600; color: var(--blue); }
+        .stat-label { font-size: 0.7em; color: var(--text-dim); margin-top: 4px; }
+
+        /* ═══════════════════════════════════════════════════════════════
+           BOTTOM NAV - 2030 Style
+           ═══════════════════════════════════════════════════════════════ */
+        .nav {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            padding: 12px 20px calc(12px + var(--safe-bottom));
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(30px);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            justify-content: space-around;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 16px;
+            cursor: pointer;
+            position: relative;
+        }
+        .nav-icon {
+            font-size: 1.3em;
+            opacity: 0.4;
+            transition: all 0.2s ease;
+        }
+        .nav-label {
+            font-size: 0.65em;
+            font-weight: 500;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .nav-item.active .nav-icon { opacity: 1; }
+        .nav-item.active .nav-label { color: var(--text); }
+        .nav-badge {
+            position: absolute;
+            top: 2px; right: 8px;
+            min-width: 18px; height: 18px;
+            background: var(--accent);
+            border-radius: 9px;
+            font-size: 0.65em;
+            font-weight: 600;
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           TOAST & SUCCESS
+           ═══════════════════════════════════════════════════════════════ */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%; transform: translateX(-50%);
+            padding: 12px 24px;
+            background: var(--text);
+            border-radius: 25px;
+            font-size: 0.85em;
+            font-weight: 500;
+            color: #000;
+            z-index: 1000;
+            animation: toastIn 0.3s ease;
+        }
+        @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(20px); } }
+
+        .success-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 500;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .success-overlay.active { display: flex; }
+        .success-icon { font-size: 4em; margin-bottom: 24px; animation: successPop 0.5s ease; }
+        @keyframes successPop { 0% { transform: scale(0); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+        .success-title { font-size: 1.5em; font-weight: 600; margin-bottom: 8px; }
+        .success-sub { color: var(--text-dim); }
+
+        /* Particles */
+        .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 999; }
+        .particle {
+            position: absolute;
+            width: 8px; height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: particleFloat 0.8s ease-out forwards;
+        }
+        @keyframes particleFloat { 
+            0% { opacity: 1; transform: translate(0, 0) scale(1); } 
+            100% { opacity: 0; transform: translate(var(--x), var(--y)) scale(0); } 
+        }
+    </style>
+</head>
+<body>
+    <!-- Realistic Smoke Background -->
+    <div class="smoke-container">
+        <div class="smoke-glow"></div>
+        <div class="smoke layer3"></div>
+        <div class="smoke layer2"></div>
+        <div class="smoke"></div>
+        <div class="wisp"></div>
+        <div class="wisp"></div>
+        <div class="wisp"></div>
+        <div class="wisp"></div>
+        <div class="wisp"></div>
+    </div>
+    <div class="vignette"></div>
+    <div class="particles" id="particles"></div>
+
+    <!-- Intro -->
+    <div class="intro" id="intro">
+        <div class="intro-logo">
+            <div class="logo-main">
+                B<span class="logo-element"><span class="num">35</span><span class="sym">r</span></span>eaking
+            </div>
+            <div class="logo-main" style="margin-top: 8px;">
+                <span style="opacity: 0.6;">Shop</span>
+            </div>
+            <p class="intro-sub">Premium Quality</p>
+        </div>
+        <button class="intro-btn" id="enter-btn">Enter</button>
+    </div>
+
+    <!-- App -->
+    <div class="app hidden" id="app">
+        <header class="header">
+            <div class="header-brand">
+                <div class="header-element">Br</div>
+                <span class="header-title">Breaking</span>
+            </div>
+            <div class="header-balance">
+                <span>€420.69</span>
+            </div>
+        </header>
+
+        <main class="content">
+            <!-- Lab -->
+            <section class="section active" id="sec-lab">
+                <div class="categories">
+                    <button class="cat-btn active" data-cat="all">All</button>
+                    <button class="cat-btn" data-cat="crystal">Crystal</button>
+                    <button class="cat-btn" data-cat="organic">Organic</button>
+                    <button class="cat-btn" data-cat="pills">Pills</button>
+                </div>
+                <div class="products" id="products"></div>
+            </section>
+
+            <!-- Turf -->
+            <section class="section" id="sec-turf">
+                <div class="empty-state">
+                    <div class="icon">🗺️</div>
+                    <p>Territory map coming soon</p>
+                </div>
+            </section>
+
+            <!-- Cart -->
+            <section class="section" id="sec-cart">
+                <div id="cart-content">
+                    <div class="empty-state">
+                        <div class="icon">🛒</div>
+                        <p>Your cart is empty</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Profile -->
+            <section class="section" id="sec-profile">
+                <div class="profile-header">
+                    <div class="profile-avatar">👨‍🔬</div>
+                    <div class="profile-name">Pinkman</div>
+                    <div class="profile-rank">Level 3 • Distributor</div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">Orders</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">€1.2k</div>
+                        <div class="stat-label">Spent</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">99%</div>
+                        <div class="stat-label">Purity</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <nav class="nav">
+            <div class="nav-item active" data-nav="lab">
+                <span class="nav-icon">🔬</span>
+                <span class="nav-label">Lab</span>
+            </div>
+            <div class="nav-item" data-nav="turf">
+                <span class="nav-icon">🗺️</span>
+                <span class="nav-label">Turf</span>
+            </div>
+            <div class="nav-item" data-nav="cart">
+                <span class="nav-icon">🛒</span>
+                <span class="nav-label">Cart</span>
+                <span class="nav-badge hidden" id="cart-badge">0</span>
+            </div>
+            <div class="nav-item" data-nav="profile">
+                <span class="nav-icon">👤</span>
+                <span class="nav-label">Profile</span>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Success -->
+    <div class="success-overlay" id="success">
+        <div class="success-icon">✓</div>
+        <div class="success-title">Order Confirmed</div>
+        <div class="success-sub">Delivery in progress</div>
+    </div>
+
+    <script>
+        const products = [
+            { id: 1, name: 'Blue Sky', icon: '💎', cat: 'crystal', purity: 99.1, price: 80, stock: 12 },
+            { id: 2, name: 'Chili P', icon: '🌿', cat: 'organic', purity: 96.2, price: 45, stock: 8 },
+            { id: 3, name: 'Madrigal', icon: '💊', cat: 'pills', purity: 91, price: 35, stock: 20 },
+            { id: 4, name: "Cap'n Cook", icon: '🍄', cat: 'organic', purity: 88.5, price: 55, stock: 3 },
+            { id: 5, name: 'Los Pollos', icon: '🐔', cat: 'crystal', purity: 97.8, price: 70, stock: 15 },
+            { id: 6, name: 'Vamonos', icon: '🧪', cat: 'crystal', purity: 95.5, price: 60, stock: 0 }
+        ];
+
+        let cart = [];
+
+        // Render products
+        function render(filter = 'all') {
+            const list = filter === 'all' ? products : products.filter(p => p.cat === filter);
+            document.getElementById('products').innerHTML = list.map(p => `
+                <div class="product ${p.stock === 0 ? 'out-of-stock' : ''}" data-id="${p.id}">
+                    <div class="product-icon ${p.cat === 'crystal' ? 'crystal' : ''}">${p.icon}</div>
+                    <div class="product-info">
+                        <div class="product-name">${p.name}</div>
+                        <div class="product-meta"><span class="purity">${p.purity}%</span> purity</div>
+                    </div>
+                    <div class="product-right">
+                        <div class="product-price">€${p.price}</div>
+                        <button class="product-add" onclick="addToCart(${p.id}, event)" ${p.stock === 0 ? 'disabled' : ''}>+</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Cart functions
+        function addToCart(id, e) {
+            const p = products.find(x => x.id === id);
+            if (!p || p.stock === 0) return;
+            
+            const existing = cart.find(x => x.id === id);
+            if (existing) existing.qty++;
+            else cart.push({ ...p, qty: 1 });
+            
+            updateCart();
+            toast(p.name + ' added');
+            burst(e.clientX, e.clientY);
+            haptic();
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(x => x.id !== id);
+            updateCart();
+            haptic();
+        }
+
+        function updateCart() {
+            const total = cart.reduce((s, x) => s + x.qty, 0);
+            const badge = document.getElementById('cart-badge');
+            badge.textContent = total;
+            badge.classList.toggle('hidden', total === 0);
+            renderCart();
+        }
+
+        function renderCart() {
+            const el = document.getElementById('cart-content');
+            if (cart.length === 0) {
+                el.innerHTML = '<div class="empty-state"><div class="icon">🛒</div><p>Your cart is empty</p></div>';
+                return;
+            }
+            const sum = cart.reduce((s, x) => s + x.price * x.qty, 0);
+            el.innerHTML = `
+                <div class="cart-list">
+                    ${cart.map(x => `
+                        <div class="cart-item">
+                            <div class="cart-item-icon">${x.icon}</div>
+                            <div class="cart-item-info">
+                                <div class="cart-item-name">${x.name}</div>
+                                <div class="cart-item-qty">Qty: ${x.qty}</div>
+                            </div>
+                            <div class="cart-item-price">€${(x.price * x.qty).toFixed(2)}</div>
+                            <button class="cart-item-remove" onclick="removeFromCart(${x.id})">×</button>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="cart-total">
+                    <div class="cart-total-row"><span>Subtotal</span><span>€${sum.toFixed(2)}</span></div>
+                    <div class="cart-total-row final"><span>Total</span><span>€${sum.toFixed(2)}</span></div>
+                    <button class="checkout-btn" onclick="checkout()">Complete Order</button>
+                </div>
+            `;
+        }
+
+        function checkout() {
+            if (cart.length === 0) return;
+            document.getElementById('success').classList.add('active');
+            haptic();
+            cart = [];
+            updateCart();
+            setTimeout(() => {
+                document.getElementById('success').classList.remove('active');
+                navigate('lab');
+            }, 2500);
+        }
+
+        // Navigation
+        function navigate(section) {
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.nav === section));
+            document.querySelectorAll('.section').forEach(s => s.classList.toggle('active', s.id === 'sec-' + section));
+            haptic();
+        }
+
+        // Utils
+        function toast(msg) {
+            document.querySelectorAll('.toast').forEach(t => t.remove());
+            const t = document.createElement('div');
+            t.className = 'toast';
+            t.textContent = msg;
+            document.body.appendChild(t);
+            setTimeout(() => t.remove(), 2000);
+        }
+
+        function haptic() {
+            if ('vibrate' in navigator) navigator.vibrate(10);
+        }
+
+        function burst(x, y) {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 8; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                const angle = (Math.PI * 2 / 8) * i;
+                const dist = 30 + Math.random() * 40;
+                p.style.cssText = `left:${x}px;top:${y}px;--x:${Math.cos(angle)*dist}px;--y:${Math.sin(angle)*dist}px;`;
+                container.appendChild(p);
+                setTimeout(() => p.remove(), 800);
+            }
+        }
+
+        // Init
+        document.getElementById('enter-btn').addEventListener('click', () => {
+            haptic();
+            document.getElementById('intro').classList.add('fade-out');
+            setTimeout(() => {
+                document.getElementById('intro').style.display = 'none';
+                document.getElementById('app').classList.remove('hidden');
+            }, 500);
+        });
+
+        document.querySelectorAll('.nav-item').forEach(n => {
+            n.addEventListener('click', () => navigate(n.dataset.nav));
+        });
+
+        document.querySelectorAll('.cat-btn').forEach(b => {
+            b.addEventListener('click', () => {
+                document.querySelectorAll('.cat-btn').forEach(x => x.classList.remove('active'));
+                b.classList.add('active');
+                render(b.dataset.cat);
+                haptic();
+            });
+        });
+
+        render();
+    </script>
+</body>
+</html>
+
