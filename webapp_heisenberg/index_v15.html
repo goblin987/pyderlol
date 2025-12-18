@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#000000">
+    <title>Breaking Bad</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --accent: #2ECC71;
+            --blue: #00B4D8;
+            --gold: #D4AF37;
+            --danger: #E74C3C;
+            --purple: #9B59B6;
+            --text: #FFFFFF;
+            --text-dim: rgba(255,255,255,0.5);
+            --text-muted: rgba(255,255,255,0.3);
+            --card-bg: rgba(255,255,255,0.04);
+            --card-border: rgba(255,255,255,0.08);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+            
+            /* Category colors */
+            --crystal-color: #00B4D8;
+            --organic-color: #2ECC71;
+            --pills-color: #F39C12;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { height: 100%; overflow: hidden; }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: #000;
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            user-select: none;
+        }
+        .hidden { display: none !important; }
+
+        /* ═══════════════════════════════════════════════════════════════
+           #9: GRADIENT MESH BACKGROUND - Flowing color blobs
+           ═══════════════════════════════════════════════════════════════ */
+        .mesh-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .mesh-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
+            mix-blend-mode: screen;
+        }
+        .mesh-blob.b1 {
+            width: 60vw; height: 60vw;
+            background: radial-gradient(circle, rgba(46,204,113,0.4) 0%, transparent 70%);
+            bottom: -20%; left: -10%;
+            animation: meshFloat1 20s ease-in-out infinite;
+        }
+        .mesh-blob.b2 {
+            width: 50vw; height: 50vw;
+            background: radial-gradient(circle, rgba(0,180,216,0.3) 0%, transparent 70%);
+            bottom: 10%; right: -15%;
+            animation: meshFloat2 25s ease-in-out infinite;
+        }
+        .mesh-blob.b3 {
+            width: 40vw; height: 40vw;
+            background: radial-gradient(circle, rgba(46,139,87,0.35) 0%, transparent 70%);
+            top: 20%; left: 20%;
+            animation: meshFloat3 18s ease-in-out infinite;
+        }
+        @keyframes meshFloat1 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(10%,-15%) scale(1.1); } }
+        @keyframes meshFloat2 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-15%,10%) scale(1.15); } }
+        @keyframes meshFloat3 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(5%,20%) scale(0.9); } }
+
+        /* #1: DEPTH PARALLAX LAYERS */
+        .parallax-layer {
+            position: absolute;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            will-change: transform;
+        }
+        .parallax-layer.deep { z-index: 1; }
+        .parallax-layer.mid { z-index: 2; }
+        .parallax-layer.front { z-index: 3; }
+
+        .smoke-particle {
+            position: absolute;
+            background: radial-gradient(circle, rgba(46,204,113,0.5) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(4px);
+        }
+
+        /* #3: FILM GRAIN + CRT SCANLINES */
+        .film-grain {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 9998;
+            opacity: 0.035;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            animation: grainShift 0.5s steps(2) infinite;
+        }
+        @keyframes grainShift { 0% { transform: translate(0,0); } 50% { transform: translate(-2%,-2%); } }
+
+        .scanlines {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 9997;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0,0,0,0.03) 2px,
+                rgba(0,0,0,0.03) 4px
+            );
+        }
+
+        .vignette {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.7) 100%);
+            pointer-events: none;
+            z-index: 9996;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           INTRO
+           ═══════════════════════════════════════════════════════════════ */
+        .intro {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .intro-logo {
+            margin-bottom: 60px;
+            animation: logoReveal 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+        }
+        @keyframes logoReveal { 
+            0% { opacity: 0; transform: scale(0.9) translateY(20px); } 
+            100% { opacity: 1; transform: scale(1) translateY(0); } 
+        }
+
+        /* #7: TYPOGRAPHY HIERARCHY */
+        .logo-main {
+            display: flex;
+            align-items: baseline;
+            gap: 2px;
+            font-size: 2.6em;
+            font-weight: 200; /* Ultra thin */
+            letter-spacing: -2px;
+        }
+        .logo-element {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            background: linear-gradient(180deg, #2E7D32 0%, #1B5E20 100%);
+            padding: 6px 10px 8px;
+            border-radius: 4px;
+            margin: 0 1px;
+            box-shadow: 0 4px 25px rgba(46,125,50,0.5), 0 0 60px rgba(46,204,113,0.2);
+        }
+        .logo-element .num {
+            font-size: 0.2em;
+            font-weight: 400;
+            opacity: 0.6;
+        }
+        .logo-element .sym {
+            font-size: 1em;
+            font-weight: 700; /* Bold contrast */
+        }
+
+        .intro-sub {
+            font-size: 0.65em;
+            font-weight: 300;
+            letter-spacing: 14px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-top: 24px;
+            animation: fadeIn 1s ease 0.8s both;
+        }
+
+        /* #2: MICRO-INTERACTION - Button glow on press */
+        .intro-btn {
+            margin-top: 50px;
+            padding: 18px 56px;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 50px;
+            font-family: inherit;
+            font-size: 0.8em;
+            font-weight: 500;
+            color: var(--text);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            cursor: pointer;
+            animation: fadeIn 1s ease 1.2s both;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .intro-btn:active {
+            transform: scale(0.95);
+            background: rgba(46,204,113,0.15);
+            border-color: var(--accent);
+            box-shadow: 0 0 30px rgba(46,204,113,0.3);
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .intro.fade-out { animation: fadeOut 0.5s ease forwards; }
+        @keyframes fadeOut { to { opacity: 0; pointer-events: none; } }
+
+        /* ═══════════════════════════════════════════════════════════════
+           APP
+           ═══════════════════════════════════════════════════════════════ */
+        .app {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* #8: GLASSMORPHISM 2.0 - Header with colored tint */
+        .header {
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10,20,10,0.6);
+            backdrop-filter: blur(30px) saturate(150%);
+            border-bottom: 1px solid rgba(46,204,113,0.1);
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-element {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px; height: 34px;
+            background: linear-gradient(180deg, #2E7D32, #1B5E20);
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: 700;
+            box-shadow: 0 2px 15px rgba(46,125,50,0.4);
+        }
+        .header-title {
+            font-size: 1.05em;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        .header-balance {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 16px;
+            background: rgba(46,204,113,0.08);
+            border: 1px solid rgba(46,204,113,0.15);
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+        }
+        .header-balance span {
+            font-size: 0.95em;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           CONTENT
+           ═══════════════════════════════════════════════════════════════ */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            padding-bottom: calc(85px + var(--safe-bottom));
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .section { display: none; }
+        .section.active { display: block; animation: sectionIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        @keyframes sectionIn { from { opacity: 0; transform: translateY(20px) scale(0.98); } }
+
+        /* Category Pills with micro-interactions */
+        .categories {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 20px;
+        }
+        .categories::-webkit-scrollbar { display: none; }
+        .cat-btn {
+            padding: 12px 22px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 30px;
+            font-family: inherit;
+            font-size: 0.75em;
+            font-weight: 500;
+            color: var(--text-dim);
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .cat-btn:active {
+            transform: scale(0.95);
+        }
+        .cat-btn.active {
+            background: var(--text);
+            border-color: var(--text);
+            color: #000;
+            font-weight: 600;
+            box-shadow: 0 4px 20px rgba(255,255,255,0.15);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           #6: ASYMMETRIC CARD LAYOUT + #5: ACCENT COLOR THEMING
+           ═══════════════════════════════════════════════════════════════ */
+        .products {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        /* #8: GLASSMORPHISM 2.0 on cards */
+        .product {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 18px;
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 20px;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* #5: Accent color left border by category */
+        .product::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 3px;
+            background: var(--category-color, var(--accent));
+            border-radius: 3px 0 0 3px;
+        }
+        .product[data-cat="crystal"] { --category-color: var(--crystal-color); }
+        .product[data-cat="organic"] { --category-color: var(--organic-color); }
+        .product[data-cat="pills"] { --category-color: var(--pills-color); }
+
+        /* #6: Featured/larger card for first item */
+        .product.featured {
+            padding: 24px;
+            background: linear-gradient(135deg, rgba(0,180,216,0.08) 0%, rgba(46,204,113,0.05) 100%);
+            border-color: rgba(0,180,216,0.15);
+        }
+        .product.featured .product-icon {
+            width: 60px; height: 60px;
+            font-size: 2.2em;
+        }
+        .product.featured .product-name {
+            font-size: 1.1em;
+        }
+        .product.featured::before {
+            width: 4px;
+            background: linear-gradient(180deg, var(--blue), var(--accent));
+        }
+
+        /* #2: Micro-interaction - card tilt on press */
+        .product:active {
+            transform: scale(0.98) rotate(-0.5deg);
+            background: rgba(255,255,255,0.06);
+        }
+
+        /* #4: HOLOGRAPHIC PRODUCT ICONS */
+        .product-icon {
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.9em;
+            background: rgba(255,255,255,0.03);
+            border-radius: 14px;
+            position: relative;
+        }
+        
+        /* Holographic shimmer effect */
+        .product-icon::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 200%; height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent 0%,
+                rgba(255,255,255,0.1) 45%,
+                rgba(255,255,255,0.2) 50%,
+                rgba(255,255,255,0.1) 55%,
+                transparent 100%
+            );
+            animation: shimmer 3s ease-in-out infinite;
+            border-radius: 14px;
+        }
+        @keyframes shimmer { 0% { left: -100%; } 100% { left: 100%; } }
+
+        .product-icon.crystal {
+            background: linear-gradient(135deg, rgba(0,180,216,0.15), rgba(0,180,216,0.05));
+            box-shadow: 0 0 25px rgba(0,180,216,0.15), inset 0 0 15px rgba(0,180,216,0.1);
+        }
+        .product-icon.organic {
+            background: linear-gradient(135deg, rgba(46,204,113,0.12), rgba(46,204,113,0.04));
+            box-shadow: 0 0 20px rgba(46,204,113,0.1);
+        }
+        .product-icon.pills {
+            background: linear-gradient(135deg, rgba(243,156,18,0.12), rgba(243,156,18,0.04));
+            box-shadow: 0 0 20px rgba(243,156,18,0.1);
+        }
+
+        .product-info { flex: 1; min-width: 0; }
+        
+        /* #7: Typography hierarchy */
+        .product-name {
+            font-size: 0.95em;
+            font-weight: 600;
+            margin-bottom: 4px;
+            letter-spacing: 0.3px;
+        }
+        .product-meta {
+            font-size: 0.7em;
+            font-weight: 300;
+            color: var(--text-muted);
+        }
+        .product-meta .purity {
+            color: var(--blue);
+            font-weight: 600;
+        }
+
+        .product-right { text-align: right; }
+        .product-price {
+            font-size: 1.05em;
+            font-weight: 800; /* Extra bold for price */
+            color: var(--accent);
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        /* #2: Micro-interaction - button glow */
+        .product-add {
+            width: 38px;
+            height: 38px;
+            background: var(--accent);
+            border: none;
+            border-radius: 50%;
+            color: #000;
+            font-size: 1.3em;
+            font-weight: 300;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: auto;
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 4px 15px rgba(46,204,113,0.3);
+        }
+        .product-add:active { 
+            transform: scale(0.85);
+            box-shadow: 0 0 25px rgba(46,204,113,0.6);
+        }
+        .product-add:disabled { 
+            background: rgba(255,255,255,0.08); 
+            color: var(--text-muted);
+            box-shadow: none;
+        }
+
+        .product.out-of-stock { opacity: 0.4; }
+        .product.out-of-stock .product-meta::after {
+            content: ' • Sold out';
+            color: var(--danger);
+            font-weight: 500;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           #10: SKELETON LOADING STATES
+           ═══════════════════════════════════════════════════════════════ */
+        .skeleton {
+            position: relative;
+            overflow: hidden;
+            background: rgba(255,255,255,0.05);
+        }
+        .skeleton::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+            animation: skeletonShimmer 1.5s infinite;
+        }
+        @keyframes skeletonShimmer { 100% { left: 100%; } }
+
+        .skeleton-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 18px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 20px;
+            margin-bottom: 14px;
+        }
+        .skeleton-icon {
+            width: 52px; height: 52px;
+            border-radius: 14px;
+        }
+        .skeleton-text {
+            flex: 1;
+        }
+        .skeleton-line {
+            height: 12px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+        .skeleton-line.w60 { width: 60%; }
+        .skeleton-line.w40 { width: 40%; }
+        .skeleton-btn {
+            width: 38px; height: 38px;
+            border-radius: 50%;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           CART & OTHER SECTIONS
+           ═══════════════════════════════════════════════════════════════ */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        .empty-state .icon {
+            font-size: 3.5em;
+            margin-bottom: 16px;
+            opacity: 0.2;
+        }
+        .empty-state p {
+            color: var(--text-muted);
+            font-size: 0.85em;
+            font-weight: 300;
+        }
+
+        .cart-list { display: flex; flex-direction: column; gap: 12px; }
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 18px;
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+        }
+        .cart-item-icon { font-size: 1.7em; }
+        .cart-item-info { flex: 1; }
+        .cart-item-name { font-size: 0.9em; font-weight: 600; }
+        .cart-item-qty { font-size: 0.7em; font-weight: 300; color: var(--text-muted); }
+        .cart-item-price { font-size: 1em; font-weight: 700; color: var(--accent); }
+        .cart-item-remove {
+            width: 34px; height: 34px;
+            background: rgba(231,76,60,0.1);
+            border: 1px solid rgba(231,76,60,0.2);
+            border-radius: 50%;
+            color: var(--danger);
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .cart-item-remove:active {
+            background: var(--danger);
+            color: white;
+            transform: scale(0.9);
+        }
+
+        .cart-total {
+            margin-top: 24px;
+            padding: 22px;
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 20px;
+        }
+        .cart-total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            font-weight: 300;
+        }
+        .cart-total-row span:first-child { color: var(--text-muted); }
+        .cart-total-row span:last-child { font-weight: 500; }
+        .cart-total-row.final {
+            padding-top: 14px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            font-size: 1.15em;
+        }
+        .cart-total-row.final span:last-child { color: var(--accent); font-weight: 800; }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 20px;
+            margin-top: 18px;
+            background: linear-gradient(135deg, var(--accent), #27AE60);
+            border: none;
+            border-radius: 16px;
+            font-family: inherit;
+            font-size: 0.95em;
+            font-weight: 700;
+            color: #000;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 6px 25px rgba(46,204,113,0.3);
+        }
+        .checkout-btn:active { 
+            transform: scale(0.97);
+            box-shadow: 0 2px 15px rgba(46,204,113,0.4);
+        }
+
+        /* Profile */
+        .profile-header { text-align: center; padding: 35px 0; }
+        .profile-avatar {
+            width: 90px; height: 90px;
+            background: linear-gradient(135deg, var(--gold), #B8860B);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5em;
+            margin: 0 auto 18px;
+            box-shadow: 0 8px 30px rgba(212,175,55,0.3);
+        }
+        .profile-name { font-size: 1.4em; font-weight: 700; letter-spacing: 1px; }
+        .profile-rank { font-size: 0.75em; font-weight: 300; color: var(--text-muted); margin-top: 6px; }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 24px;
+        }
+        .stat-card {
+            padding: 20px 16px;
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            text-align: center;
+        }
+        .stat-value { font-size: 1.4em; font-weight: 800; color: var(--blue); }
+        .stat-label { font-size: 0.65em; font-weight: 300; color: var(--text-muted); margin-top: 6px; }
+
+        /* ═══════════════════════════════════════════════════════════════
+           BOTTOM NAV
+           ═══════════════════════════════════════════════════════════════ */
+        .nav {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            padding: 14px 24px calc(14px + var(--safe-bottom));
+            background: rgba(5,10,5,0.85);
+            backdrop-filter: blur(40px) saturate(150%);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            justify-content: space-around;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 18px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        .nav-item:active { transform: scale(0.9); }
+        .nav-icon {
+            font-size: 1.35em;
+            opacity: 0.35;
+            transition: all 0.3s ease;
+        }
+        .nav-label {
+            font-size: 0.6em;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .nav-item.active .nav-icon { opacity: 1; transform: scale(1.1); }
+        .nav-item.active .nav-label { color: var(--text); }
+        .nav-badge {
+            position: absolute;
+            top: 0; right: 6px;
+            min-width: 20px; height: 20px;
+            background: var(--accent);
+            border-radius: 10px;
+            font-size: 0.65em;
+            font-weight: 700;
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(46,204,113,0.4);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           TOAST & SUCCESS
+           ═══════════════════════════════════════════════════════════════ */
+        .toast {
+            position: fixed;
+            bottom: 105px;
+            left: 50%; transform: translateX(-50%);
+            padding: 14px 28px;
+            background: var(--text);
+            border-radius: 30px;
+            font-size: 0.85em;
+            font-weight: 600;
+            color: #000;
+            z-index: 1000;
+            animation: toastIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+        }
+        @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(30px) scale(0.9); } }
+
+        .success-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.97);
+            z-index: 500;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .success-overlay.active { display: flex; }
+        .success-icon { 
+            font-size: 4.5em; 
+            margin-bottom: 28px; 
+            animation: successBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes successBounce { 
+            0% { transform: scale(0) rotate(-20deg); } 
+            60% { transform: scale(1.2) rotate(5deg); } 
+            100% { transform: scale(1) rotate(0); } 
+        }
+        .success-title { font-size: 1.6em; font-weight: 700; margin-bottom: 10px; }
+        .success-sub { color: var(--text-muted); font-weight: 300; }
+
+        /* Particles */
+        .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 999; }
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            animation: particleExplode 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+        .particle.green { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
+        .particle.blue { background: var(--blue); box-shadow: 0 0 6px var(--blue); }
+        @keyframes particleExplode { 
+            0% { opacity: 1; transform: translate(0, 0) scale(1); } 
+            100% { opacity: 0; transform: translate(var(--x), var(--y)) scale(0); } 
+        }
+    </style>
+</head>
+<body>
+    <!-- #9: Gradient Mesh Background -->
+    <div class="mesh-bg">
+        <div class="mesh-blob b1"></div>
+        <div class="mesh-blob b2"></div>
+        <div class="mesh-blob b3"></div>
+        
+        <!-- #1: Parallax layers -->
+        <div class="parallax-layer deep" id="parallax-deep"></div>
+        <div class="parallax-layer mid" id="parallax-mid"></div>
+        <div class="parallax-layer front" id="parallax-front"></div>
+    </div>
+    
+    <!-- #3: Film Grain + Scanlines -->
+    <div class="scanlines"></div>
+    <div class="film-grain"></div>
+    <div class="vignette"></div>
+    
+    <div class="particles" id="particles"></div>
+
+    <!-- Intro -->
+    <div class="intro" id="intro">
+        <div class="intro-logo">
+            <div class="logo-main">
+                B<span class="logo-element"><span class="num">35</span><span class="sym">r</span></span>eaking
+            </div>
+            <div class="logo-main" style="margin-top: 10px;">
+                <span style="opacity: 0.4; font-weight: 300;">Shop</span>
+            </div>
+            <p class="intro-sub">Premium Quality</p>
+        </div>
+        <button class="intro-btn" id="enter-btn">Enter</button>
+    </div>
+
+    <!-- App -->
+    <div class="app hidden" id="app">
+        <header class="header">
+            <div class="header-brand">
+                <div class="header-element">Br</div>
+                <span class="header-title">Breaking</span>
+            </div>
+            <div class="header-balance">
+                <span>€420.69</span>
+            </div>
+        </header>
+
+        <main class="content" id="main-content">
+            <section class="section active" id="sec-lab">
+                <div class="categories">
+                    <button class="cat-btn active" data-cat="all">All</button>
+                    <button class="cat-btn" data-cat="crystal">Crystal</button>
+                    <button class="cat-btn" data-cat="organic">Organic</button>
+                    <button class="cat-btn" data-cat="pills">Pills</button>
+                </div>
+                <!-- #10: Skeleton loading shown initially -->
+                <div class="products" id="products">
+                    <div class="skeleton-card">
+                        <div class="skeleton skeleton-icon"></div>
+                        <div class="skeleton-text">
+                            <div class="skeleton skeleton-line w60"></div>
+                            <div class="skeleton skeleton-line w40"></div>
+                        </div>
+                        <div class="skeleton skeleton-btn"></div>
+                    </div>
+                    <div class="skeleton-card">
+                        <div class="skeleton skeleton-icon"></div>
+                        <div class="skeleton-text">
+                            <div class="skeleton skeleton-line w60"></div>
+                            <div class="skeleton skeleton-line w40"></div>
+                        </div>
+                        <div class="skeleton skeleton-btn"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="sec-turf">
+                <div class="empty-state">
+                    <div class="icon">🗺️</div>
+                    <p>Territory map coming soon</p>
+                </div>
+            </section>
+
+            <section class="section" id="sec-cart">
+                <div id="cart-content">
+                    <div class="empty-state">
+                        <div class="icon">🛒</div>
+                        <p>Your cart is empty</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="sec-profile">
+                <div class="profile-header">
+                    <div class="profile-avatar">👨‍🔬</div>
+                    <div class="profile-name">Pinkman</div>
+                    <div class="profile-rank">Level 3 • Distributor</div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">Orders</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">€1.2k</div>
+                        <div class="stat-label">Spent</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">99%</div>
+                        <div class="stat-label">Purity</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <nav class="nav">
+            <div class="nav-item active" data-nav="lab">
+                <span class="nav-icon">🔬</span>
+                <span class="nav-label">Lab</span>
+            </div>
+            <div class="nav-item" data-nav="turf">
+                <span class="nav-icon">🗺️</span>
+                <span class="nav-label">Turf</span>
+            </div>
+            <div class="nav-item" data-nav="cart">
+                <span class="nav-icon">🛒</span>
+                <span class="nav-label">Cart</span>
+                <span class="nav-badge hidden" id="cart-badge">0</span>
+            </div>
+            <div class="nav-item" data-nav="profile">
+                <span class="nav-icon">👤</span>
+                <span class="nav-label">Profile</span>
+            </div>
+        </nav>
+    </div>
+
+    <div class="success-overlay" id="success">
+        <div class="success-icon">✓</div>
+        <div class="success-title">Order Confirmed</div>
+        <div class="success-sub">Delivery in progress</div>
+    </div>
+
+    <script>
+        const products = [
+            { id: 1, name: 'Blue Sky', icon: '💎', cat: 'crystal', purity: 99.1, price: 80, stock: 12, featured: true },
+            { id: 2, name: 'Chili P', icon: '🌿', cat: 'organic', purity: 96.2, price: 45, stock: 8 },
+            { id: 3, name: 'Madrigal', icon: '💊', cat: 'pills', purity: 91, price: 35, stock: 20 },
+            { id: 4, name: "Cap'n Cook", icon: '🍄', cat: 'organic', purity: 88.5, price: 55, stock: 3 },
+            { id: 5, name: 'Los Pollos', icon: '🐔', cat: 'crystal', purity: 97.8, price: 70, stock: 15 },
+            { id: 6, name: 'Vamonos', icon: '🧪', cat: 'crystal', purity: 95.5, price: 60, stock: 0 }
+        ];
+
+        let cart = [];
+        let scrollY = 0;
+
+        // #1: Parallax on scroll
+        const content = document.getElementById('main-content');
+        content.addEventListener('scroll', () => {
+            scrollY = content.scrollTop;
+            document.getElementById('parallax-deep').style.transform = `translateY(${scrollY * 0.1}px)`;
+            document.getElementById('parallax-mid').style.transform = `translateY(${scrollY * 0.05}px)`;
+            document.getElementById('parallax-front').style.transform = `translateY(${scrollY * 0.02}px)`;
+        });
+
+        // #10: Simulate loading then render
+        function render(filter = 'all') {
+            const list = filter === 'all' ? products : products.filter(p => p.cat === filter);
+            document.getElementById('products').innerHTML = list.map((p, i) => `
+                <div class="product ${p.stock === 0 ? 'out-of-stock' : ''} ${p.featured && filter === 'all' ? 'featured' : ''}" 
+                     data-id="${p.id}" data-cat="${p.cat}">
+                    <div class="product-icon ${p.cat}">${p.icon}</div>
+                    <div class="product-info">
+                        <div class="product-name">${p.name}</div>
+                        <div class="product-meta"><span class="purity">${p.purity}%</span> purity</div>
+                    </div>
+                    <div class="product-right">
+                        <div class="product-price">€${p.price}</div>
+                        <button class="product-add" onclick="addToCart(${p.id}, event)" ${p.stock === 0 ? 'disabled' : ''}>+</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addToCart(id, e) {
+            const p = products.find(x => x.id === id);
+            if (!p || p.stock === 0) return;
+            
+            const existing = cart.find(x => x.id === id);
+            if (existing) existing.qty++;
+            else cart.push({ ...p, qty: 1 });
+            
+            updateCart();
+            toast(p.name + ' added');
+            burst(e.clientX, e.clientY);
+            haptic();
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(x => x.id !== id);
+            updateCart();
+            haptic();
+        }
+
+        function updateCart() {
+            const total = cart.reduce((s, x) => s + x.qty, 0);
+            const badge = document.getElementById('cart-badge');
+            badge.textContent = total;
+            badge.classList.toggle('hidden', total === 0);
+            renderCart();
+        }
+
+        function renderCart() {
+            const el = document.getElementById('cart-content');
+            if (cart.length === 0) {
+                el.innerHTML = '<div class="empty-state"><div class="icon">🛒</div><p>Your cart is empty</p></div>';
+                return;
+            }
+            const sum = cart.reduce((s, x) => s + x.price * x.qty, 0);
+            el.innerHTML = `
+                <div class="cart-list">
+                    ${cart.map(x => `
+                        <div class="cart-item">
+                            <div class="cart-item-icon">${x.icon}</div>
+                            <div class="cart-item-info">
+                                <div class="cart-item-name">${x.name}</div>
+                                <div class="cart-item-qty">Qty: ${x.qty}</div>
+                            </div>
+                            <div class="cart-item-price">€${(x.price * x.qty).toFixed(2)}</div>
+                            <button class="cart-item-remove" onclick="removeFromCart(${x.id})">×</button>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="cart-total">
+                    <div class="cart-total-row"><span>Subtotal</span><span>€${sum.toFixed(2)}</span></div>
+                    <div class="cart-total-row final"><span>Total</span><span>€${sum.toFixed(2)}</span></div>
+                    <button class="checkout-btn" onclick="checkout()">Complete Order</button>
+                </div>
+            `;
+        }
+
+        function checkout() {
+            if (cart.length === 0) return;
+            document.getElementById('success').classList.add('active');
+            haptic();
+            // Multiple bursts
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => burst(
+                    window.innerWidth / 2 + (Math.random() - 0.5) * 200,
+                    window.innerHeight / 2 + (Math.random() - 0.5) * 200,
+                    true
+                ), i * 100);
+            }
+            cart = [];
+            updateCart();
+            setTimeout(() => {
+                document.getElementById('success').classList.remove('active');
+                navigate('lab');
+            }, 2500);
+        }
+
+        function navigate(section) {
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.nav === section));
+            document.querySelectorAll('.section').forEach(s => s.classList.toggle('active', s.id === 'sec-' + section));
+            haptic();
+        }
+
+        function toast(msg) {
+            document.querySelectorAll('.toast').forEach(t => t.remove());
+            const t = document.createElement('div');
+            t.className = 'toast';
+            t.textContent = msg;
+            document.body.appendChild(t);
+            setTimeout(() => t.remove(), 2000);
+        }
+
+        function haptic() {
+            if ('vibrate' in navigator) navigator.vibrate(10);
+        }
+
+        function burst(x, y, multi = false) {
+            const container = document.getElementById('particles');
+            const count = multi ? 15 : 10;
+            for (let i = 0; i < count; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle ' + (Math.random() > 0.5 ? 'green' : 'blue');
+                const size = 4 + Math.random() * 8;
+                const angle = (Math.PI * 2 / count) * i + Math.random() * 0.5;
+                const dist = 40 + Math.random() * 60;
+                p.style.cssText = `left:${x}px;top:${y}px;width:${size}px;height:${size}px;--x:${Math.cos(angle)*dist}px;--y:${Math.sin(angle)*dist}px;`;
+                container.appendChild(p);
+                setTimeout(() => p.remove(), 800);
+            }
+        }
+
+        // Init
+        document.getElementById('enter-btn').addEventListener('click', () => {
+            haptic();
+            document.getElementById('intro').classList.add('fade-out');
+            setTimeout(() => {
+                document.getElementById('intro').style.display = 'none';
+                document.getElementById('app').classList.remove('hidden');
+                // #10: Simulate loading delay then show products
+                setTimeout(() => render(), 400);
+            }, 500);
+        });
+
+        document.querySelectorAll('.nav-item').forEach(n => {
+            n.addEventListener('click', () => navigate(n.dataset.nav));
+        });
+
+        document.querySelectorAll('.cat-btn').forEach(b => {
+            b.addEventListener('click', () => {
+                document.querySelectorAll('.cat-btn').forEach(x => x.classList.remove('active'));
+                b.classList.add('active');
+                render(b.dataset.cat);
+                haptic();
+            });
+        });
+    </script>
+</body>
+</html>
+
