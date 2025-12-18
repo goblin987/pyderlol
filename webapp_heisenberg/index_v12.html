@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0a1a0a">
+    <title>Breaking Bad - Heisenberg's Lab</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ═══════════════════════════════════════════════════════════════
+           V12 - MOBILE-FIRST BREAKING BAD EXPERIENCE
+           Priority: Phone users, touch-optimized, premium header
+           ═══════════════════════════════════════════════════════════════ */
+        
+        :root {
+            --hazmat-yellow: #F5C518;
+            --crystal-blue: #00B4D8;
+            --lab-green: #2ECC71;
+            --money-green: #27AE60;
+            --danger-red: #E74C3C;
+            --bg-dark: #0a0a0a;
+            --text-primary: #f0f0f0;
+            --text-muted: #666;
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --nav-height: 75px;
+            --touch-min: 48px; /* Minimum touch target */
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html { height: 100%; }
+        body {
+            font-family: 'Roboto Condensed', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100%;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            user-select: none;
+            touch-action: manipulation;
+        }
+
+        .hidden { display: none !important; }
+
+        /* ═══════════════════════════════════════════════════════════════
+           FILM GRAIN + VIGNETTE (Optimized for mobile)
+           ═══════════════════════════════════════════════════════════════ */
+        .film-grain {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.03;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+        .vignette {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 9998;
+            background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.5) 100%);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           GREEN SMOKE BACKGROUND
+           ═══════════════════════════════════════════════════════════════ */
+        .smoke-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0;
+            background: linear-gradient(180deg, #0a1a0a 0%, #080808 100%);
+            overflow: hidden;
+        }
+        .smoke-layer {
+            position: absolute;
+            width: 100%; height: 100%;
+        }
+        .smoke-layer.deep {
+            background: radial-gradient(ellipse 150% 80% at 30% 100%, rgba(46,204,113,0.12) 0%, transparent 60%);
+            animation: smokeMove 20s ease-in-out infinite;
+        }
+        .smoke-layer.mid {
+            background: radial-gradient(ellipse 100% 60% at 70% 80%, rgba(46,204,113,0.08) 0%, transparent 50%);
+            animation: smokeMove 15s ease-in-out infinite reverse;
+        }
+        @keyframes smokeMove { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-20px, -30px); } }
+
+        .bubble {
+            position: absolute;
+            bottom: -20px;
+            background: radial-gradient(circle at 30% 30%, rgba(46,204,113,0.6), transparent 70%);
+            border-radius: 50%;
+            animation: bubbleUp 5s ease-in infinite;
+        }
+        .bubble:nth-child(1) { left: 10%; width: 8px; height: 8px; animation-delay: 0s; }
+        .bubble:nth-child(2) { left: 25%; width: 5px; height: 5px; animation-delay: 1.2s; animation-duration: 4s; }
+        .bubble:nth-child(3) { left: 45%; width: 10px; height: 10px; animation-delay: 0.5s; animation-duration: 6s; }
+        .bubble:nth-child(4) { left: 65%; width: 6px; height: 6px; animation-delay: 2s; animation-duration: 4.5s; }
+        .bubble:nth-child(5) { left: 85%; width: 7px; height: 7px; animation-delay: 1s; }
+        @keyframes bubbleUp {
+            0% { transform: translateY(0) scale(1); opacity: 0; }
+            10% { opacity: 0.7; }
+            100% { transform: translateY(-100vh) scale(0.3); opacity: 0; }
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           INTRO SCREEN (Mobile optimized)
+           ═══════════════════════════════════════════════════════════════ */
+        .intro {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(180deg, #0a1a0a 0%, #050505 100%);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .intro-smoke {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 60%;
+            background: radial-gradient(ellipse 150% 100% at 50% 100%, rgba(46,204,113,0.2) 0%, transparent 70%);
+            animation: introSmoke 6s ease-in-out infinite;
+        }
+        @keyframes introSmoke { 0%,100% { opacity: 0.7; } 50% { opacity: 1; transform: scaleY(1.1); } }
+
+        .intro-logo {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 25px;
+            animation: logoIn 1s cubic-bezier(0.34,1.56,0.64,1) 0.3s both;
+        }
+        @keyframes logoIn { 0% { opacity: 0; transform: scale(0.5) rotateY(90deg); } 100% { opacity: 1; transform: scale(1) rotateY(0); } }
+
+        .p-element {
+            width: 75px; height: 85px;
+            background: linear-gradient(160deg, #2a402a 0%, #1a2a1a 100%);
+            border: 2px solid #3a5a3a;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 0 40px rgba(46,204,113,0.4);
+        }
+        .p-element .num { position: absolute; top: 5px; left: 8px; font-family: 'JetBrains Mono'; font-size: 0.6em; color: rgba(255,255,255,0.5); }
+        .p-element .sym { font-family: 'Bebas Neue'; font-size: 2.6em; line-height: 1; }
+        .p-element.br .sym { color: #A52A2A; text-shadow: 0 0 15px rgba(165,42,42,0.6); }
+        .p-element.ba .sym { color: #2ECC71; text-shadow: 0 0 15px rgba(46,204,113,0.6); }
+        .p-element .name { font-size: 0.55em; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 1px; }
+
+        .intro-title { font-family: 'Bebas Neue'; font-size: 2em; letter-spacing: 8px; text-shadow: 0 0 30px rgba(255,255,255,0.2); animation: fadeUp 1s ease 0.8s both; }
+        .intro-quote { font-size: 0.95em; color: rgba(255,255,255,0.5); font-style: italic; margin-top: 8px; animation: fadeUp 1s ease 1.1s both; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        .intro-btn {
+            margin-top: 40px;
+            padding: 18px 50px;
+            background: linear-gradient(180deg, #2ECC71, #27AE60);
+            border: none;
+            border-radius: 12px;
+            font-family: 'Oswald';
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #000;
+            letter-spacing: 4px;
+            cursor: pointer;
+            animation: fadeUp 1s ease 2s both;
+            box-shadow: 0 6px 0 #1E8449, 0 10px 30px rgba(0,0,0,0.4), 0 0 40px rgba(46,204,113,0.4);
+            min-height: var(--touch-min);
+            transition: transform 0.1s ease;
+        }
+        .intro-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #1E8449; }
+
+        .intro.fade-out { animation: fadeOut 0.6s ease forwards; }
+        @keyframes fadeOut { to { opacity: 0; pointer-events: none; } }
+
+        /* ═══════════════════════════════════════════════════════════════
+           MAIN APP CONTAINER
+           ═══════════════════════════════════════════════════════════════ */
+        .app {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 10;
+            padding-top: var(--safe-top);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           PREMIUM ANIMATED HEADER - Breaking Bad Theme
+           ═══════════════════════════════════════════════════════════════ */
+        .header {
+            background: linear-gradient(180deg, rgba(15,20,15,0.98) 0%, rgba(10,15,10,0.95) 100%);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(46,204,113,0.3);
+            padding: 12px 16px 14px;
+            position: relative;
+            z-index: 100;
+        }
+
+        /* Top Row: Logo + Lab Equipment Animation */
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .brand-elements {
+            display: flex;
+            gap: 3px;
+        }
+        .brand-el {
+            width: 26px; height: 30px;
+            background: linear-gradient(160deg, #2a402a, #1a2a1a);
+            border: 1px solid #3a5a3a;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Bebas Neue';
+            font-size: 0.9em;
+            box-shadow: 0 0 12px rgba(46,204,113,0.3);
+        }
+        .brand-el.br { color: #A52A2A; }
+        .brand-el.ba { color: #2ECC71; }
+        .brand-text .title { font-family: 'Bebas Neue'; font-size: 1.3em; letter-spacing: 3px; line-height: 1; }
+        .brand-text .sub { font-family: 'JetBrains Mono'; font-size: 0.55em; color: var(--crystal-blue); }
+
+        /* Animated Lab Equipment */
+        .lab-equipment {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            height: 50px;
+        }
+
+        /* Animated Beaker with Bubbling Liquid */
+        .beaker {
+            width: 32px;
+            height: 45px;
+            position: relative;
+        }
+        .beaker-glass {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 40px;
+            background: linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.05) 100%);
+            border: 2px solid rgba(255,255,255,0.2);
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            overflow: hidden;
+        }
+        .beaker-liquid {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 70%;
+            background: linear-gradient(180deg, rgba(0,180,216,0.6) 0%, rgba(0,180,216,0.9) 100%);
+            animation: liquidBubble 3s ease-in-out infinite;
+        }
+        @keyframes liquidBubble { 0%,100% { height: 70%; } 50% { height: 75%; } }
+        
+        .beaker-bubble {
+            position: absolute;
+            background: rgba(255,255,255,0.6);
+            border-radius: 50%;
+            animation: beakerBubble 2s ease-in-out infinite;
+        }
+        .beaker-bubble:nth-child(1) { width: 4px; height: 4px; left: 20%; bottom: 5px; animation-delay: 0s; }
+        .beaker-bubble:nth-child(2) { width: 3px; height: 3px; left: 50%; bottom: 8px; animation-delay: 0.5s; }
+        .beaker-bubble:nth-child(3) { width: 5px; height: 5px; left: 70%; bottom: 3px; animation-delay: 1s; }
+        @keyframes beakerBubble {
+            0%,100% { transform: translateY(0); opacity: 0.8; }
+            50% { transform: translateY(-15px); opacity: 0; }
+        }
+        
+        .beaker-steam {
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 15px;
+        }
+        .steam-wisp {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: steamRise 2s ease-out infinite;
+        }
+        .steam-wisp:nth-child(1) { left: 0; animation-delay: 0s; }
+        .steam-wisp:nth-child(2) { left: 6px; animation-delay: 0.3s; }
+        .steam-wisp:nth-child(3) { left: 12px; animation-delay: 0.6s; }
+        @keyframes steamRise {
+            0% { transform: translateY(0) scale(0.5); opacity: 0; }
+            30% { opacity: 0.8; }
+            100% { transform: translateY(-20px) scale(1.5); opacity: 0; }
+        }
+
+        /* Floating Crystal */
+        .crystal-float {
+            width: 24px;
+            height: 24px;
+            position: relative;
+            animation: crystalBob 3s ease-in-out infinite;
+        }
+        .crystal-float::before {
+            content: '💎';
+            font-size: 1.3em;
+            filter: drop-shadow(0 0 8px rgba(0,180,216,0.8));
+        }
+        @keyframes crystalBob { 0%,100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-8px) rotate(10deg); } }
+
+        /* Hazmat Warning Light */
+        .hazmat-light {
+            width: 28px;
+            height: 28px;
+            background: var(--hazmat-yellow);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9em;
+            animation: hazmatPulse 2s ease-in-out infinite;
+            box-shadow: 0 0 15px rgba(245,197,24,0.5);
+        }
+        @keyframes hazmatPulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.6; transform: scale(0.95); } }
+
+        /* Sound Toggle Button */
+        .sound-toggle {
+            width: 36px;
+            height: 36px;
+            background: rgba(30,30,30,0.8);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1em;
+            cursor: pointer;
+            min-width: var(--touch-min);
+            min-height: var(--touch-min);
+        }
+        .sound-toggle.muted { opacity: 0.5; }
+
+        /* User Info Row */
+        .user-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            background: rgba(25,25,25,0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
+            margin-bottom: 10px;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .avatar {
+            width: 42px; height: 42px;
+            background: linear-gradient(135deg, var(--hazmat-yellow), #C9A000);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4em;
+        }
+        .user-details .name { font-family: 'Oswald'; font-size: 1em; font-weight: 600; }
+        .user-details .rank { font-family: 'JetBrains Mono'; font-size: 0.6em; color: var(--crystal-blue); }
+        .balance {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: linear-gradient(135deg, rgba(39,174,96,0.2), rgba(39,174,96,0.1));
+            border: 1px solid rgba(39,174,96,0.3);
+            border-radius: 10px;
+            min-height: var(--touch-min);
+        }
+        .balance-icon { font-size: 1.3em; }
+        .balance-amount { font-family: 'JetBrains Mono'; font-size: 1.1em; font-weight: 700; color: var(--money-green); }
+
+        /* Rotating Quote Banner */
+        .quote-banner {
+            background: rgba(20,20,20,0.6);
+            border-radius: 8px;
+            padding: 8px 12px;
+            text-align: center;
+            border-left: 3px solid var(--lab-green);
+        }
+        .quote-text {
+            font-family: 'Roboto Condensed';
+            font-size: 0.8em;
+            font-style: italic;
+            color: rgba(255,255,255,0.7);
+            transition: opacity 0.3s ease;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           CONTENT AREA (Touch optimized)
+           ═══════════════════════════════════════════════════════════════ */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 16px;
+            padding-bottom: calc(var(--nav-height) + var(--safe-bottom) + 20px);
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .section { display: none; animation: sectionIn 0.3s ease; }
+        .section.active { display: block; }
+        @keyframes sectionIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .section-title {
+            font-family: 'Oswald';
+            font-size: 1.1em;
+            color: var(--hazmat-yellow);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Filter Tabs (Touch friendly) */
+        .filters {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 12px;
+            margin-bottom: 14px;
+            -webkit-overflow-scrolling: touch;
+        }
+        .filters::-webkit-scrollbar { display: none; }
+        .filter-btn {
+            padding: 12px 18px;
+            background: rgba(30,30,30,0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 10px;
+            color: rgba(255,255,255,0.7);
+            font-family: 'Oswald';
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            white-space: nowrap;
+            min-height: var(--touch-min);
+            transition: all 0.2s ease;
+        }
+        .filter-btn.active {
+            background: linear-gradient(135deg, var(--hazmat-yellow), #C9A000);
+            border-color: var(--hazmat-yellow);
+            color: #000;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           PRODUCT CARDS (Mobile optimized)
+           ═══════════════════════════════════════════════════════════════ */
+        .products {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .card {
+            background: rgba(25,25,25,0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 14px;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            transition: transform 0.2s ease;
+        }
+        .card:active { transform: scale(0.98); }
+
+        .card-badge {
+            position: absolute;
+            top: 10px; left: 10px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-family: 'JetBrains Mono';
+            font-size: 0.6em;
+            font-weight: 700;
+        }
+        .card-badge.high { background: rgba(0,180,216,0.2); color: var(--crystal-blue); border: 1px solid rgba(0,180,216,0.4); }
+        .card-badge.med { background: rgba(245,197,24,0.2); color: var(--hazmat-yellow); border: 1px solid rgba(245,197,24,0.4); }
+        .card-badge.low { background: rgba(231,76,60,0.2); color: var(--danger-red); border: 1px solid rgba(231,76,60,0.4); }
+
+        .card-batch {
+            position: absolute;
+            top: 10px; right: 10px;
+            font-family: 'JetBrains Mono';
+            font-size: 0.5em;
+            color: rgba(255,255,255,0.3);
+        }
+
+        .card-icon {
+            text-align: center;
+            font-size: 2.8em;
+            padding: 20px 0 14px;
+        }
+        .card-icon.crystal { filter: drop-shadow(0 0 15px rgba(0,180,216,0.6)); animation: crystalPulse 2s ease-in-out infinite; }
+        @keyframes crystalPulse { 0%,100% { filter: drop-shadow(0 0 15px rgba(0,180,216,0.6)); } 50% { filter: drop-shadow(0 0 25px rgba(0,180,216,0.9)); } }
+
+        .card-name {
+            font-family: 'Oswald';
+            font-size: 0.95em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .card-formula {
+            font-family: 'JetBrains Mono';
+            font-size: 0.65em;
+            color: var(--crystal-blue);
+            margin-bottom: 10px;
+        }
+
+        .card-purity {
+            margin-bottom: 12px;
+        }
+        .purity-row {
+            display: flex;
+            justify-content: space-between;
+            font-family: 'JetBrains Mono';
+            font-size: 0.55em;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+        .purity-val { color: var(--crystal-blue); font-weight: 700; }
+        .purity-bar {
+            width: 100%; height: 5px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .purity-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--crystal-blue), #C4E538);
+            border-radius: 3px;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .card-price {
+            font-family: 'JetBrains Mono';
+            font-size: 1.15em;
+            font-weight: 700;
+            color: var(--money-green);
+        }
+        .card-stock {
+            font-family: 'JetBrains Mono';
+            font-size: 0.6em;
+            color: var(--text-muted);
+            padding: 3px 8px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 4px;
+        }
+        .card-stock.low { color: #F39C12; background: rgba(243,156,18,0.1); }
+        .card-stock.out { color: var(--danger-red); background: rgba(231,76,60,0.1); }
+
+        .add-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(180deg, var(--hazmat-yellow), #C9A000);
+            border: none;
+            border-radius: 10px;
+            font-family: 'Oswald';
+            font-size: 0.85em;
+            font-weight: 600;
+            color: #000;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            min-height: var(--touch-min);
+            box-shadow: 0 4px 0 #8B6914;
+            transition: transform 0.1s ease;
+        }
+        .add-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #8B6914; }
+        .add-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .add-btn.added { background: linear-gradient(180deg, var(--lab-green), var(--money-green)); box-shadow: 0 4px 0 #1E8449; }
+
+        /* ═══════════════════════════════════════════════════════════════
+           BARREL/CART (Touch optimized)
+           ═══════════════════════════════════════════════════════════════ */
+        .empty-cart {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--text-muted);
+        }
+        .empty-cart .icon { font-size: 4em; margin-bottom: 15px; opacity: 0.5; }
+        .empty-cart p { font-family: 'Oswald'; font-size: 1.1em; }
+        .empty-cart .sub { font-style: italic; font-size: 0.9em; margin-top: 5px; }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px;
+            background: rgba(30,30,30,0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 14px;
+            margin-bottom: 12px;
+        }
+        .cart-icon { font-size: 2.2em; width: 50px; text-align: center; }
+        .cart-info { flex: 1; }
+        .cart-name { font-family: 'Oswald'; font-size: 0.95em; }
+        .cart-details { font-family: 'JetBrains Mono'; font-size: 0.65em; color: var(--text-muted); }
+        .cart-price { font-family: 'JetBrains Mono'; font-size: 1.1em; font-weight: 700; color: var(--money-green); }
+        .cart-remove {
+            width: 40px; height: 40px;
+            min-width: var(--touch-min);
+            min-height: var(--touch-min);
+            background: rgba(231,76,60,0.2);
+            border: 1px solid rgba(231,76,60,0.4);
+            border-radius: 50%;
+            color: var(--danger-red);
+            font-size: 1.1em;
+            cursor: pointer;
+        }
+        .cart-remove:active { background: var(--danger-red); color: white; }
+
+        .cart-summary {
+            margin-top: 20px;
+            padding: 18px;
+            background: rgba(30,30,30,0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 16px;
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 8px;
+        }
+        .summary-row.total {
+            padding-top: 12px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-family: 'Oswald';
+            font-size: 1.2em;
+            color: white;
+        }
+        .summary-row.total span:last-child { color: var(--money-green); font-weight: 700; }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 18px;
+            margin-top: 16px;
+            background: linear-gradient(180deg, var(--lab-green), var(--money-green));
+            border: none;
+            border-radius: 14px;
+            font-family: 'Bebas Neue';
+            font-size: 1.2em;
+            color: white;
+            letter-spacing: 4px;
+            cursor: pointer;
+            min-height: 56px;
+            box-shadow: 0 5px 0 #1E8449;
+            transition: transform 0.1s ease;
+        }
+        .checkout-btn:active { transform: translateY(4px); box-shadow: 0 1px 0 #1E8449; }
+
+        /* ═══════════════════════════════════════════════════════════════
+           BOTTOM NAVIGATION (Mobile optimized)
+           ═══════════════════════════════════════════════════════════════ */
+        .nav {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            height: calc(var(--nav-height) + var(--safe-bottom));
+            padding-bottom: var(--safe-bottom);
+            background: linear-gradient(180deg, rgba(20,25,20,0.98), rgba(10,15,10,0.99));
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(46,204,113,0.25);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            cursor: pointer;
+            position: relative;
+            min-width: 60px;
+            min-height: var(--touch-min);
+        }
+        .nav-icon {
+            font-size: 1.5em;
+            margin-bottom: 4px;
+            filter: grayscale(100%) brightness(0.5);
+            transition: all 0.2s ease;
+        }
+        .nav-label {
+            font-family: 'Oswald';
+            font-size: 0.6em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+        }
+        .nav-item.active .nav-icon { filter: none; transform: scale(1.15) translateY(-2px); }
+        .nav-item.active .nav-label { color: var(--hazmat-yellow); }
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 8px;
+            width: 28px; height: 3px;
+            background: var(--hazmat-yellow);
+            border-radius: 3px;
+            box-shadow: 0 0 10px var(--hazmat-yellow);
+        }
+        .nav-badge {
+            position: absolute;
+            top: 5px; right: 10px;
+            min-width: 20px; height: 20px;
+            background: var(--danger-red);
+            border-radius: 10px;
+            font-family: 'JetBrains Mono';
+            font-size: 0.6em;
+            font-weight: 700;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 8px var(--danger-red);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           TOAST NOTIFICATIONS
+           ═══════════════════════════════════════════════════════════════ */
+        .toast {
+            position: fixed;
+            top: calc(var(--safe-top) + 80px);
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 14px 24px;
+            background: rgba(20,20,20,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 14px;
+            font-family: 'Oswald';
+            font-size: 0.9em;
+            color: white;
+            z-index: 10000;
+            animation: toastIn 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+        .toast.success { border-left: 4px solid var(--lab-green); }
+        @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(-20px); } }
+
+        /* ═══════════════════════════════════════════════════════════════
+           SUCCESS OVERLAY
+           ═══════════════════════════════════════════════════════════════ */
+        .success {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(ellipse at center, rgba(0,180,216,0.2) 0%, rgba(10,10,10,0.98) 70%);
+            z-index: 5000;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .success.active { display: flex; }
+        .success-crystals { font-size: 2.5em; animation: bounce 0.5s ease; margin-bottom: 20px; }
+        @keyframes bounce { 0% { transform: scale(0); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }
+        .success-title { font-family: 'Bebas Neue'; font-size: 2.2em; color: var(--crystal-blue); text-shadow: 0 0 30px rgba(0,180,216,0.5); letter-spacing: 5px; }
+        .success-quote { font-family: 'Oswald'; font-size: 1.1em; color: rgba(255,255,255,0.7); margin-top: 15px; }
+        .success-xp { margin-top: 20px; padding: 10px 25px; background: var(--lab-green); border-radius: 20px; font-family: 'JetBrains Mono'; font-weight: 700; }
+
+        /* Particle Container */
+        .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9997; }
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            animation: particleFly 0.8s ease-out forwards;
+        }
+        .particle.blue { background: var(--crystal-blue); box-shadow: 0 0 6px var(--crystal-blue); }
+        .particle.green { background: var(--lab-green); box-shadow: 0 0 6px var(--lab-green); }
+        .particle.yellow { background: var(--hazmat-yellow); box-shadow: 0 0 6px var(--hazmat-yellow); }
+        @keyframes particleFly { 0% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0); } }
+
+        /* Profile Section */
+        .profile-card {
+            text-align: center;
+            padding: 30px 20px;
+            background: rgba(30,30,30,0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+        .profile-avatar {
+            width: 90px; height: 90px;
+            background: linear-gradient(135deg, var(--hazmat-yellow), #C9A000);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            margin: 0 auto 15px;
+            box-shadow: 0 0 30px rgba(245,197,24,0.3);
+        }
+        .profile-name { font-family: 'Bebas Neue'; font-size: 1.8em; letter-spacing: 4px; }
+        .profile-rank-badge {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 6px 18px;
+            background: rgba(0,180,216,0.2);
+            border: 1px solid rgba(0,180,216,0.4);
+            border-radius: 20px;
+            font-family: 'JetBrains Mono';
+            font-size: 0.7em;
+            color: var(--crystal-blue);
+        }
+        .profile-stars { margin-top: 10px; font-size: 1.3em; }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .stat {
+            padding: 16px 10px;
+            background: rgba(30,30,30,0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 14px;
+            text-align: center;
+        }
+        .stat-val { display: block; font-family: 'Bebas Neue'; font-size: 1.5em; color: var(--crystal-blue); }
+        .stat-label { font-size: 0.65em; color: var(--text-muted); }
+    </style>
+</head>
+<body>
+    <div class="film-grain"></div>
+    <div class="vignette"></div>
+    <div class="smoke-bg">
+        <div class="smoke-layer deep"></div>
+        <div class="smoke-layer mid"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+    </div>
+    <div class="particles"></div>
+
+    <!-- INTRO -->
+    <div class="intro" id="intro">
+        <div class="intro-smoke"></div>
+        <div class="intro-logo">
+            <div class="p-element br"><span class="num">35</span><span class="sym">Br</span><span class="name">Bromine</span></div>
+            <div class="p-element ba"><span class="num">56</span><span class="sym">Ba</span><span class="name">Barium</span></div>
+        </div>
+        <h1 class="intro-title">HEISENBERG'S LAB</h1>
+        <p class="intro-quote">"Chemistry is the study of change."</p>
+        <button class="intro-btn" id="enter-btn">⚗️ ENTER THE LAB ⚗️</button>
+    </div>
+
+    <!-- MAIN APP -->
+    <div class="app hidden" id="app">
+        <header class="header">
+            <div class="header-top">
+                <div class="brand">
+                    <div class="brand-elements">
+                        <div class="brand-el br">Br</div>
+                        <div class="brand-el ba">Ba</div>
+                    </div>
+                    <div class="brand-text">
+                        <div class="title">BREAKING BAD</div>
+                        <div class="sub">Heisenberg's Lab • 99.1% Pure</div>
+                    </div>
+                </div>
+                <div class="lab-equipment">
+                    <div class="beaker">
+                        <div class="beaker-glass">
+                            <div class="beaker-liquid">
+                                <div class="beaker-bubble"></div>
+                                <div class="beaker-bubble"></div>
+                                <div class="beaker-bubble"></div>
+                            </div>
+                        </div>
+                        <div class="beaker-steam">
+                            <div class="steam-wisp"></div>
+                            <div class="steam-wisp"></div>
+                            <div class="steam-wisp"></div>
+                        </div>
+                    </div>
+                    <div class="crystal-float"></div>
+                    <div class="hazmat-light">☢️</div>
+                    <button class="sound-toggle" id="sound-toggle">🔊</button>
+                </div>
+            </div>
+            <div class="user-row">
+                <div class="user-info">
+                    <div class="avatar">👨‍🔬</div>
+                    <div class="user-details">
+                        <div class="name">PINKMAN</div>
+                        <div class="rank">LVL 3 • DISTRIBUTOR</div>
+                    </div>
+                </div>
+                <div class="balance">
+                    <span class="balance-icon">💰</span>
+                    <span class="balance-amount" id="balance">€420.69</span>
+                </div>
+            </div>
+            <div class="quote-banner">
+                <span class="quote-text" id="quote">"I am the one who knocks."</span>
+            </div>
+        </header>
+
+        <main class="content">
+            <!-- LAB Section -->
+            <section class="section active" id="sec-lab">
+                <h2 class="section-title">📋 Available Batches</h2>
+                <div class="filters">
+                    <button class="filter-btn active" data-f="all">ALL</button>
+                    <button class="filter-btn" data-f="crystal">💎 CRYSTAL</button>
+                    <button class="filter-btn" data-f="green">🌿 GREEN</button>
+                    <button class="filter-btn" data-f="pills">💊 PILLS</button>
+                </div>
+                <div class="products" id="products"></div>
+            </section>
+
+            <!-- TURF Section -->
+            <section class="section" id="sec-turf">
+                <h2 class="section-title">🗺️ Distribution Turf</h2>
+                <p class="empty-cart"><span class="icon">🗺️</span><br>Territory map coming soon...</p>
+            </section>
+
+            <!-- BARREL Section -->
+            <section class="section" id="sec-barrel">
+                <h2 class="section-title">🛢️ Your Barrel <span id="cart-count" style="color:var(--text-muted);font-size:0.8em;margin-left:10px;">0 items</span></h2>
+                <div id="cart-items">
+                    <div class="empty-cart">
+                        <div class="icon">🛢️</div>
+                        <p>Your barrel is empty</p>
+                        <p class="sub">"No half measures."</p>
+                    </div>
+                </div>
+                <div id="cart-summary" style="display:none;">
+                    <div class="cart-summary">
+                        <div class="summary-row"><span>Subtotal:</span><span id="subtotal">€0.00</span></div>
+                        <div class="summary-row total"><span>TOTAL:</span><span id="total">€0.00</span></div>
+                        <button class="checkout-btn" id="checkout-btn">🚐 COOK THE ORDER 🚐</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PROFILE Section -->
+            <section class="section" id="sec-profile">
+                <h2 class="section-title">👤 Cook Profile</h2>
+                <div class="profile-card">
+                    <div class="profile-avatar">👨‍🔬</div>
+                    <div class="profile-name">PINKMAN</div>
+                    <div class="profile-rank-badge">DISTRIBUTOR</div>
+                    <div class="profile-stars">⭐⭐⭐☆☆</div>
+                </div>
+                <div class="stats">
+                    <div class="stat"><span class="stat-val">12</span><span class="stat-label">Total Cooks</span></div>
+                    <div class="stat"><span class="stat-val">€1,247</span><span class="stat-label">Total Spent</span></div>
+                    <div class="stat"><span class="stat-val">99.1%</span><span class="stat-label">Avg Purity</span></div>
+                </div>
+            </section>
+        </main>
+
+        <nav class="nav">
+            <div class="nav-item active" data-s="lab"><span class="nav-icon">🔬</span><span class="nav-label">Lab</span></div>
+            <div class="nav-item" data-s="turf"><span class="nav-icon">🗺️</span><span class="nav-label">Turf</span></div>
+            <div class="nav-item" data-s="barrel"><span class="nav-icon">🛢️</span><span class="nav-label">Barrel</span><span class="nav-badge hidden" id="cart-badge">0</span></div>
+            <div class="nav-item" data-s="profile"><span class="nav-icon">👤</span><span class="nav-label">Profile</span></div>
+        </nav>
+    </div>
+
+    <!-- SUCCESS OVERLAY -->
+    <div class="success" id="success">
+        <div class="success-crystals">💎💎💎💎💎</div>
+        <h2 class="success-title">BATCH DELIVERED</h2>
+        <p class="success-quote">"Yeah, Science, Bitch!"</p>
+        <div class="success-xp">+50 XP</div>
+    </div>
+
+    <script>
+        // ═══════════════════════════════════════════════════════════════
+        // V12 - MOBILE-FIRST BREAKING BAD EXPERIENCE
+        // ═══════════════════════════════════════════════════════════════
+
+        const products = [
+            { id: 1, name: 'Blue Sky', formula: 'C₁₀H₁₅N', icon: '💎', cat: 'crystal', purity: 99.1, price: 80, stock: 12, batch: '#0042' },
+            { id: 2, name: 'Chili P Special', formula: 'C₁₀H₁₅N+', icon: '🌿', cat: 'green', purity: 96.2, price: 45, stock: 8, batch: '#0038' },
+            { id: 3, name: 'Madrigal Tabs', formula: 'C₂₀H₂₅N₃O', icon: '💊', cat: 'pills', purity: 91, price: 35, stock: 20, batch: '#0051' },
+            { id: 4, name: "Cap'n Cook", formula: 'C₁₂H₁₇NO', icon: '🍄', cat: 'green', purity: 88.5, price: 55, stock: 3, batch: '#0029' },
+            { id: 5, name: 'Los Pollos', formula: 'C₁₀H₁₅N', icon: '🐔', cat: 'crystal', purity: 97.8, price: 70, stock: 15, batch: '#0044' },
+            { id: 6, name: 'Vamonos Pest', formula: 'C₁₀H₁₅N', icon: '🧪', cat: 'crystal', purity: 95.5, price: 60, stock: 0, batch: '#0033' }
+        ];
+
+        const quotes = [
+            '"I am the one who knocks."',
+            '"Say my name."',
+            '"Chemistry is the study of change."',
+            '"No half measures."',
+            '"Yeah, Science, Bitch!"',
+            '"Tread lightly."',
+            '"I am the danger."',
+            '"We need to cook."'
+        ];
+
+        let cart = [];
+        let soundEnabled = true;
+        let audioCtx = null;
+
+        // ═══════════════════════════════════════════════════════════════
+        // SOUND SYSTEM
+        // ═══════════════════════════════════════════════════════════════
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+        }
+
+        function playClick() {
+            if (!soundEnabled || !audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.05);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.05);
+        }
+
+        function playSuccess() {
+            if (!soundEnabled || !audioCtx) return;
+            [523, 659, 784].forEach((f, i) => {
+                setTimeout(() => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.frequency.setValueAtTime(f, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.25);
+                }, i * 80);
+            });
+        }
+
+        function playBubble() {
+            if (!soundEnabled || !audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.frequency.setValueAtTime(150 + Math.random() * 150, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.08);
+            gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.08);
+        }
+
+        // Ambient bubbling
+        function startAmbient() {
+            if (!soundEnabled) return;
+            playBubble();
+            setTimeout(startAmbient, 2000 + Math.random() * 4000);
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // HAPTIC FEEDBACK
+        // ═══════════════════════════════════════════════════════════════
+        function haptic(type = 'light') {
+            if ('vibrate' in navigator) {
+                const p = { light: 10, medium: 20, heavy: 40, success: [20, 30, 20] };
+                navigator.vibrate(p[type] || 10);
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // PARTICLES
+        // ═══════════════════════════════════════════════════════════════
+        function burst(x, y, count = 12) {
+            const container = document.querySelector('.particles');
+            const colors = ['blue', 'green', 'yellow'];
+            for (let i = 0; i < count; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle ' + colors[Math.floor(Math.random() * 3)];
+                const size = 4 + Math.random() * 8;
+                const angle = Math.random() * Math.PI * 2;
+                const dist = 30 + Math.random() * 70;
+                p.style.cssText = `left:${x}px;top:${y}px;width:${size}px;height:${size}px;--tx:${Math.cos(angle)*dist}px;--ty:${Math.sin(angle)*dist - 30}px;`;
+                container.appendChild(p);
+                setTimeout(() => p.remove(), 800);
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // TOAST
+        // ═══════════════════════════════════════════════════════════════
+        function toast(msg) {
+            document.querySelectorAll('.toast').forEach(t => t.remove());
+            const t = document.createElement('div');
+            t.className = 'toast success';
+            t.textContent = msg;
+            document.body.appendChild(t);
+            setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 2000);
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // RENDER PRODUCTS
+        // ═══════════════════════════════════════════════════════════════
+        function renderProducts(filter = 'all') {
+            const grid = document.getElementById('products');
+            const filtered = filter === 'all' ? products : products.filter(p => p.cat === filter);
+            grid.innerHTML = filtered.map(p => {
+                const badge = p.purity >= 95 ? 'high' : p.purity >= 85 ? 'med' : 'low';
+                const stockCls = p.stock === 0 ? 'out' : p.stock <= 5 ? 'low' : '';
+                const stockTxt = p.stock === 0 ? 'SOLD OUT' : p.stock + ' left';
+                const iconCls = p.cat === 'crystal' ? 'crystal' : '';
+                return `
+                    <div class="card" data-id="${p.id}">
+                        <span class="card-badge ${badge}">${p.purity}%</span>
+                        <span class="card-batch">BATCH ${p.batch}</span>
+                        <div class="card-icon ${iconCls}">${p.icon}</div>
+                        <div class="card-name">${p.name}</div>
+                        <div class="card-formula">${p.formula}</div>
+                        <div class="card-purity">
+                            <div class="purity-row"><span>PURITY</span><span class="purity-val">${p.purity}%</span></div>
+                            <div class="purity-bar"><div class="purity-fill" style="width:${p.purity}%"></div></div>
+                        </div>
+                        <div class="card-footer">
+                            <span class="card-price">€${p.price.toFixed(2)}</span>
+                            <span class="card-stock ${stockCls}">${stockTxt}</span>
+                        </div>
+                        <button class="add-btn" data-id="${p.id}" ${p.stock === 0 ? 'disabled' : ''}>
+                            ${p.stock > 0 ? '🛢️ ADD TO BARREL' : 'UNAVAILABLE'}
+                        </button>
+                    </div>
+                `;
+            }).join('');
+
+            // Add button listeners
+            grid.querySelectorAll('.add-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    addToCart(parseInt(btn.dataset.id), e);
+                });
+            });
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // CART FUNCTIONS
+        // ═══════════════════════════════════════════════════════════════
+        function addToCart(id, e) {
+            const p = products.find(x => x.id === id);
+            if (!p || p.stock === 0) return;
+            
+            const existing = cart.find(x => x.id === id);
+            if (existing) existing.qty++;
+            else cart.push({ ...p, qty: 1 });
+            
+            playSuccess();
+            haptic('success');
+            
+            const rect = e.target.getBoundingClientRect();
+            burst(rect.left + rect.width/2, rect.top, 15);
+            
+            updateCartUI();
+            toast(p.name + ' added!');
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(x => x.id !== id);
+            playClick();
+            haptic('light');
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const badge = document.getElementById('cart-badge');
+            const count = document.getElementById('cart-count');
+            const total = cart.reduce((s, x) => s + x.qty, 0);
+            
+            badge.textContent = total;
+            badge.classList.toggle('hidden', total === 0);
+            count.textContent = total + ' item' + (total !== 1 ? 's' : '');
+            
+            renderCart();
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cart-items');
+            const summary = document.getElementById('cart-summary');
+            
+            if (cart.length === 0) {
+                container.innerHTML = '<div class="empty-cart"><div class="icon">🛢️</div><p>Your barrel is empty</p><p class="sub">"No half measures."</p></div>';
+                summary.style.display = 'none';
+                return;
+            }
+            
+            container.innerHTML = cart.map(x => `
+                <div class="cart-item">
+                    <div class="cart-icon">${x.icon}</div>
+                    <div class="cart-info">
+                        <div class="cart-name">${x.name}</div>
+                        <div class="cart-details">${x.purity}% pure • Qty: ${x.qty}</div>
+                    </div>
+                    <div class="cart-price">€${(x.price * x.qty).toFixed(2)}</div>
+                    <button class="cart-remove" onclick="removeFromCart(${x.id})">✕</button>
+                </div>
+            `).join('');
+            
+            const sub = cart.reduce((s, x) => s + x.price * x.qty, 0);
+            document.getElementById('subtotal').textContent = '€' + sub.toFixed(2);
+            document.getElementById('total').textContent = '€' + sub.toFixed(2);
+            summary.style.display = 'block';
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // NAVIGATION
+        // ═══════════════════════════════════════════════════════════════
+        function navigate(section) {
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.s === section));
+            document.querySelectorAll('.section').forEach(s => s.classList.toggle('active', s.id === 'sec-' + section));
+            playClick();
+            haptic('light');
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // QUOTES ROTATION
+        // ═══════════════════════════════════════════════════════════════
+        function rotateQuote() {
+            const el = document.getElementById('quote');
+            el.style.opacity = 0;
+            setTimeout(() => {
+                el.textContent = quotes[Math.floor(Math.random() * quotes.length)];
+                el.style.opacity = 1;
+            }, 300);
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // INIT
+        // ═══════════════════════════════════════════════════════════════
+        document.addEventListener('DOMContentLoaded', () => {
+            // Intro button
+            document.getElementById('enter-btn').addEventListener('click', () => {
+                initAudio();
+                playSuccess();
+                haptic('heavy');
+                document.getElementById('intro').classList.add('fade-out');
+                setTimeout(() => {
+                    document.getElementById('intro').style.display = 'none';
+                    document.getElementById('app').classList.remove('hidden');
+                    setTimeout(startAmbient, 2000);
+                }, 600);
+            });
+
+            // Navigation
+            document.querySelectorAll('.nav-item').forEach(n => {
+                n.addEventListener('click', () => navigate(n.dataset.s));
+            });
+
+            // Filters
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    renderProducts(btn.dataset.f);
+                    playClick();
+                });
+            });
+
+            // Sound toggle
+            document.getElementById('sound-toggle').addEventListener('click', () => {
+                soundEnabled = !soundEnabled;
+                const btn = document.getElementById('sound-toggle');
+                btn.textContent = soundEnabled ? '🔊' : '🔇';
+                btn.classList.toggle('muted', !soundEnabled);
+                if (soundEnabled) initAudio();
+            });
+
+            // Checkout
+            document.getElementById('checkout-btn').addEventListener('click', () => {
+                if (cart.length === 0) return;
+                
+                document.getElementById('success').classList.add('active');
+                playSuccess();
+                haptic('success');
+                
+                // Multiple particle bursts
+                for (let i = 0; i < 5; i++) {
+                    setTimeout(() => {
+                        burst(window.innerWidth/2 + (Math.random()-0.5)*200, window.innerHeight/2 + (Math.random()-0.5)*200, 20);
+                    }, i * 200);
+                }
+                
+                cart = [];
+                updateCartUI();
+                
+                setTimeout(() => {
+                    document.getElementById('success').classList.remove('active');
+                    navigate('lab');
+                }, 3000);
+            });
+
+            // Rotate quotes
+            setInterval(rotateQuote, 8000);
+
+            // Render products
+            renderProducts();
+
+            console.log('🧪 V12 Mobile-First Ready!');
+        });
+
+        // Global for onclick handlers
+        window.removeFromCart = removeFromCart;
+    </script>
+</body>
+</html>
+
