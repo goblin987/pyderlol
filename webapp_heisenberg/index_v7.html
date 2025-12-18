@@ -3,51 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Breaking Bad</title>
+    <title>Heisenberg's Lab</title>
     
-    <!-- Typography -->
+    <!-- Premium Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     
     <style>
         /* ═══════════════════════════════════════════════════════════════════════════
-           BREAKING BAD - AUTHENTIC COLOR PALETTE
+           BREAKING BAD AUTHENTIC COLOR SYSTEM
            ═══════════════════════════════════════════════════════════════════════════ */
         :root {
-            /* Show Colors */
-            --bb-green: #4CAF50;
-            --bb-green-light: #81C784;
-            --bb-green-dark: #2E7D32;
-            --bb-green-glow: rgba(76, 175, 80, 0.6);
+            /* Core Colors */
+            --black: #000000;
+            --black-rich: #050505;
+            --black-green: #080a08;
+            --surface: #0d0f0d;
+            --surface-elevated: #131513;
+            --surface-glass: rgba(20, 25, 20, 0.7);
+            
+            /* Breaking Bad Green */
+            --bb-green: #3d8c40;
+            --bb-green-bright: #4ade80;
+            --bb-green-glow: rgba(74, 222, 128, 0.4);
+            --bb-green-subtle: rgba(61, 140, 64, 0.15);
+            
+            /* Metallic Chrome */
+            --chrome: #a8a8a8;
+            --chrome-light: #d4d4d4;
+            --chrome-dark: #6b6b6b;
+            --chrome-shine: #ffffff;
             
             /* Crystal Blue */
-            --crystal: #03A9F4;
-            --crystal-light: #4FC3F7;
+            --crystal: #67b8de;
+            --crystal-glow: rgba(103, 184, 222, 0.3);
             
-            /* Neutrals */
-            --black: #000000;
-            --dark: #0D0D0D;
-            --surface: #1A1A1A;
-            --card: #222222;
-            --border: #333333;
+            /* Text */
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-muted: rgba(255, 255, 255, 0.4);
             
-            --white: #FFFFFF;
-            --gray-100: #F5F5F5;
-            --gray-300: #E0E0E0;
-            --gray-500: #9E9E9E;
-            --gray-700: #616161;
+            /* Danger */
+            --danger: #ef4444;
             
-            /* Accent */
-            --danger: #F44336;
-            --warning: #FFC107;
+            /* Spacing */
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            
+            /* Radius */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
         }
 
         /* ═══════════════════════════════════════════════════════════════════════════
-           RESET
+           RESET & BASE
            ═══════════════════════════════════════════════════════════════════════════ */
-        * {
+        *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -59,64 +77,75 @@
         }
 
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--black);
-            color: var(--white);
+            color: var(--text-primary);
             -webkit-font-smoothing: antialiased;
             -webkit-tap-highlight-color: transparent;
             user-select: none;
+            line-height: 1.5;
         }
 
         .hidden { display: none !important; }
 
         /* ═══════════════════════════════════════════════════════════════════════════
-           SMOKE BACKGROUND - Authentic BB Style
+           SMOKE BACKGROUND - Always Visible
            ═══════════════════════════════════════════════════════════════════════════ */
         .smoke-bg {
             position: fixed;
             inset: 0;
             z-index: 0;
-            background: linear-gradient(180deg, #000 0%, #0a0f0a 100%);
             overflow: hidden;
+            background: linear-gradient(180deg, #000 0%, #050805 50%, #0a0f0a 100%);
         }
 
-        .smoke {
+        .smoke-particle {
             position: absolute;
             border-radius: 50%;
-            filter: blur(60px);
-            opacity: 0;
-            animation: rise linear infinite;
+            background: radial-gradient(ellipse at center, 
+                rgba(61, 140, 64, 0.25) 0%, 
+                rgba(61, 140, 64, 0.1) 40%,
+                transparent 70%
+            );
+            filter: blur(40px);
+            animation: smokeRise linear infinite;
+            will-change: transform, opacity;
         }
 
-        @keyframes rise {
-            0% { transform: translateY(0) scale(0.8); opacity: 0; }
-            15% { opacity: 0.4; }
-            85% { opacity: 0.15; }
-            100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
+        @keyframes smokeRise {
+            0% {
+                transform: translateY(0) scale(0.5) rotate(0deg);
+                opacity: 0;
+            }
+            15% { opacity: 0.8; }
+            85% { opacity: 0.2; }
+            100% {
+                transform: translateY(-120vh) scale(2.5) rotate(180deg);
+                opacity: 0;
+            }
         }
 
         .smoke-glow {
             position: absolute;
-            bottom: -20%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 150%;
-            height: 60%;
-            background: radial-gradient(ellipse at center bottom,
-                rgba(76, 175, 80, 0.15) 0%,
-                rgba(76, 175, 80, 0.05) 40%,
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40%;
+            background: radial-gradient(ellipse 120% 100% at 50% 100%,
+                rgba(61, 140, 64, 0.12) 0%,
+                rgba(61, 140, 64, 0.05) 40%,
                 transparent 70%
             );
             animation: glowPulse 4s ease-in-out infinite;
         }
 
         @keyframes glowPulse {
-            0%, 100% { opacity: 0.8; transform: translateX(-50%) scale(1); }
-            50% { opacity: 1; transform: translateX(-50%) scale(1.05); }
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
         }
 
         /* ═══════════════════════════════════════════════════════════════════════════
-           CINEMATIC INTRO - Breaking Bad Style
+           CINEMATIC INTRO - Breaking Bad Title Sequence
            ═══════════════════════════════════════════════════════════════════════════ */
         .intro {
             position: fixed;
@@ -126,133 +155,259 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            background: var(--black);
         }
 
-        /* Periodic Table Logo */
-        .logo {
+        /* Floating Chemical Formulas */
+        .formula-particle {
+            position: absolute;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: rgba(61, 140, 64, 0.2);
+            animation: formulaFloat 20s linear infinite;
+            white-space: nowrap;
+        }
+
+        @keyframes formulaFloat {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.1; }
+            100% { transform: translateY(-100vh) rotate(10deg); opacity: 0; }
+        }
+
+        /* Metallic Logo Container */
+        .logo-container {
+            position: relative;
+            z-index: 10;
+            animation: logoReveal 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s both;
+        }
+
+        @keyframes logoReveal {
+            0% { 
+                opacity: 0;
+                transform: scale(0.5) rotateX(30deg);
+                filter: blur(20px);
+            }
+            100% { 
+                opacity: 1;
+                transform: scale(1) rotateX(0);
+                filter: blur(0);
+            }
+        }
+
+        /* Breaking Bad Style Periodic Elements */
+        .periodic-logo {
             display: flex;
-            gap: 4px;
-            animation: logoIn 1s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+            align-items: flex-start;
+            gap: 3px;
+            perspective: 1000px;
         }
 
-        @keyframes logoIn {
-            0% { opacity: 0; transform: scale(0.5); filter: blur(20px); }
-            100% { opacity: 1; transform: scale(1); filter: blur(0); }
-        }
-
-        .element {
+        .element-box {
             width: 70px;
-            height: 85px;
-            background: linear-gradient(180deg, #1a2a1a 0%, #0d150d 100%);
-            border: 2px solid var(--bb-green);
-            border-radius: 4px;
+            height: 80px;
+            position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            position: relative;
+            border-radius: 4px;
+            /* Metallic 3D Effect */
+            background: linear-gradient(135deg, 
+                #3a3a3a 0%, 
+                #5a5a5a 20%, 
+                #8a8a8a 40%, 
+                #6a6a6a 60%, 
+                #4a4a4a 80%, 
+                #3a3a3a 100%
+            );
             box-shadow: 
-                0 0 20px var(--bb-green-glow),
-                inset 0 1px 0 rgba(255,255,255,0.1);
+                inset 0 1px 0 rgba(255,255,255,0.3),
+                inset 0 -1px 0 rgba(0,0,0,0.3),
+                0 5px 20px rgba(0,0,0,0.5),
+                0 0 40px rgba(61, 140, 64, 0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+            overflow: hidden;
         }
 
-        .element .num {
+        /* Green Reflection Overlay */
+        .element-box::before {
+            content: '';
             position: absolute;
-            top: 4px;
-            left: 6px;
-            font-size: 10px;
+            inset: 0;
+            background: linear-gradient(135deg, 
+                rgba(61, 140, 64, 0.3) 0%, 
+                transparent 50%,
+                rgba(61, 140, 64, 0.1) 100%
+            );
+            pointer-events: none;
+        }
+
+        /* Shine Animation */
+        .element-box::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 30%,
+                rgba(255,255,255,0.1) 50%,
+                transparent 70%
+            );
+            animation: metalShine 3s ease-in-out infinite;
+        }
+
+        @keyframes metalShine {
+            0%, 100% { transform: translateX(-100%) rotate(45deg); }
+            50% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        .atomic-num {
+            position: absolute;
+            top: 6px;
+            left: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
             font-weight: 500;
-            color: var(--gray-500);
+            color: var(--bb-green-bright);
+            text-shadow: 0 0 10px var(--bb-green-glow);
         }
 
-        .element .sym {
-            font-family: 'Archivo Black', sans-serif;
+        .element-symbol {
+            font-family: 'Playfair Display', serif;
             font-size: 38px;
-            line-height: 1;
+            font-weight: 600;
+            background: linear-gradient(180deg, 
+                var(--chrome-light) 0%, 
+                var(--chrome) 50%, 
+                var(--chrome-dark) 100%
+            );
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+            position: relative;
+            z-index: 2;
         }
 
-        .element.br .sym { color: #CD5C5C; }
-        .element.ba .sym { color: var(--bb-green); }
+        .element-box.bromine .element-symbol {
+            background: linear-gradient(180deg, #cd9999 0%, #a06060 50%, #804040 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
 
-        .element .name {
+        .element-box.barium .element-symbol {
+            background: linear-gradient(180deg, 
+                #90d090 0%, 
+                var(--bb-green) 50%, 
+                #2a6a2a 100%
+            );
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+
+        .element-name {
+            font-family: 'Inter', sans-serif;
             font-size: 8px;
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: var(--gray-500);
+            color: var(--text-muted);
             margin-top: 2px;
         }
 
-        /* Title */
-        .intro-title {
-            margin-top: 30px;
-            animation: titleIn 0.8s ease 1.3s both;
+        /* Title Text */
+        .intro-text {
+            text-align: center;
+            margin-top: 40px;
+            z-index: 10;
         }
 
-        @keyframes titleIn {
+        .title {
+            font-family: 'Playfair Display', serif;
+            font-size: 26px;
+            font-weight: 500;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            background: linear-gradient(180deg, var(--chrome-light) 0%, var(--chrome) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: titleReveal 1s ease 1.8s both;
+        }
+
+        @keyframes titleReveal {
             0% { opacity: 0; transform: translateY(20px); }
             100% { opacity: 1; transform: translateY(0); }
         }
 
-        .intro-title h1 {
-            font-family: 'Archivo Black', sans-serif;
-            font-size: 24px;
-            letter-spacing: 6px;
+        .subtitle {
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 400;
+            color: var(--text-muted);
+            margin-top: 12px;
+            letter-spacing: 4px;
             text-transform: uppercase;
-            color: var(--white);
+            animation: titleReveal 1s ease 2.1s both;
         }
 
-        .intro-title p {
-            font-size: 13px;
-            color: var(--gray-500);
-            text-align: center;
-            margin-top: 8px;
+        .quote {
+            font-family: 'Playfair Display', serif;
+            font-size: 14px;
             font-style: italic;
+            color: var(--text-secondary);
+            margin-top: 30px;
+            animation: titleReveal 1s ease 2.4s both;
         }
 
         /* Enter Button */
         .enter-btn {
-            margin-top: 40px;
-            padding: 14px 45px;
-            background: var(--bb-green);
+            margin-top: 50px;
+            padding: 16px 50px;
+            background: linear-gradient(180deg, var(--bb-green-bright) 0%, var(--bb-green) 100%);
             border: none;
-            border-radius: 4px;
-            font-family: 'Roboto', sans-serif;
+            border-radius: var(--radius-sm);
+            font-family: 'Inter', sans-serif;
             font-size: 13px;
-            font-weight: 700;
+            font-weight: 600;
             letter-spacing: 3px;
             text-transform: uppercase;
             color: var(--black);
             cursor: pointer;
-            animation: btnIn 0.5s ease 1.8s both;
+            z-index: 10;
+            animation: btnReveal 0.8s ease 2.8s both;
             box-shadow: 0 0 30px var(--bb-green-glow);
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .enter-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 40px var(--bb-green-glow);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 0 50px var(--bb-green-glow);
         }
 
         .enter-btn:active {
-            transform: translateY(1px);
+            transform: translateY(0) scale(0.98);
         }
 
-        @keyframes btnIn {
-            0% { opacity: 0; transform: translateY(20px); }
+        @keyframes btnReveal {
+            0% { opacity: 0; transform: translateY(30px); }
             100% { opacity: 1; transform: translateY(0); }
         }
 
-        .intro.exit {
-            animation: introOut 0.6s ease forwards;
+        .intro.fade-out {
+            animation: introExit 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
-        @keyframes introOut {
-            to { opacity: 0; transform: scale(1.05); }
+        @keyframes introExit {
+            to { opacity: 0; transform: scale(1.1); filter: blur(20px); }
         }
 
         /* ═══════════════════════════════════════════════════════════════════════════
-           MAIN APP
+           MAIN APPLICATION
            ═══════════════════════════════════════════════════════════════════════════ */
         .app {
             height: 100vh;
@@ -263,490 +418,565 @@
         }
 
         /* Film Grain */
-        .grain {
+        .film-grain {
             position: fixed;
             inset: 0;
             z-index: 9999;
             pointer-events: none;
-            opacity: 0.02;
-            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            opacity: 0.025;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
         }
 
         /* ═══════════════════════════════════════════════════════════════════════════
-           HEADER - Breaking Bad Branded
+           PREMIUM HEADER
            ═══════════════════════════════════════════════════════════════════════════ */
         .header {
-            padding: 12px 16px;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(76, 175, 80, 0.2);
             position: relative;
             z-index: 100;
+            padding: var(--space-md);
+            background: linear-gradient(180deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.8) 70%, transparent 100%);
         }
 
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* Mini Logo */
-        .brand {
+        .header-brand {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: var(--space-md);
+            margin-bottom: var(--space-md);
         }
 
+        /* Mini Periodic Logo */
         .mini-logo {
             display: flex;
             gap: 2px;
         }
 
-        .mini-el {
-            width: 22px;
-            height: 26px;
-            background: linear-gradient(180deg, #1a2a1a 0%, #0d150d 100%);
-            border: 1px solid var(--bb-green);
-            border-radius: 2px;
+        .mini-element {
+            width: 28px;
+            height: 32px;
+            background: linear-gradient(135deg, #4a4a4a 0%, #6a6a6a 50%, #4a4a4a 100%);
+            border-radius: 3px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-family: 'Archivo Black', sans-serif;
-            font-size: 11px;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
 
-        .mini-el.br { color: #CD5C5C; }
-        .mini-el.ba { color: var(--bb-green); }
+        .mini-element::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(61, 140, 64, 0.3) 0%, transparent 50%);
+            border-radius: 3px;
+        }
+
+        .mini-element .num {
+            font-size: 6px;
+            color: var(--bb-green-bright);
+            position: absolute;
+            top: 2px;
+            left: 3px;
+        }
+
+        .mini-element .sym {
+            font-family: 'Playfair Display', serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--chrome-light);
+        }
+
+        .mini-element.br .sym { color: #c08080; }
+        .mini-element.ba .sym { color: #80c080; }
 
         .brand-text {
-            font-family: 'Archivo Black', sans-serif;
-            font-size: 11px;
-            letter-spacing: 2px;
-            color: var(--white);
+            display: flex;
+            flex-direction: column;
         }
 
-        /* Balance */
-        .balance {
+        .brand-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            font-weight: 500;
+            letter-spacing: 3px;
+            color: var(--text-primary);
+        }
+
+        .brand-location {
+            font-size: 11px;
+            color: var(--text-muted);
             display: flex;
             align-items: center;
             gap: 6px;
-            padding: 6px 12px;
-            background: rgba(76, 175, 80, 0.1);
-            border: 1px solid rgba(76, 175, 80, 0.3);
-            border-radius: 4px;
+            margin-top: 2px;
+            cursor: pointer;
         }
 
-        .balance-icon {
-            font-size: 14px;
-            color: var(--bb-green);
+        .brand-location:hover {
+            color: var(--bb-green-bright);
         }
 
-        .balance-amount {
-            font-family: 'Roboto Mono', monospace;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--bb-green);
-        }
-
-        /* Location Row */
-        .location-row {
-            display: flex;
-            gap: 8px;
-            margin-top: 10px;
-        }
-
-        .location-btn {
-            flex: 1;
+        /* Header Stats */
+        .header-stats {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            padding: 10px 12px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            gap: var(--space-sm);
         }
 
-        .location-btn:hover {
-            border-color: var(--bb-green);
+        .stat-card {
+            flex: 1;
+            padding: var(--space-sm) var(--space-md);
+            background: var(--surface-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: var(--radius-md);
         }
 
-        .loc-label {
-            font-size: 9px;
+        .stat-label {
+            font-size: 10px;
+            font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: var(--gray-500);
+            color: var(--text-muted);
+            margin-bottom: 4px;
         }
 
-        .loc-value {
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--white);
-            margin-top: 2px;
+        .stat-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--bb-green-bright);
+            text-shadow: 0 0 20px var(--bb-green-glow);
         }
 
-        .loc-arrow {
-            font-size: 10px;
-            color: var(--bb-green);
+        .stat-value.danger {
+            color: var(--danger);
+            text-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
         }
 
         /* ═══════════════════════════════════════════════════════════════════════════
-           CONTENT
+           CONTENT AREA
            ═══════════════════════════════════════════════════════════════════════════ */
         .content {
             flex: 1;
             overflow-y: auto;
-            padding: 16px;
-            padding-bottom: 80px;
+            overflow-x: hidden;
+            padding: var(--space-md);
+            padding-bottom: 100px;
+            -webkit-overflow-scrolling: touch;
         }
 
-        .content::-webkit-scrollbar { width: 3px; }
-        .content::-webkit-scrollbar-thumb { background: var(--bb-green); border-radius: 2px; }
+        .content::-webkit-scrollbar { width: 0; }
 
-        /* Section */
         .section { display: none; }
-        .section.active { display: block; animation: fadeIn 0.3s ease; }
+        .section.active { display: block; animation: sectionIn 0.4s ease; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .section-head {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 16px;
+        @keyframes sectionIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .section-title {
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 2px;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
             text-transform: uppercase;
-            color: var(--gray-300);
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            margin-bottom: var(--space-md);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
         }
 
-        .section-count {
-            font-family: 'Roboto Mono', monospace;
-            font-size: 10px;
-            color: var(--bb-green);
-            padding: 4px 8px;
-            background: rgba(76, 175, 80, 0.1);
-            border-radius: 3px;
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.1) 0%, transparent 100%);
         }
 
         /* ═══════════════════════════════════════════════════════════════════════════
-           PRODUCT CARDS - Clean Minimal Design
+           GLASS VIAL PRODUCT CARDS
            ═══════════════════════════════════════════════════════════════════════════ */
-        .grid {
+        .products-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
+            gap: var(--space-md);
         }
 
-        .card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 14px;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        .product-card {
             position: relative;
+            padding: var(--space-lg) var(--space-md);
+            background: var(--surface-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             overflow: hidden;
         }
 
-        .card::before {
+        /* Subtle inner glow */
+        .product-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--bb-green), var(--crystal));
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.3s ease;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
         }
 
-        .card:hover {
+        .product-card:hover {
+            transform: translateY(-8px) scale(1.02);
             border-color: var(--bb-green);
-            transform: translateY(-2px);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                0 0 30px var(--bb-green-subtle);
         }
 
-        .card:hover::before {
-            transform: scaleX(1);
+        .product-card:active {
+            transform: translateY(-4px) scale(1.01);
         }
 
-        .card:active {
-            transform: translateY(0) scale(0.98);
-        }
-
-        /* Purity Badge */
-        .purity-tag {
+        /* Premium badge */
+        .product-badge {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            font-family: 'Roboto Mono', monospace;
-            font-size: 9px;
-            font-weight: 500;
-            padding: 3px 6px;
-            background: rgba(76, 175, 80, 0.2);
-            color: var(--bb-green);
-            border-radius: 3px;
+            top: var(--space-sm);
+            right: var(--space-sm);
+            padding: 4px 8px;
+            background: var(--bb-green-subtle);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+            border-radius: var(--radius-sm);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--bb-green-bright);
         }
 
-        .purity-tag.high {
-            background: rgba(3, 169, 244, 0.2);
+        .product-badge.premium {
+            background: linear-gradient(135deg, var(--bb-green-subtle), var(--crystal-glow));
+            border-color: var(--crystal);
             color: var(--crystal);
+            animation: premiumGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes premiumGlow {
+            0%, 100% { box-shadow: 0 0 10px var(--crystal-glow); }
+            50% { box-shadow: 0 0 20px var(--crystal-glow); }
         }
 
         /* Product Icon */
-        .card-icon {
-            width: 40px;
-            height: 40px;
-            margin: 8px auto 12px;
+        .product-icon {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto var(--space-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.03);
+            border-radius: var(--radius-md);
+            transition: transform 0.3s ease;
         }
 
-        .card-icon svg {
-            width: 100%;
-            height: 100%;
+        .product-card:hover .product-icon {
+            transform: scale(1.1);
         }
 
-        .card-name {
-            font-size: 12px;
-            font-weight: 700;
+        .product-icon svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        .product-name {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
             text-align: center;
-            color: var(--white);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            color: var(--text-primary);
+            margin-bottom: 4px;
         }
 
-        .card-desc {
-            font-family: 'Roboto Mono', monospace;
-            font-size: 9px;
+        .product-formula {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
             text-align: center;
-            color: var(--gray-500);
-            margin-top: 3px;
+            color: var(--text-muted);
+            margin-bottom: var(--space-md);
         }
 
         /* Purity Bar */
         .purity-bar {
-            margin: 10px 0;
             height: 3px;
-            background: var(--border);
+            background: rgba(255,255,255,0.1);
             border-radius: 2px;
             overflow: hidden;
+            margin-bottom: var(--space-md);
         }
 
         .purity-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--bb-green), var(--crystal));
+            background: linear-gradient(90deg, var(--bb-green) 0%, var(--crystal) 100%);
             border-radius: 2px;
+            box-shadow: 0 0 10px var(--bb-green-glow);
+            position: relative;
         }
 
-        .card-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 8px;
+        .purity-fill::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: purityShine 2s ease-in-out infinite;
         }
 
-        .card-price {
-            font-family: 'Roboto Mono', monospace;
-            font-size: 16px;
+        @keyframes purityShine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .product-price {
+            font-family: 'Inter', sans-serif;
+            font-size: 22px;
             font-weight: 700;
-            color: var(--bb-green);
+            text-align: center;
+            color: var(--text-primary);
         }
 
-        .card-stock {
-            font-size: 9px;
-            color: var(--gray-500);
-            text-transform: uppercase;
+        .product-price span {
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--text-muted);
         }
 
-        .card-stock.low { color: var(--danger); }
+        .product-stock {
+            font-size: 10px;
+            text-align: center;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .product-stock.low { color: var(--danger); }
 
         /* ═══════════════════════════════════════════════════════════════════════════
-           CART
+           CART / BARREL SECTION
            ═══════════════════════════════════════════════════════════════════════════ */
-        .empty {
+        .empty-state {
             text-align: center;
-            padding: 50px 20px;
-            color: var(--gray-500);
+            padding: 60px var(--space-lg);
         }
 
         .empty-icon {
-            width: 50px;
-            height: 50px;
-            margin: 0 auto 16px;
+            width: 64px;
+            height: 64px;
+            margin: 0 auto var(--space-lg);
             opacity: 0.3;
         }
 
-        .empty-icon svg { fill: var(--gray-500); width: 100%; height: 100%; }
+        .empty-icon svg { width: 100%; height: 100%; fill: var(--text-muted); }
 
-        .empty-text {
-            font-size: 14px;
-            font-weight: 500;
+        .empty-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-sm);
+        }
+
+        .empty-desc {
+            font-size: 13px;
+            color: var(--text-muted);
         }
 
         .cart-item {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 12px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            margin-bottom: 8px;
+            gap: var(--space-md);
+            padding: var(--space-md);
+            background: var(--surface-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-sm);
         }
 
-        .cart-item-icon { width: 36px; height: 36px; }
-        .cart-item-icon svg { width: 100%; height: 100%; }
-
-        .cart-item-info { flex: 1; }
-        .cart-item-name { font-size: 13px; font-weight: 500; }
-        .cart-item-qty { font-size: 11px; color: var(--gray-500); }
-
-        .cart-item-price {
-            font-family: 'Roboto Mono', monospace;
-            font-size: 13px;
-            color: var(--bb-green);
-        }
-
-        .cart-item-remove {
-            width: 28px;
-            height: 28px;
-            background: rgba(244, 67, 54, 0.1);
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
+        .cart-item-icon {
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .cart-item-remove svg { width: 14px; height: 14px; fill: var(--danger); }
+        .cart-item-icon svg { width: 24px; height: 24px; }
+
+        .cart-item-info { flex: 1; }
+
+        .cart-item-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .cart-item-qty {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .cart-item-price {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: var(--bb-green-bright);
+        }
+
+        .cart-item-remove {
+            width: 32px;
+            height: 32px;
+            background: rgba(239, 68, 68, 0.1);
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease;
+        }
+
+        .cart-item-remove:hover { background: rgba(239, 68, 68, 0.2); }
+        .cart-item-remove svg { width: 16px; height: 16px; fill: var(--danger); }
 
         .cart-summary {
-            margin-top: 16px;
-            padding: 14px;
-            background: rgba(76, 175, 80, 0.1);
-            border: 1px solid rgba(76, 175, 80, 0.2);
-            border-radius: 6px;
+            margin-top: var(--space-lg);
+            padding: var(--space-lg);
+            background: var(--surface-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(74, 222, 128, 0.2);
+            border-radius: var(--radius-lg);
         }
 
         .cart-total {
             display: flex;
             justify-content: space-between;
-            font-size: 14px;
-            font-weight: 500;
+            align-items: center;
+            font-size: 18px;
+            font-weight: 600;
         }
 
         .cart-total-amount {
-            font-family: 'Roboto Mono', monospace;
-            color: var(--bb-green);
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--bb-green-bright);
+            text-shadow: 0 0 20px var(--bb-green-glow);
         }
 
         .checkout-btn {
             width: 100%;
-            margin-top: 12px;
-            padding: 12px;
-            background: var(--bb-green);
+            margin-top: var(--space-md);
+            padding: var(--space-md);
+            background: linear-gradient(180deg, var(--bb-green-bright) 0%, var(--bb-green) 100%);
             border: none;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 700;
+            border-radius: var(--radius-md);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
             letter-spacing: 2px;
             text-transform: uppercase;
             color: var(--black);
             cursor: pointer;
-            transition: all 0.2s ease;
+            box-shadow: 0 0 30px var(--bb-green-glow);
+            transition: all 0.3s ease;
         }
 
-        .checkout-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+        .checkout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 40px var(--bb-green-glow);
+        }
 
         /* ═══════════════════════════════════════════════════════════════════════════
-           PROFILE
+           PROFILE SECTION
            ═══════════════════════════════════════════════════════════════════════════ */
         .profile-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 20px;
+            background: var(--surface-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: var(--radius-xl);
+            padding: var(--space-xl);
             text-align: center;
-            margin-bottom: 16px;
+            margin-bottom: var(--space-lg);
         }
 
-        .avatar {
-            width: 70px;
-            height: 70px;
-            margin: 0 auto 12px;
-            background: rgba(76, 175, 80, 0.1);
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto var(--space-md);
+            background: var(--bb-green-subtle);
             border: 2px solid var(--bb-green);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 0 30px var(--bb-green-glow);
         }
 
-        .avatar svg { width: 40px; height: 40px; fill: var(--bb-green); }
+        .profile-avatar svg { width: 40px; height: 40px; fill: var(--bb-green-bright); }
 
         .profile-name {
-            font-family: 'Archivo Black', sans-serif;
-            font-size: 18px;
-            letter-spacing: 1px;
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 500;
+            letter-spacing: 2px;
         }
 
         .profile-rank {
-            font-family: 'Roboto Mono', monospace;
-            font-size: 10px;
-            color: var(--bb-green);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--bb-green-bright);
             margin-top: 4px;
         }
 
-        .stats {
+        .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
+            gap: var(--space-sm);
         }
 
-        .stat {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 12px;
+        .stat-box {
+            background: var(--surface-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
             text-align: center;
         }
 
-        .stat-value {
-            font-family: 'Roboto Mono', monospace;
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--bb-green);
+        .stat-box-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--bb-green-bright);
         }
 
-        .stat-label {
-            font-size: 9px;
-            color: var(--gray-500);
+        .stat-box-label {
+            font-size: 10px;
+            color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-top: 4px;
         }
 
         /* ═══════════════════════════════════════════════════════════════════════════
-           BOTTOM NAV
+           BOTTOM NAVIGATION - Apple Style
            ═══════════════════════════════════════════════════════════════════════════ */
-        .nav {
+        .bottom-nav {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            height: 60px;
-            background: rgba(13, 13, 13, 0.95);
-            backdrop-filter: blur(10px);
-            border-top: 1px solid var(--border);
+            height: 80px;
+            background: rgba(10, 12, 10, 0.95);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border-top: 1px solid rgba(255,255,255,0.05);
             display: flex;
             justify-content: space-around;
             align-items: center;
@@ -759,297 +989,308 @@
             flex-direction: column;
             align-items: center;
             gap: 4px;
-            padding: 8px 16px;
+            padding: var(--space-sm) var(--space-md);
             cursor: pointer;
+            transition: all 0.3s ease;
             position: relative;
         }
 
         .nav-icon {
-            width: 20px;
-            height: 20px;
-            opacity: 0.4;
-            transition: all 0.2s ease;
+            width: 24px;
+            height: 24px;
+            opacity: 0.5;
+            transition: all 0.3s ease;
         }
 
-        .nav-icon svg { width: 100%; height: 100%; fill: var(--white); }
+        .nav-icon svg { width: 100%; height: 100%; fill: var(--text-primary); }
 
-        .nav-item.active .nav-icon { opacity: 1; }
-        .nav-item.active .nav-icon svg { fill: var(--bb-green); }
+        .nav-item.active .nav-icon {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .nav-item.active .nav-icon svg { fill: var(--bb-green-bright); }
 
         .nav-label {
-            font-size: 9px;
+            font-size: 10px;
             font-weight: 500;
-            letter-spacing: 0.5px;
-            color: var(--gray-500);
-            text-transform: uppercase;
+            color: var(--text-muted);
+            transition: color 0.3s ease;
         }
 
-        .nav-item.active .nav-label { color: var(--bb-green); }
+        .nav-item.active .nav-label { color: var(--bb-green-bright); }
 
-        .nav-badge {
+        .cart-badge {
             position: absolute;
-            top: 4px;
-            right: 8px;
-            min-width: 14px;
-            height: 14px;
+            top: 0;
+            right: 4px;
+            min-width: 18px;
+            height: 18px;
             background: var(--danger);
-            border-radius: 7px;
-            font-size: 9px;
-            font-weight: 700;
+            border-radius: 9px;
+            font-size: 10px;
+            font-weight: 600;
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 0 3px;
+            padding: 0 5px;
         }
 
         /* ═══════════════════════════════════════════════════════════════════════════
-           MODAL
+           MODALS - Bottom Sheet Style
            ═══════════════════════════════════════════════════════════════════════════ */
-        .modal-bg {
+        .modal-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
             z-index: 2000;
+            display: flex;
+            align-items: flex-end;
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s ease;
-            display: flex;
-            align-items: flex-end;
         }
 
-        .modal-bg.open { opacity: 1; visibility: visible; }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
 
         .modal {
             width: 100%;
             max-height: 70vh;
             background: var(--surface);
-            border-radius: 12px 12px 0 0;
-            border: 1px solid var(--border);
-            border-bottom: none;
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
             transform: translateY(100%);
-            transition: transform 0.3s ease;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             overflow-y: auto;
         }
 
-        .modal-bg.open .modal { transform: translateY(0); }
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
 
-        .modal-head {
+        .modal-handle {
+            width: 36px;
+            height: 4px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+            margin: var(--space-md) auto;
+        }
+
+        .modal-header {
+            padding: 0 var(--space-lg) var(--space-md);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 14px 16px;
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            background: var(--surface);
         }
 
         .modal-title {
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-transform: uppercase;
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
         }
 
         .modal-close {
-            width: 28px;
-            height: 28px;
-            background: rgba(244, 67, 54, 0.1);
+            width: 32px;
+            height: 32px;
+            background: rgba(255,255,255,0.1);
             border: none;
-            border-radius: 4px;
+            border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .modal-close svg { width: 14px; height: 14px; fill: var(--danger); }
+        .modal-close svg { width: 16px; height: 16px; fill: var(--text-primary); }
 
-        .modal-body { padding: 16px; }
+        .modal-body { padding: 0 var(--space-lg) var(--space-xl); }
 
-        .option {
-            padding: 12px;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            margin-bottom: 6px;
+        .location-option {
+            padding: var(--space-md);
+            background: var(--surface-elevated);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-sm);
             cursor: pointer;
-            font-size: 13px;
             transition: all 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .option:hover, .option.selected {
+        .location-option:hover {
             border-color: var(--bb-green);
-            background: rgba(76, 175, 80, 0.1);
+            background: var(--bb-green-subtle);
         }
 
-        .option.selected::after {
+        .location-option.selected {
+            border-color: var(--bb-green);
+            background: var(--bb-green-subtle);
+        }
+
+        .location-option.selected::after {
             content: '✓';
-            float: right;
-            color: var(--bb-green);
+            color: var(--bb-green-bright);
+            font-weight: bold;
         }
 
         /* Toast */
         .toast {
             position: fixed;
-            bottom: 80px;
+            bottom: 100px;
             left: 50%;
-            transform: translateX(-50%) translateY(20px);
-            background: var(--bb-green);
-            color: var(--black);
-            padding: 10px 20px;
-            border-radius: 4px;
-            font-size: 12px;
+            transform: translateX(-50%) translateY(30px);
+            background: var(--surface-elevated);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+            padding: var(--space-md) var(--space-lg);
+            border-radius: var(--radius-lg);
+            font-size: 13px;
             font-weight: 500;
             z-index: 3000;
             opacity: 0;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
         }
 
-        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
     </style>
 </head>
 <body>
     <!-- Smoke Background -->
-    <div class="smoke-bg">
-        <div id="smokeContainer"></div>
+    <div class="smoke-bg" id="smokeBg">
         <div class="smoke-glow"></div>
     </div>
 
-    <div class="grain"></div>
+    <!-- Film Grain -->
+    <div class="film-grain"></div>
 
     <!-- ═══════════════════════════════════════════════════════════════════════════
-         INTRO
+         CINEMATIC INTRO
          ═══════════════════════════════════════════════════════════════════════════ -->
     <div class="intro" id="intro">
-        <div class="logo">
-            <div class="element br">
-                <span class="num">35</span>
-                <span class="sym">Br</span>
-                <span class="name">Bromine</span>
-            </div>
-            <div class="element ba">
-                <span class="num">56</span>
-                <span class="sym">Ba</span>
-                <span class="name">Barium</span>
+        <!-- Chemical Formulas Float -->
+        <div id="formulaContainer"></div>
+
+        <!-- Metallic Logo -->
+        <div class="logo-container">
+            <div class="periodic-logo">
+                <div class="element-box bromine">
+                    <span class="atomic-num">35</span>
+                    <span class="element-symbol">Br</span>
+                    <span class="element-name">Bromine</span>
+                </div>
+                <div class="element-box barium">
+                    <span class="atomic-num">56</span>
+                    <span class="element-symbol">Ba</span>
+                    <span class="element-name">Barium</span>
+                </div>
             </div>
         </div>
 
-        <div class="intro-title">
-            <h1>eaking  ad</h1>
-            <p>"I am the one who knocks."</p>
+        <div class="intro-text">
+            <h1 class="title">Heisenberg's Lab</h1>
+            <p class="subtitle">Premium Distribution</p>
+            <p class="quote">"I am the one who knocks."</p>
         </div>
 
         <button class="enter-btn" id="enterBtn">Enter</button>
     </div>
 
     <!-- ═══════════════════════════════════════════════════════════════════════════
-         APP
+         MAIN APPLICATION
          ═══════════════════════════════════════════════════════════════════════════ -->
     <div class="app hidden" id="app">
         <!-- Header -->
         <header class="header">
-            <div class="header-top">
-                <div class="brand">
-                    <div class="mini-logo">
-                        <div class="mini-el br">Br</div>
-                        <div class="mini-el ba">Ba</div>
-                    </div>
-                    <span class="brand-text">LAB</span>
+            <div class="header-brand">
+                <div class="mini-logo">
+                    <div class="mini-element br"><span class="num">35</span><span class="sym">Br</span></div>
+                    <div class="mini-element ba"><span class="num">56</span><span class="sym">Ba</span></div>
                 </div>
-
-                <div class="balance">
-                    <span class="balance-icon">$</span>
-                    <span class="balance-amount" id="balanceDisplay">1,240,000</span>
+                <div class="brand-text">
+                    <div class="brand-name">HEISENBERG'S LAB</div>
+                    <div class="brand-location" id="locationTrigger">
+                        <span id="cityDisplay">Albuquerque</span> › <span id="districtDisplay">Desert Lab</span> ▾
+                    </div>
                 </div>
             </div>
-
-            <div class="location-row">
-                <div class="location-btn" id="cityBtn">
-                    <div>
-                        <div class="loc-label">City</div>
-                        <div class="loc-value" id="cityValue">Albuquerque</div>
-                    </div>
-                    <span class="loc-arrow">▼</span>
+            <div class="header-stats">
+                <div class="stat-card">
+                    <div class="stat-label">Balance</div>
+                    <div class="stat-value" id="balanceDisplay">$1,240,000</div>
                 </div>
-                <div class="location-btn" id="districtBtn">
-                    <div>
-                        <div class="loc-label">District</div>
-                        <div class="loc-value" id="districtValue">Desert Lab</div>
-                    </div>
-                    <span class="loc-arrow">▼</span>
+                <div class="stat-card">
+                    <div class="stat-label">Heat Level</div>
+                    <div class="stat-value danger">LOW</div>
                 </div>
             </div>
         </header>
 
         <!-- Content -->
-        <main class="content">
-            <!-- Lab Section -->
+        <main class="content" id="content">
+            <!-- LAB Section -->
             <section class="section active" id="labSection">
-                <div class="section-head">
-                    <span class="section-title">Available Batches</span>
-                    <span class="section-count" id="itemCount">6 items</span>
-                </div>
-                <div class="grid" id="productGrid"></div>
+                <div class="section-title">Available Batches</div>
+                <div class="products-grid" id="productsGrid"></div>
             </section>
 
-            <!-- Turf Section -->
+            <!-- TURF Section -->
             <section class="section" id="turfSection">
-                <div class="section-head">
-                    <span class="section-title">Territory</span>
-                </div>
-                <div class="empty">
+                <div class="section-title">Territory</div>
+                <div class="empty-state">
                     <div class="empty-icon">
-                        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
                     </div>
-                    <div class="empty-text">Coming Soon</div>
+                    <div class="empty-title">Territory Expansion</div>
+                    <div class="empty-desc">Coming soon. Build your empire.</div>
                 </div>
             </section>
 
-            <!-- Cart Section -->
-            <section class="section" id="cartSection">
-                <div class="section-head">
-                    <span class="section-title">Your Barrel</span>
-                </div>
+            <!-- BARREL Section -->
+            <section class="section" id="barrelSection">
+                <div class="section-title">Your Barrel</div>
                 <div id="cartContent"></div>
             </section>
 
-            <!-- Profile Section -->
+            <!-- PROFILE Section -->
             <section class="section" id="profileSection">
-                <div class="section-head">
-                    <span class="section-title">Profile</span>
-                </div>
+                <div class="section-title">Profile</div>
                 <div class="profile-card">
-                    <div class="avatar">
+                    <div class="profile-avatar">
                         <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
                     </div>
                     <div class="profile-name">HEISENBERG</div>
-                    <div class="profile-rank">KINGPIN</div>
+                    <div class="profile-rank">RANK: KINGPIN</div>
                 </div>
-                <div class="stats">
-                    <div class="stat"><div class="stat-value">24</div><div class="stat-label">Orders</div></div>
-                    <div class="stat"><div class="stat-value">99.1%</div><div class="stat-label">Purity</div></div>
-                    <div class="stat"><div class="stat-value">$48K</div><div class="stat-label">Spent</div></div>
-                    <div class="stat"><div class="stat-value">ELITE</div><div class="stat-label">Rep</div></div>
+                <div class="stats-grid">
+                    <div class="stat-box"><div class="stat-box-value">24</div><div class="stat-box-label">Orders</div></div>
+                    <div class="stat-box"><div class="stat-box-value">99.1%</div><div class="stat-box-label">Avg Purity</div></div>
+                    <div class="stat-box"><div class="stat-box-value">$48K</div><div class="stat-box-label">Spent</div></div>
+                    <div class="stat-box"><div class="stat-box-value">ELITE</div><div class="stat-box-label">Reputation</div></div>
                 </div>
             </section>
         </main>
 
-        <!-- Bottom Nav -->
-        <nav class="nav">
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
             <div class="nav-item active" data-section="lab">
-                <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M7 2v2h1v7.15l-4.65 7.19L3 19h18l-.35-.66L16 11.15V4h1V2H7zm5 12l3.55-5.5L14 8V4h-4v4l-1.55.5L12 14z"/></svg></div>
+                <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M6 22h12v-2H6v2zM7 2v2h2v7.6L4 18h16l-5-6.4V4h2V2H7zm5 12l3.6-4.6L14 9V4h-4v5l-1.6 4.4L13 14z"/></svg></div>
                 <span class="nav-label">Lab</span>
             </div>
             <div class="nav-item" data-section="turf">
                 <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></div>
                 <span class="nav-label">Turf</span>
             </div>
-            <div class="nav-item" data-section="cart">
-                <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M17 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-3l1.1-2h7.5c.7 0 1.3-.4 1.5-1l3.4-6.2c.2-.4-.1-.8-.5-.8H6.2l-.9-2H2v2h2l3.6 7.6L6.2 16c-.4.7.1 1.5 1 1.5h12v-2H7.4l.9-1.5z"/></svg></div>
-                <span class="nav-label">Cart</span>
-                <span class="nav-badge hidden" id="cartBadge">0</span>
+            <div class="nav-item" data-section="barrel">
+                <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M17 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-3l1.1-2h7.5c.7 0 1.3-.4 1.5-1l3.4-6.2c.2-.4-.1-.8-.5-.8H6.2l-.9-2H2v2h2l3.6 7.6L6.2 16c-.4.7.1 1.5 1 1.5h12v-2H7.4l.9-1.6z"/></svg></div>
+                <span class="nav-label">Barrel</span>
+                <span class="cart-badge hidden" id="cartBadge">0</span>
             </div>
             <div class="nav-item" data-section="profile">
                 <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
@@ -1058,28 +1299,21 @@
         </nav>
     </div>
 
-    <!-- City Modal -->
-    <div class="modal-bg" id="cityModal">
+    <!-- Location Modal -->
+    <div class="modal-overlay" id="locationModal">
         <div class="modal">
-            <div class="modal-head">
-                <span class="modal-title">Select City</span>
-                <button class="modal-close" onclick="closeModal('cityModal')"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+            <div class="modal-handle"></div>
+            <div class="modal-header">
+                <span class="modal-title">Select Location</span>
+                <button class="modal-close" onclick="closeModal('locationModal')">
+                    <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                </button>
             </div>
-            <div class="modal-body" id="cityOptions"></div>
+            <div class="modal-body" id="locationOptions"></div>
         </div>
     </div>
 
-    <!-- District Modal -->
-    <div class="modal-bg" id="districtModal">
-        <div class="modal">
-            <div class="modal-head">
-                <span class="modal-title">Select District</span>
-                <button class="modal-close" onclick="closeModal('districtModal')"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
-            </div>
-            <div class="modal-body" id="districtOptions"></div>
-        </div>
-    </div>
-
+    <!-- Toast -->
     <div class="toast" id="toast"></div>
 
     <script>
@@ -1087,52 +1321,69 @@
         // DATA
         // ═══════════════════════════════════════════════════════════════════════════
         const PRODUCTS = [
-            { id: 1, name: 'Blue Sky', desc: 'C₁₀H₁₅N', purity: 99.1, price: 120, stock: 'In Stock', high: true, icon: 'crystal' },
-            { id: 2, name: 'Chili P', desc: 'Pinkman Special', purity: 96.2, price: 45, stock: '8 left', low: true, icon: 'flask' },
-            { id: 3, name: 'Pollos', desc: 'Distribution', purity: 97.8, price: 70, stock: '15 ready', icon: 'beaker' },
-            { id: 4, name: 'Madrigal', desc: 'Industrial', purity: 91.0, price: 35, stock: 'Stocked', icon: 'pill' },
-            { id: 5, name: 'Vamonos', desc: 'Mobile Lab', purity: 98.5, price: 95, stock: 'Limited', high: true, icon: 'van' },
-            { id: 6, name: 'A1A Wash', desc: 'Clean', purity: 89.3, price: 28, stock: 'Bulk', icon: 'barrel' }
+            { id: 1, name: 'Blue Sky', formula: 'C₁₀H₁₅N', purity: 99.1, price: 120, stock: 'In Stock', premium: true, color: '#67b8de' },
+            { id: 2, name: 'Chili P', formula: 'Special Blend', purity: 96.2, price: 45, stock: '8 Left', stockLow: true, color: '#4ade80' },
+            { id: 3, name: 'Pollos Blend', formula: 'Distribution Grade', purity: 97.8, price: 70, stock: '15 Ready', color: '#fbbf24' },
+            { id: 4, name: 'Madrigal', formula: 'Industrial', purity: 91.0, price: 35, stock: 'Stocked', color: '#f472b6' },
+            { id: 5, name: 'Vamonos', formula: 'Mobile Lab', purity: 98.5, price: 95, stock: 'Limited', premium: true, color: '#a3e635' },
+            { id: 6, name: 'A1A Special', formula: 'Car Wash Clean', purity: 89.3, price: 28, stock: 'Bulk', color: '#fb923c' }
         ];
 
-        const CITIES = ['Albuquerque', 'Santa Fe', 'El Paso', 'Phoenix'];
-        const DISTRICTS = {
+        const LOCATIONS = {
             'Albuquerque': ['Desert Lab', 'Los Pollos', 'A1A Car Wash', 'Vamonos HQ'],
             'Santa Fe': ['Downtown', 'North Side', 'Industrial'],
             'El Paso': ['Border Zone', 'Cartel Alley', 'Safe House'],
-            'Phoenix': ['Metro', 'Desert', 'Distribution']
+            'Phoenix': ['Metro', 'Desert Outskirts', 'Distribution Hub']
         };
 
-        const ICONS = {
-            crystal: `<svg viewBox="0 0 24 24" fill="#03A9F4"><path d="M12 2L2 12l10 10 10-10L12 2zm0 15l-5-5 5-5 5 5-5 5z"/></svg>`,
-            flask: `<svg viewBox="0 0 24 24" fill="#4CAF50"><path d="M7 2v2h1v7.15l-4.65 7.19L3 19h18l-.35-.66L16 11.15V4h1V2H7zm5 12l3.55-5.5L14 8V4h-4v4l-1.55.5L12 14z"/></svg>`,
-            beaker: `<svg viewBox="0 0 24 24" fill="#FFC107"><path d="M6 3v6l-2 9c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2l-2-9V3H6zm2 2h8v5l1.5 7h-11L8 10V5z"/></svg>`,
-            pill: `<svg viewBox="0 0 24 24" fill="#E91E63"><path d="M4.22 11.29l9.9-9.9c1.95-1.95 5.12-1.95 7.07 0s1.95 5.12 0 7.07l-9.9 9.9c-1.95 1.95-5.12 1.95-7.07 0s-1.95-5.12 0-7.07zm10.61-7.78l-4.95 4.95 4.24 4.24 4.95-4.95c1.17-1.17 1.17-3.07 0-4.24-1.17-1.17-3.07-1.17-4.24 0z"/></svg>`,
-            van: `<svg viewBox="0 0 24 24" fill="#8BC34A"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5H15V3H9v2H6.5c-.66 0-1.22.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>`,
-            barrel: `<svg viewBox="0 0 24 24" fill="#FF9800"><path d="M17 4c0-1.1-.9-2-2-2H9c-1.1 0-2 .9-2 2v1H4v2h1v11c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V7h1V5h-3V4zm-6 0h2v1h-2V4zm5 14H8V7h8v11z"/></svg>`
+        // ═══════════════════════════════════════════════════════════════════════════
+        // STATE
+        // ═══════════════════════════════════════════════════════════════════════════
+        let state = {
+            currentSection: 'lab',
+            city: 'Albuquerque',
+            district: 'Desert Lab',
+            cart: [],
+            balance: 1240000
         };
 
-        let state = { section: 'lab', city: 'Albuquerque', district: 'Desert Lab', cart: [], balance: 1240000 };
-
         // ═══════════════════════════════════════════════════════════════════════════
-        // SMOKE
+        // SMOKE PARTICLES
         // ═══════════════════════════════════════════════════════════════════════════
-        function createSmoke() {
-            const container = document.getElementById('smokeContainer');
+        function createSmokeParticles() {
+            const bg = document.getElementById('smokeBg');
             for (let i = 0; i < 12; i++) {
-                const smoke = document.createElement('div');
-                smoke.className = 'smoke';
-                const size = 150 + Math.random() * 200;
-                smoke.style.cssText = `
+                const particle = document.createElement('div');
+                particle.className = 'smoke-particle';
+                const size = 150 + Math.random() * 250;
+                particle.style.cssText = `
                     width: ${size}px;
                     height: ${size}px;
                     left: ${Math.random() * 100}%;
                     bottom: -${size}px;
-                    background: radial-gradient(ellipse at center, rgba(76,175,80,0.3) 0%, rgba(76,175,80,0.1) 40%, transparent 70%);
                     animation-duration: ${12 + Math.random() * 8}s;
                     animation-delay: ${Math.random() * 10}s;
                 `;
-                container.appendChild(smoke);
+                bg.appendChild(particle);
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════════
+        // FORMULA PARTICLES (Intro)
+        // ═══════════════════════════════════════════════════════════════════════════
+        function createFormulaParticles() {
+            const container = document.getElementById('formulaContainer');
+            const formulas = ['C₁₀H₁₅N', 'CH₄', 'H₂SO₄', 'NH₃', 'HCl', 'P₄', 'Li', 'NaOH', 'I₂'];
+            for (let i = 0; i < 15; i++) {
+                const formula = document.createElement('div');
+                formula.className = 'formula-particle';
+                formula.textContent = formulas[Math.floor(Math.random() * formulas.length)];
+                formula.style.cssText = `
+                    left: ${Math.random() * 100}%;
+                    animation-duration: ${15 + Math.random() * 10}s;
+                    animation-delay: ${Math.random() * 10}s;
+                `;
+                container.appendChild(formula);
             }
         }
 
@@ -1141,40 +1392,43 @@
         // ═══════════════════════════════════════════════════════════════════════════
         document.getElementById('enterBtn').addEventListener('click', () => {
             haptic('heavy');
-            document.getElementById('intro').classList.add('exit');
+            const intro = document.getElementById('intro');
+            intro.classList.add('fade-out');
             setTimeout(() => {
-                document.getElementById('intro').classList.add('hidden');
+                intro.classList.add('hidden');
                 document.getElementById('app').classList.remove('hidden');
-                init();
-            }, 600);
+                initApp();
+            }, 1000);
         });
 
         // ═══════════════════════════════════════════════════════════════════════════
-        // INIT
+        // APP INIT
         // ═══════════════════════════════════════════════════════════════════════════
-        function init() {
+        function initApp() {
             renderProducts();
             renderCart();
-            setupNav();
-            setupLocation();
+            setupNavigation();
+            setupLocationTrigger();
         }
 
         // ═══════════════════════════════════════════════════════════════════════════
         // PRODUCTS
         // ═══════════════════════════════════════════════════════════════════════════
         function renderProducts() {
-            const grid = document.getElementById('productGrid');
+            const grid = document.getElementById('productsGrid');
             grid.innerHTML = PRODUCTS.map(p => `
-                <div class="card" onclick="addToCart(${p.id})">
-                    <span class="purity-tag ${p.high ? 'high' : ''}">${p.purity}%</span>
-                    <div class="card-icon">${ICONS[p.icon]}</div>
-                    <div class="card-name">${p.name}</div>
-                    <div class="card-desc">${p.desc}</div>
-                    <div class="purity-bar"><div class="purity-fill" style="width:${p.purity}%"></div></div>
-                    <div class="card-footer">
-                        <span class="card-price">€${p.price}</span>
-                        <span class="card-stock ${p.low ? 'low' : ''}">${p.stock}</span>
+                <div class="product-card" onclick="addToCart(${p.id})">
+                    <span class="product-badge ${p.premium ? 'premium' : ''}">${p.purity}%</span>
+                    <div class="product-icon">
+                        <svg viewBox="0 0 24 24" fill="${p.color}">
+                            <path d="M7 2v2h1v14c0 1.1.9 2 2 2h4c1.1 0 2-.9 2-2V4h1V2H7zm5 16h-2V8h2v10zm2 0h-1V4h-2v14h-1V4H9v14c0 .55.45 1 1 1h4c.55 0 1-.45 1-1V4h-1v14z"/>
+                        </svg>
                     </div>
+                    <div class="product-name">${p.name}</div>
+                    <div class="product-formula">${p.formula}</div>
+                    <div class="purity-bar"><div class="purity-fill" style="width: ${p.purity}%"></div></div>
+                    <div class="product-price"><span>€</span>${p.price}</div>
+                    <div class="product-stock ${p.stockLow ? 'low' : ''}">${p.stock}</div>
                 </div>
             `).join('');
         }
@@ -1182,138 +1436,156 @@
         // ═══════════════════════════════════════════════════════════════════════════
         // CART
         // ═══════════════════════════════════════════════════════════════════════════
-        function addToCart(id) {
+        function addToCart(productId) {
             haptic('light');
-            const product = PRODUCTS.find(p => p.id === id);
-            const existing = state.cart.find(c => c.id === id);
+            const product = PRODUCTS.find(p => p.id === productId);
+            const existing = state.cart.find(item => item.id === productId);
             if (existing) existing.qty++;
             else state.cart.push({ ...product, qty: 1 });
-            updateBadge();
+            updateCartBadge();
             renderCart();
-            toast(`${product.name} added`);
+            showToast(`${product.name} added to barrel`);
         }
 
-        function removeFromCart(id) {
+        function removeFromCart(productId) {
             haptic('light');
-            state.cart = state.cart.filter(c => c.id !== id);
-            updateBadge();
+            state.cart = state.cart.filter(item => item.id !== productId);
+            updateCartBadge();
             renderCart();
         }
 
-        function updateBadge() {
+        function updateCartBadge() {
             const badge = document.getElementById('cartBadge');
-            const total = state.cart.reduce((s, c) => s + c.qty, 0);
+            const total = state.cart.reduce((sum, item) => sum + item.qty, 0);
             badge.textContent = total;
             badge.classList.toggle('hidden', total === 0);
         }
 
         function renderCart() {
-            const el = document.getElementById('cartContent');
-            if (!state.cart.length) {
-                el.innerHTML = `<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M17 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-3l1.1-2h7.5c.7 0 1.3-.4 1.5-1l3.4-6.2c.2-.4-.1-.8-.5-.8H6.2l-.9-2H2v2h2l3.6 7.6L6.2 16c-.4.7.1 1.5 1 1.5h12v-2H7.4l.9-1.5z"/></svg></div><div class="empty-text">Barrel is empty</div></div>`;
+            const container = document.getElementById('cartContent');
+            if (state.cart.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M17 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-3l1.1-2h7.5c.7 0 1.3-.4 1.5-1l3.4-6.2c.2-.4-.1-.8-.5-.8H6.2l-.9-2H2v2h2l3.6 7.6L6.2 16c-.4.7.1 1.5 1 1.5h12v-2H7.4l.9-1.6z"/></svg></div>
+                        <div class="empty-title">Barrel is Empty</div>
+                        <div class="empty-desc">Add products from the Lab</div>
+                    </div>
+                `;
                 return;
             }
-            const total = state.cart.reduce((s, c) => s + c.price * c.qty, 0);
-            el.innerHTML = `
-                ${state.cart.map(c => `
+            const total = state.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            container.innerHTML = `
+                ${state.cart.map(item => `
                     <div class="cart-item">
-                        <div class="cart-item-icon">${ICONS[c.icon]}</div>
-                        <div class="cart-item-info"><div class="cart-item-name">${c.name}</div><div class="cart-item-qty">Qty: ${c.qty}</div></div>
-                        <div class="cart-item-price">€${c.price * c.qty}</div>
-                        <button class="cart-item-remove" onclick="removeFromCart(${c.id})"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+                        <div class="cart-item-icon"><svg viewBox="0 0 24 24" fill="${item.color}"><path d="M7 2v2h1v14c0 1.1.9 2 2 2h4c1.1 0 2-.9 2-2V4h1V2H7z"/></svg></div>
+                        <div class="cart-item-info">
+                            <div class="cart-item-name">${item.name}</div>
+                            <div class="cart-item-qty">Qty: ${item.qty}</div>
+                        </div>
+                        <div class="cart-item-price">€${item.price * item.qty}</div>
+                        <button class="cart-item-remove" onclick="removeFromCart(${item.id})">
+                            <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                        </button>
                     </div>
                 `).join('')}
                 <div class="cart-summary">
                     <div class="cart-total"><span>Total</span><span class="cart-total-amount">€${total.toLocaleString()}</span></div>
-                    <button class="checkout-btn" onclick="checkout()">Cook Order</button>
+                    <button class="checkout-btn" onclick="checkout()">Cook the Order</button>
                 </div>
             `;
         }
 
         function checkout() {
-            if (!state.cart.length) return;
+            if (state.cart.length === 0) return;
             haptic('heavy');
-            const total = state.cart.reduce((s, c) => s + c.price * c.qty, 0);
+            const total = state.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
             state.balance -= total;
             state.cart = [];
-            updateBadge();
+            updateCartBadge();
             renderCart();
-            document.getElementById('balanceDisplay').textContent = state.balance.toLocaleString();
-            toast('Order placed!');
-            navigate('lab');
+            document.getElementById('balanceDisplay').textContent = '$' + state.balance.toLocaleString();
+            showToast('Order placed successfully!');
+            navigateTo('lab');
         }
 
         // ═══════════════════════════════════════════════════════════════════════════
-        // NAV
+        // NAVIGATION
         // ═══════════════════════════════════════════════════════════════════════════
-        function setupNav() {
+        function setupNavigation() {
             document.querySelectorAll('.nav-item').forEach(item => {
-                item.addEventListener('click', () => navigate(item.dataset.section));
+                item.addEventListener('click', () => navigateTo(item.dataset.section));
             });
         }
 
-        function navigate(section) {
+        function navigateTo(section) {
             haptic('light');
-            state.section = section;
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.section === section));
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            state.currentSection = section;
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.toggle('active', item.dataset.section === section);
+            });
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
             document.getElementById(`${section}Section`).classList.add('active');
         }
 
         // ═══════════════════════════════════════════════════════════════════════════
         // LOCATION
         // ═══════════════════════════════════════════════════════════════════════════
-        function setupLocation() {
-            document.getElementById('cityBtn').onclick = () => { openModal('cityModal'); renderCities(); };
-            document.getElementById('districtBtn').onclick = () => { openModal('districtModal'); renderDistricts(); };
+        function setupLocationTrigger() {
+            document.getElementById('locationTrigger').addEventListener('click', () => {
+                haptic('light');
+                openModal('locationModal');
+                renderLocationOptions();
+            });
         }
 
-        function renderCities() {
-            document.getElementById('cityOptions').innerHTML = CITIES.map(c =>
-                `<div class="option ${c === state.city ? 'selected' : ''}" onclick="selectCity('${c}')">${c}</div>`
-            ).join('');
+        function renderLocationOptions() {
+            const container = document.getElementById('locationOptions');
+            container.innerHTML = Object.entries(LOCATIONS).map(([city, districts]) => `
+                <div style="margin-bottom: 16px;">
+                    <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">${city}</div>
+                    ${districts.map(district => `
+                        <div class="location-option ${state.city === city && state.district === district ? 'selected' : ''}" onclick="selectLocation('${city}', '${district}')">
+                            ${district}
+                        </div>
+                    `).join('')}
+                </div>
+            `).join('');
         }
 
-        function renderDistricts() {
-            document.getElementById('districtOptions').innerHTML = (DISTRICTS[state.city] || []).map(d =>
-                `<div class="option ${d === state.district ? 'selected' : ''}" onclick="selectDistrict('${d}')">${d}</div>`
-            ).join('');
-        }
-
-        function selectCity(city) {
+        function selectLocation(city, district) {
             haptic('light');
             state.city = city;
-            state.district = DISTRICTS[city][0];
-            document.getElementById('cityValue').textContent = city;
-            document.getElementById('districtValue').textContent = state.district;
-            closeModal('cityModal');
-        }
-
-        function selectDistrict(district) {
-            haptic('light');
             state.district = district;
-            document.getElementById('districtValue').textContent = district;
-            closeModal('districtModal');
+            document.getElementById('cityDisplay').textContent = city;
+            document.getElementById('districtDisplay').textContent = district;
+            closeModal('locationModal');
         }
 
         // ═══════════════════════════════════════════════════════════════════════════
-        // MODAL
+        // MODALS
         // ═══════════════════════════════════════════════════════════════════════════
-        function openModal(id) { document.getElementById(id).classList.add('open'); }
-        function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+        function openModal(id) {
+            document.getElementById(id).classList.add('active');
+        }
 
-        document.querySelectorAll('.modal-bg').forEach(m => {
-            m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) overlay.classList.remove('active');
+            });
         });
 
         // ═══════════════════════════════════════════════════════════════════════════
         // TOAST
         // ═══════════════════════════════════════════════════════════════════════════
-        function toast(msg) {
-            const t = document.getElementById('toast');
-            t.textContent = msg;
-            t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 2000);
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
         }
 
         // ═══════════════════════════════════════════════════════════════════════════
@@ -1331,12 +1603,16 @@
         if (window.Telegram?.WebApp) {
             const tg = window.Telegram.WebApp;
             tg.expand();
+            tg.enableClosingConfirmation();
             tg.setHeaderColor('#000000');
             tg.setBackgroundColor('#000000');
         }
 
-        // INIT SMOKE
-        createSmoke();
+        // ═══════════════════════════════════════════════════════════════════════════
+        // INIT
+        // ═══════════════════════════════════════════════════════════════════════════
+        createSmokeParticles();
+        createFormulaParticles();
     </script>
 </body>
 </html>
