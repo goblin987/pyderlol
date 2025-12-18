@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Heisenberg Distribution V9</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;700;900&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        @font-face {
+            font-family: 'Pricedown';
+            src: url('/webapp_fresh/pricedown.woff2') format('woff2'),
+                 url('/webapp_fresh/pricedown.woff') format('woff');
+            font-display: swap;
+        }
+
+        :root {
+            --bb-green: #3fa535;
+            --bb-green-dark: #102610;
+            --bb-green-glow: #4ade80;
+            --money-green: #2e8b57;
+            --black: #000000;
+            --gta-yellow: #f6c915;
+            --text-primary: #ffffff;
+            --surface: rgba(16, 38, 16, 0.4);
+            --surface-glass: rgba(0, 0, 0, 0.6);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--black);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════
+           SMOKE BACKGROUND (Universal)
+           ═══════════════════════════════════════════════════════════════════════════ */
+        #smokeCanvas {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════
+           AUTHENTIC INTRO
+           ═══════════════════════════════════════════════════════════════════════════ */
+        .intro {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .intro-logo {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 1.5s ease;
+        }
+
+        .intro-logo.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .bb-box {
+            width: 80px;
+            height: 90px;
+            background: var(--bb-green-dark);
+            border: 2px solid var(--bb-green);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 0 40px rgba(63, 165, 53, 0.2);
+        }
+
+        .bb-box .atomic-num {
+            position: absolute;
+            top: 5px;
+            left: 7px;
+            font-size: 12px;
+            font-weight: 900;
+            color: var(--bb-green);
+        }
+
+        .bb-box .symbol {
+            font-family: 'Playfair Display', serif;
+            font-size: 50px;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1;
+        }
+
+        .intro-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            letter-spacing: 2px;
+            color: #fff;
+            opacity: 0;
+            transition: opacity 2s ease;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .intro-title span { color: var(--bb-green); }
+
+        .btn-enter {
+            margin-top: 60px;
+            padding: 15px 50px;
+            background: transparent;
+            border: 1px solid var(--bb-green);
+            color: var(--bb-green);
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            font-size: 14px;
+            letter-spacing: 5px;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.5s ease;
+            text-transform: uppercase;
+        }
+
+        .btn-enter:hover {
+            background: var(--bb-green);
+            color: #000;
+            box-shadow: 0 0 50px rgba(63, 165, 53, 0.5);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════
+           MAIN APP - GTA INSPIRED BUT NOSTALGIC
+           ═══════════════════════════════════════════════════════════════════════════ */
+        .app {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        /* GTA HUD ELEMENTS */
+        .gta-hud-top {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            text-align: right;
+            z-index: 1000;
+        }
+
+        .gta-money {
+            font-family: 'Pricedown', sans-serif;
+            font-size: 42px;
+            color: var(--money-green);
+            text-shadow: 2px 2px 0px #000, -2px -2px 0px #000, 2px -2px 0px #000, -2px 2px 0px #000;
+            letter-spacing: 1px;
+        }
+
+        .gta-hud-bottom {
+            position: fixed;
+            bottom: 100px;
+            right: 25px;
+            text-align: right;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .gta-location {
+            font-family: 'Pricedown', sans-serif;
+            font-size: 24px;
+            color: #fff;
+            text-shadow: 2px 2px 0px #000;
+            text-transform: uppercase;
+        }
+
+        .gta-zone {
+            font-family: 'Pricedown', sans-serif;
+            font-size: 18px;
+            color: var(--gta-yellow);
+            text-shadow: 1px 1px 0px #000;
+            margin-top: -5px;
+        }
+
+        /* Content Area */
+        .header {
+            padding: 30px 20px 10px;
+        }
+
+        .brand-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            color: var(--bb-green);
+            letter-spacing: 1px;
+        }
+
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            padding-bottom: 120px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Mission Style Cards - Very Clean & Dummy Proof */
+        .product-card {
+            background: var(--surface-glass);
+            border-left: 4px solid var(--bb-green);
+            margin-bottom: 15px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .product-card:active { transform: scale(0.98); }
+
+        .product-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .product-name {
+            font-family: 'Pricedown', sans-serif;
+            font-size: 26px;
+            color: #fff;
+            letter-spacing: 1px;
+        }
+
+        .product-meta {
+            font-family: 'Courier Prime', monospace;
+            font-size: 11px;
+            color: var(--bb-green-glow);
+            text-transform: uppercase;
+        }
+
+        .product-price {
+            font-family: 'Pricedown', sans-serif;
+            font-size: 24px;
+            color: var(--gta-yellow);
+        }
+
+        /* Bottom Nav - EZ Use */
+        .nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: rgba(0,0,0,0.9);
+            border-top: 1px solid var(--bb-green-dark);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            color: #444;
+            transition: color 0.3s;
+        }
+
+        .nav-item.active { color: var(--bb-green); }
+
+        .nav-item svg { width: 24px; height: 24px; fill: currentColor; }
+        .nav-item span { font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Modals */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 2000;
+            display: none;
+            flex-direction: column;
+            padding: 40px 25px;
+        }
+
+        .modal.active { display: flex; animation: fadeIn 0.3s ease; }
+
+        .modal-header {
+            font-family: 'Pricedown', sans-serif;
+            font-size: 40px;
+            color: var(--bb-green);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .option-btn {
+            background: #111;
+            border: 1px solid #222;
+            padding: 20px;
+            margin-bottom: 10px;
+            color: #fff;
+            font-family: 'Pricedown', sans-serif;
+            font-size: 22px;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .option-btn:hover { border-color: var(--bb-green); }
+        .option-btn.selected { background: var(--bb-green); color: #000; }
+
+        .btn-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #666;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bb-green);
+            color: #000;
+            padding: 10px 25px;
+            font-family: 'Pricedown', sans-serif;
+            font-size: 18px;
+            border-radius: 4px;
+            z-index: 3000;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Smoke -->
+    <canvas id="smokeCanvas"></canvas>
+
+    <!-- Original Intro -->
+    <div class="intro" id="intro">
+        <div class="intro-logo" id="introLogo">
+            <div class="bb-box">
+                <span class="atomic-num">35</span>
+                <span class="symbol">Br</span>
+            </div>
+            <div class="bb-box">
+                <span class="atomic-num">56</span>
+                <span class="symbol">Ba</span>
+            </div>
+        </div>
+        <h1 class="intro-title" id="introTitle">HEISENBERG <span>DISTRIBUTION</span></h1>
+        <button class="btn-enter" id="enterBtn">ENTER</button>
+    </div>
+
+    <!-- Main App -->
+    <div class="app" id="app">
+        <!-- GTA HUD -->
+        <div class="gta-hud-top">
+            <div class="gta-money" id="moneyHud">$1,240,000</div>
+        </div>
+
+        <div class="gta-hud-bottom">
+            <div class="gta-location" id="cityHud">Albuquerque</div>
+            <div class="gta-zone" id="zoneHud">Desert Lab</div>
+        </div>
+
+        <header class="header">
+            <div class="brand-logo">HEISENBERG LABS</div>
+        </header>
+
+        <main class="content">
+            <div id="productGrid"></div>
+        </main>
+
+        <nav class="nav">
+            <div class="nav-item active" onclick="switchSection('lab')">
+                <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-8 14H7v-2h4v2zm0-4H7v-2h4v2zm0-4H7V7h4v2zm6 12h-4v-2h4v2zm0-4h-4v-2h4v2zm0-4h-4V7h4v2z"/></svg>
+                <span>Lab</span>
+            </div>
+            <div class="nav-item" onclick="openLocationModal()">
+                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                <span>Turf</span>
+            </div>
+            <div class="nav-item" onclick="switchSection('barrel')">
+                <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                <span>Barrel</span>
+            </div>
+            <div class="nav-item" onclick="switchSection('profile')">
+                <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                <span>Profile</span>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal" id="locationModal">
+        <div class="btn-close" onclick="closeLocationModal()">✕</div>
+        <div class="modal-header">CHOOSE TERRITORY</div>
+        <div id="locationOptions"></div>
+    </div>
+
+    <div class="toast" id="toast">ADDED TO BARREL</div>
+
+    <!-- Theme Music (Royalty free placeholder) -->
+    <audio id="introMusic" src="https://raw.githubusercontent.com/goblin987/pyderlol/main/intro_music.mp3"></audio>
+
+    <script>
+        // ═══════════════════════════════════════════════════════════════════════════
+        // NOSTALGIC SMOKE EFFECT
+        // ═══════════════════════════════════════════════════════════════════════════
+        const canvas = document.getElementById('smokeCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + 100;
+                this.size = 60 + Math.random() * 120;
+                this.speedY = 0.4 + Math.random() * 1.2;
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                this.opacity = 0;
+                this.maxOpacity = 0.1 + Math.random() * 0.15;
+            }
+            update() {
+                this.y -= this.speedY;
+                this.x += this.speedX;
+                if (this.y < canvas.height * 0.8 && this.opacity < this.maxOpacity) this.opacity += 0.002;
+                if (this.y < 0) this.reset();
+            }
+            draw() {
+                ctx.beginPath();
+                const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
+                grad.addColorStop(0, `rgba(63, 165, 53, ${this.opacity})`);
+                grad.addColorStop(1, 'transparent');
+                ctx.fillStyle = grad;
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 40; i++) particles.push(new Particle());
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // ═══════════════════════════════════════════════════════════════════════════
+        // INTRO SEQUENCE
+        // ═══════════════════════════════════════════════════════════════════════════
+        setTimeout(() => {
+            document.getElementById('introLogo').classList.add('active');
+        }, 500);
+
+        setTimeout(() => {
+            document.getElementById('introTitle').style.opacity = '1';
+        }, 1500);
+
+        setTimeout(() => {
+            document.getElementById('enterBtn').style.opacity = '1';
+        }, 2500);
+
+        document.getElementById('enterBtn').addEventListener('click', () => {
+            const music = document.getElementById('introMusic');
+            music.play().catch(e => console.log("Audio play blocked"));
+            
+            if (window.Telegram?.WebApp?.HapticFeedback) {
+                window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+            }
+
+            document.getElementById('intro').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('intro').style.display = 'none';
+                document.getElementById('app').style.opacity = '1';
+                initApp();
+            }, 1500);
+        });
+
+        // ═══════════════════════════════════════════════════════════════════════════
+        // APP LOGIC
+        // ═══════════════════════════════════════════════════════════════════════════
+        const PRODUCTS = [
+            { id: 1, name: 'Blue Sky', purity: '99.1%', price: 120, formula: 'C10H15N' },
+            { id: 2, name: 'Chili P', purity: '96.2%', price: 45, formula: 'Special' },
+            { id: 3, name: 'Pollos Blend', purity: '97.8%', price: 70, formula: 'Madrigal' },
+            { id: 4, name: 'Vamonos Pest', purity: '98.5%', price: 95, formula: 'Industrial' },
+            { id: 5, name: 'A1A Car Wash', purity: '88.2%', price: 30, formula: 'Basic' }
+        ];
+
+        const LOCATIONS = {
+            'Albuquerque': ['Desert Lab', 'Los Pollos', 'A1A Car Wash'],
+            'Santa Fe': ['Industrial', 'North Side'],
+            'El Paso': ['Border Hub', 'Safe House']
+        };
+
+        let state = {
+            city: 'Albuquerque',
+            zone: 'Desert Lab',
+            balance: 1240000
+        };
+
+        function initApp() {
+            renderProducts();
+        }
+
+        function renderProducts() {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = PRODUCTS.map(p => `
+                <div class="product-card" onclick="addToBarrel('${p.name}')">
+                    <div class="product-info">
+                        <div class="product-name">${p.name}</div>
+                        <div class="product-meta">${p.purity} PURE • ${p.formula}</div>
+                    </div>
+                    <div class="product-price">$${p.price}</div>
+                </div>
+            `).join('');
+        }
+
+        function addToBarrel(name) {
+            if (window.Telegram?.WebApp?.HapticFeedback) {
+                window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+            }
+            const toast = document.getElementById('toast');
+            toast.textContent = `${name.toUpperCase()} ADDED`;
+            toast.style.display = 'block';
+            setTimeout(() => toast.style.display = 'none', 2000);
+        }
+
+        // Location Modal
+        function openLocationModal() {
+            const list = document.getElementById('locationOptions');
+            list.innerHTML = Object.entries(LOCATIONS).map(([city, zones]) => `
+                <div style="margin-bottom: 20px;">
+                    <div style="color: #666; font-size: 10px; font-weight: 900; text-transform: uppercase; margin-bottom: 5px;">${city}</div>
+                    ${zones.map(zone => `
+                        <button class="option-btn ${state.zone === zone ? 'selected' : ''}" 
+                                onclick="selectLocation('${city}', '${zone}')">${zone}</button>
+                    `).join('')}
+                </div>
+            `).join('');
+            document.getElementById('locationModal').classList.add('active');
+        }
+
+        function closeLocationModal() {
+            document.getElementById('locationModal').classList.remove('active');
+        }
+
+        function selectLocation(city, zone) {
+            state.city = city;
+            state.zone = zone;
+            document.getElementById('cityHud').textContent = city;
+            document.getElementById('zoneHud').textContent = zone;
+            closeLocationModal();
+        }
+
+        function switchSection(section) {
+            // Simple section switcher logic
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+        }
+
+        // Telegram Integration
+        if (window.Telegram?.WebApp) {
+            window.Telegram.WebApp.expand();
+            window.Telegram.WebApp.setHeaderColor('#000000');
+        }
+    </script>
+</body>
+</html>
+
