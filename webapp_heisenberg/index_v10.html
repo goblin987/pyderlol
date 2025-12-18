@@ -1,0 +1,1758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Breaking Bad</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --black: #000000;
+            --rich-black: #030503;
+            --surface: #0a0d0a;
+            --card-bg: #0c100c;
+            --card-border: #1a251a;
+            
+            --bb-green: #00c853;
+            --bb-green-dark: #00a040;
+            --bb-green-light: #69f0ae;
+            --bb-green-glow: rgba(0, 200, 83, 0.6);
+            --bb-green-subtle: rgba(0, 200, 83, 0.08);
+            
+            --crystal: #4fc3f7;
+            --crystal-glow: rgba(79, 195, 247, 0.5);
+            
+            --white: #ffffff;
+            --gray-100: #f0f0f0;
+            --gray-300: #a0a0a0;
+            --gray-500: #606060;
+            --gray-700: #303030;
+            
+            --red: #ff3d3d;
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--black);
+            color: var(--white);
+            -webkit-font-smoothing: antialiased;
+            user-select: none;
+        }
+
+        .hidden { display: none !important; }
+
+        /* ═══════════════════════════════════════════════════════════════════════════
+           GLOBAL GREEN SMOKE BACKGROUND
+           ═══════════════════════════════════════════════════════════════════════════ */
+        .smoke-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            background: linear-gradient(180deg, #000 0%, #020402 50%, #040804 100%);
+        }
+
+        .smoke-cloud {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            will-change: transform;
+        }
+
+        /* Intro smoke - larger, more dramatic */
+        .intro .smoke-cloud {
+            animation: introSmoke 12s ease-in-out infinite;
+        }
+
+        /* App smoke - continuous ambient */
+        .app-smoke .smoke-cloud {
+            animation: appSmoke 18s ease-in-out infinite;
+        }
+
+        .smoke-cloud:nth-child(1) {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(ellipse, rgba(0, 200, 83, 0.4) 0%, transparent 70%);
+            left: -10%;
+            bottom: -100px;
+            animation-delay: 0s;
+        }
+
+        .smoke-cloud:nth-child(2) {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(ellipse, rgba(0, 255, 100, 0.3) 0%, transparent 70%);
+            right: -5%;
+            bottom: -80px;
+            animation-delay: 3s;
+        }
+
+        .smoke-cloud:nth-child(3) {
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(ellipse, rgba(0, 180, 70, 0.35) 0%, transparent 70%);
+            left: 30%;
+            bottom: -120px;
+            animation-delay: 6s;
+        }
+
+        .smoke-cloud:nth-child(4) {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(ellipse, rgba(0, 220, 90, 0.25) 0%, transparent 70%);
+            left: 60%;
+            bottom: -60px;
+            animation-delay: 9s;
+        }
+
+        .smoke-cloud:nth-child(5) {
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(ellipse, rgba(0, 150, 60, 0.3) 0%, transparent 70%);
+            left: 10%;
+            bottom: -80px;
+            animation-delay: 2s;
+        }
+
+        @keyframes introSmoke {
+            0% { transform: translateY(0) scale(1); opacity: 0; }
+            15% { opacity: 0.9; }
+            85% { opacity: 0.3; }
+            100% { transform: translateY(-140vh) scale(2.5); opacity: 0; }
+        }
+
+        @keyframes appSmoke {
+            0%, 100% { 
+                transform: translateY(0) translateX(0) scale(1); 
+                opacity: 0.4;
+            }
+            25% { 
+                transform: translateY(-20vh) translateX(10px) scale(1.3); 
+                opacity: 0.6;
+            }
+            50% { 
+                transform: translateY(-35vh) translateX(-10px) scale(1.5); 
+                opacity: 0.5;
+            }
+            75% { 
+                transform: translateY(-50vh) translateX(5px) scale(1.2); 
+                opacity: 0.3;
+            }
+        }
+
+        /* Floating Chemistry Symbols */
+        .chem-float {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .chem-symbol {
+            position: absolute;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--bb-green);
+            opacity: 0;
+            text-shadow: 0 0 15px var(--bb-green-glow);
+            animation: chemDrift 20s linear infinite;
+            will-change: transform;
+        }
+
+        @keyframes chemDrift {
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+            5% { opacity: 0.5; }
+            95% { opacity: 0.15; }
+            100% { transform: translateY(-10vh) rotate(20deg); opacity: 0; }
+        }
+
+        /* Floating Crystal Particles */
+        .crystal-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--crystal);
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            box-shadow: 0 0 10px var(--crystal-glow);
+            animation: crystalFloat 15s ease-in-out infinite;
+            will-change: transform;
+        }
+
+        @keyframes crystalFloat {
+            0%, 100% { 
+                transform: translateY(0) rotate(0deg) scale(1);
+                opacity: 0.6;
+            }
+            50% { 
+                transform: translateY(-100px) rotate(180deg) scale(1.5);
+                opacity: 1;
+            }
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════
+           INTRO SCREEN
+           ═══════════════════════════════════════════════════════════════════════════ */
+        .intro {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .bb-logo {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            animation: logoEnter 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+        }
+
+        @keyframes logoEnter {
+            from { opacity: 0; transform: scale(0.8); filter: blur(10px); }
+            to { opacity: 1; transform: scale(1); filter: blur(0); }
+        }
+
+        .bb-title-row {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .bb-title-row.second { margin-top: -6px; }
+
+        .periodic-el {
+            width: 58px;
+            height: 64px;
+            background: linear-gradient(180deg, rgba(0, 200, 83, 0.25) 0%, rgba(0, 80, 30, 0.3) 100%);
+            border: 2px solid var(--bb-green);
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 0 40px var(--bb-green-glow), inset 0 0 20px rgba(0, 200, 83, 0.1);
+            animation: elementPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes elementPulse {
+            0%, 100% { box-shadow: 0 0 30px var(--bb-green-glow); }
+            50% { box-shadow: 0 0 50px var(--bb-green-glow), 0 0 80px rgba(0, 200, 83, 0.3); }
+        }
+
+        .periodic-el .atomic-num {
+            position: absolute;
+            top: 4px;
+            left: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            font-weight: 500;
+            color: var(--bb-green);
+        }
+
+        .periodic-el .symbol {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 36px;
+            color: var(--bb-green-light);
+            text-shadow: 0 0 20px var(--bb-green-glow);
+            margin-top: 6px;
+        }
+
+        .periodic-el .name {
+            font-size: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--gray-500);
+        }
+
+        .title-text {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 52px;
+            color: var(--white);
+            letter-spacing: 1px;
+            margin-left: 2px;
+        }
+
+        .intro-tagline {
+            font-size: 12px;
+            font-weight: 400;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            color: var(--gray-500);
+            margin-top: 35px;
+            animation: fadeUp 1s ease 1.8s both;
+        }
+
+        .intro-quote {
+            font-size: 15px;
+            font-style: italic;
+            color: var(--bb-green);
+            margin-top: 12px;
+            text-shadow: 0 0 20px var(--bb-green-glow);
+            animation: fadeUp 1s ease 2.1s both;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .enter-btn {
+            margin-top: 50px;
+            padding: 18px 70px;
+            background: transparent;
+            border: 2px solid var(--bb-green);
+            border-radius: 4px;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 18px;
+            letter-spacing: 4px;
+            color: var(--bb-green);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+            animation: fadeUp 1s ease 2.5s both;
+            transition: all 0.4s ease;
+        }
+
+        .enter-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--bb-green);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+            z-index: -1;
+        }
+
+        .enter-btn:hover {
+            color: var(--black);
+            box-shadow: 0 0 50px var(--bb-green-glow);
+        }
+
+        .enter-btn:hover::before { transform: scaleX(1); }
+
+        .intro.fade-out {
+            animation: introExit 1s ease forwards;
+        }
+
+        @keyframes introExit {
+            to { opacity: 0; }
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════
+           MAIN APP
+           ═══════════════════════════════════════════════════════════════════════════ */
+        .app {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .app-smoke {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════
+           LABORATORY HEADER
+           ═══════════════════════════════════════════════════════════════════════════ */
+        .header {
+            position: relative;
+            z-index: 100;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.95) 0%, rgba(3, 5, 3, 0.9) 100%);
+            border-bottom: 1px solid var(--card-border);
+            overflow: hidden;
+        }
+
+        /* Animated header bubbles */
+        .header-bubbles {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, var(--bb-green-light), var(--bb-green));
+            opacity: 0.15;
+            animation: bubbleRise 8s ease-in-out infinite;
+        }
+
+        @keyframes bubbleRise {
+            0%, 100% { transform: translateY(0) scale(1); opacity: 0; }
+            20% { opacity: 0.2; }
+            80% { opacity: 0.1; }
+            100% { transform: translateY(-60px) scale(0.5); opacity: 0; }
+        }
+
+        /* Header content */
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 16px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-elements {
+            display: flex;
+            gap: 2px;
+        }
+
+        .mini-el {
+            width: 26px;
+            height: 30px;
+            background: linear-gradient(180deg, rgba(0, 200, 83, 0.2), rgba(0, 80, 30, 0.3));
+            border: 1px solid var(--bb-green);
+            border-radius: 3px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(0, 200, 83, 0.3);
+            animation: miniPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes miniPulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(0, 200, 83, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(0, 200, 83, 0.5); }
+        }
+
+        .mini-el .num {
+            font-size: 6px;
+            color: var(--bb-green);
+            line-height: 1;
+        }
+
+        .mini-el .sym {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 14px;
+            color: var(--bb-green-light);
+            text-shadow: 0 0 8px var(--bb-green-glow);
+            line-height: 1;
+        }
+
+        .brand-title {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 18px;
+            letter-spacing: 2px;
+            color: var(--white);
+        }
+
+        .brand-tagline {
+            font-size: 8px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--gray-500);
+        }
+
+        .header-balance {
+            text-align: right;
+        }
+
+        .balance-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--gray-500);
+        }
+
+        .balance-amount {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--bb-green);
+            text-shadow: 0 0 15px var(--bb-green-glow);
+            animation: balanceGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes balanceGlow {
+            0%, 100% { text-shadow: 0 0 10px var(--bb-green-glow); }
+            50% { text-shadow: 0 0 25px var(--bb-green-glow), 0 0 40px rgba(0, 200, 83, 0.3); }
+        }
+
+        /* Lab equipment decoration */
+        .lab-equipment {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            padding: 8px 0 12px;
+            border-top: 1px solid rgba(0, 200, 83, 0.1);
+        }
+
+        .beaker {
+            width: 24px;
+            height: 32px;
+            border: 2px solid var(--bb-green);
+            border-top: none;
+            border-radius: 0 0 4px 4px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .beaker::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60%;
+            background: linear-gradient(180deg, rgba(0, 200, 83, 0.3), rgba(0, 200, 83, 0.6));
+            animation: liquidBubble 2s ease-in-out infinite;
+        }
+
+        @keyframes liquidBubble {
+            0%, 100% { height: 55%; }
+            50% { height: 65%; }
+        }
+
+        .beaker::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: beakerBubble 1.5s ease-in-out infinite;
+        }
+
+        @keyframes beakerBubble {
+            0%, 100% { bottom: 8px; opacity: 0; transform: translateX(-50%) scale(0.5); }
+            50% { bottom: 20px; opacity: 1; transform: translateX(-50%) scale(1); }
+        }
+
+        .flask {
+            width: 20px;
+            height: 30px;
+            position: relative;
+        }
+
+        .flask::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 18px;
+            border: 2px solid var(--bb-green);
+            border-radius: 50%;
+            background: linear-gradient(180deg, rgba(79, 195, 247, 0.3), rgba(79, 195, 247, 0.5));
+        }
+
+        .flask::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 14px;
+            border: 2px solid var(--bb-green);
+            border-bottom: none;
+            background: rgba(79, 195, 247, 0.2);
+        }
+
+        .test-tube {
+            width: 10px;
+            height: 30px;
+            border: 2px solid var(--bb-green);
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .test-tube::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 70%;
+            background: linear-gradient(180deg, rgba(255, 193, 7, 0.4), rgba(255, 152, 0, 0.6));
+            animation: tubeBubble 3s ease-in-out infinite;
+        }
+
+        @keyframes tubeBubble {
+            0%, 100% { height: 65%; }
+            50% { height: 75%; }
+        }
+
+        /* Location Bar */
+        .location-bar {
+            display: flex;
+            gap: 8px;
+            padding: 0 16px 14px;
+        }
+
+        .location-btn {
+            flex: 1;
+            padding: 10px 14px;
+            background: rgba(0, 200, 83, 0.05);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .location-btn:hover {
+            border-color: var(--bb-green);
+            background: rgba(0, 200, 83, 0.1);
+        }
+
+        .location-btn span {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--gray-100);
+        }
+
+        .location-btn svg {
+            width: 14px;
+            height: 14px;
+            fill: var(--gray-500);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════
+           CONTENT
+           ═══════════════════════════════════════════════════════════════════════════ */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            padding-bottom: 100px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .content::-webkit-scrollbar { width: 0; }
+
+        .section { display: none; }
+        .section.active { 
+            display: block; 
+            animation: sectionIn 0.4s ease;
+        }
+
+        @keyframes sectionIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 15px;
+            letter-spacing: 3px;
+            color: var(--gray-300);
+        }
+
+        .section-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--bb-green), transparent);
+            margin-left: 12px;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════
+           PRODUCT CARDS WITH ADD BUTTON
+           ═══════════════════════════════════════════════════════════════════════════ */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .product-card {
+            background: linear-gradient(160deg, rgba(12, 20, 12, 0.95), rgba(5, 8, 5, 0.98));
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 14px 12px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--bb-green), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .product-card:hover {
+            border-color: rgba(0, 200, 83, 0.5);
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 25px rgba(0, 200, 83, 0.15);
+        }
+
+        .product-card:hover::before { opacity: 1; }
+
+        /* Purity Badge */
+        .product-purity {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 4px 8px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--bb-green);
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--bb-green);
+            text-shadow: 0 0 8px var(--bb-green-glow);
+            animation: badgePulse 3s ease-in-out infinite;
+        }
+
+        @keyframes badgePulse {
+            0%, 100% { box-shadow: 0 0 5px rgba(0, 200, 83, 0.3); }
+            50% { box-shadow: 0 0 15px rgba(0, 200, 83, 0.5); }
+        }
+
+        .product-purity.premium {
+            border-color: var(--crystal);
+            color: var(--crystal);
+            text-shadow: 0 0 8px var(--crystal-glow);
+        }
+
+        /* Product Visual */
+        .product-visual {
+            width: 50px;
+            height: 50px;
+            margin: 4px auto 10px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-visual::before {
+            content: '';
+            position: absolute;
+            inset: -8px;
+            background: radial-gradient(circle, rgba(0, 200, 83, 0.15), transparent 70%);
+            border-radius: 50%;
+            animation: iconGlow 4s ease-in-out infinite;
+        }
+
+        @keyframes iconGlow {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+
+        .product-visual svg {
+            width: 36px;
+            height: 36px;
+            position: relative;
+            z-index: 1;
+            filter: drop-shadow(0 0 8px currentColor);
+        }
+
+        .product-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 15px;
+            letter-spacing: 1px;
+            text-align: center;
+            color: var(--white);
+        }
+
+        .product-type {
+            font-size: 9px;
+            text-align: center;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        /* Purity Bar */
+        .purity-meter {
+            margin-bottom: 10px;
+        }
+
+        .purity-track {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .purity-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--bb-green-dark), var(--bb-green-light));
+            border-radius: 2px;
+            box-shadow: 0 0 10px var(--bb-green-glow);
+            position: relative;
+        }
+
+        .purity-fill::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+            animation: purityShine 2s infinite;
+        }
+
+        @keyframes purityShine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Price */
+        .product-price {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .price-main {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 24px;
+            color: var(--white);
+        }
+
+        .price-currency {
+            font-size: 14px;
+            color: var(--gray-500);
+        }
+
+        /* ADD BUTTON */
+        .add-btn {
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(180deg, var(--bb-green), var(--bb-green-dark));
+            border: none;
+            border-radius: 8px;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 13px;
+            letter-spacing: 2px;
+            color: var(--black);
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 15px rgba(0, 200, 83, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .add-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .add-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 25px rgba(0, 200, 83, 0.5);
+        }
+
+        .add-btn:hover::before {
+            left: 100%;
+        }
+
+        .add-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════
+           CART / BARREL
+           ═══════════════════════════════════════════════════════════════════════════ */
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        .empty-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 16px;
+            opacity: 0.2;
+        }
+
+        .empty-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: var(--gray-500);
+        }
+
+        .empty-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 18px;
+            letter-spacing: 2px;
+            color: var(--gray-300);
+        }
+
+        .empty-desc {
+            font-size: 12px;
+            color: var(--gray-500);
+            margin-top: 6px;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+
+        .cart-item-visual {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cart-item-visual svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .cart-item-info { flex: 1; }
+
+        .cart-item-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+
+        .cart-item-qty {
+            font-size: 11px;
+            color: var(--gray-500);
+        }
+
+        .cart-item-price {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--bb-green);
+        }
+
+        .cart-item-remove {
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 61, 61, 0.1);
+            border: 1px solid rgba(255, 61, 61, 0.2);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .cart-item-remove svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--red);
+        }
+
+        .cart-summary {
+            margin-top: 20px;
+            padding: 20px;
+            background: linear-gradient(160deg, rgba(12, 20, 12, 0.95), rgba(5, 8, 5, 0.98));
+            border: 1px solid var(--bb-green-dark);
+            border-radius: 12px;
+            box-shadow: 0 0 25px rgba(0, 200, 83, 0.1);
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .cart-total-label {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 16px;
+            letter-spacing: 2px;
+            color: var(--gray-300);
+        }
+
+        .cart-total-amount {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--bb-green);
+            text-shadow: 0 0 15px var(--bb-green-glow);
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(180deg, var(--bb-green), var(--bb-green-dark));
+            border: none;
+            border-radius: 10px;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 16px;
+            letter-spacing: 3px;
+            color: var(--black);
+            cursor: pointer;
+            box-shadow: 0 0 25px rgba(0, 200, 83, 0.3);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════
+           PROFILE
+           ═══════════════════════════════════════════════════════════════════════════ */
+        .profile-card {
+            background: linear-gradient(160deg, rgba(12, 20, 12, 0.95), rgba(5, 8, 5, 0.98));
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 28px 20px;
+            text-align: center;
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--bb-green), transparent);
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 16px;
+            background: rgba(0, 200, 83, 0.1);
+            border: 2px solid var(--bb-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 30px rgba(0, 200, 83, 0.3);
+            animation: avatarPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes avatarPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 200, 83, 0.2); }
+            50% { box-shadow: 0 0 40px rgba(0, 200, 83, 0.4); }
+        }
+
+        .profile-avatar svg {
+            width: 40px;
+            height: 40px;
+            fill: var(--bb-green);
+        }
+
+        .profile-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 26px;
+            letter-spacing: 4px;
+        }
+
+        .profile-rank {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--bb-green);
+            text-shadow: 0 0 10px var(--bb-green-glow);
+            margin-top: 4px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--bb-green);
+        }
+
+        .stat-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--gray-500);
+            margin-top: 4px;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════
+           BOTTOM NAV
+           ═══════════════════════════════════════════════════════════════════════════ */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 68px;
+            background: rgba(3, 5, 3, 0.98);
+            border-top: 1px solid var(--card-border);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1000;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 18px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .nav-icon {
+            width: 22px;
+            height: 22px;
+            opacity: 0.4;
+            transition: all 0.2s;
+        }
+
+        .nav-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: var(--white);
+        }
+
+        .nav-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--gray-700);
+        }
+
+        .nav-item.active .nav-icon {
+            opacity: 1;
+        }
+
+        .nav-item.active .nav-icon svg {
+            fill: var(--bb-green);
+            filter: drop-shadow(0 0 10px var(--bb-green-glow));
+        }
+
+        .nav-item.active .nav-label {
+            color: var(--bb-green);
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: 0;
+            right: 10px;
+            min-width: 16px;
+            height: 16px;
+            background: var(--red);
+            border-radius: 8px;
+            font-size: 9px;
+            font-weight: 600;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════
+           MODALS
+           ═══════════════════════════════════════════════════════════════════════════ */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            display: flex;
+            align-items: flex-end;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            width: 100%;
+            max-height: 70vh;
+            background: var(--surface);
+            border-radius: 20px 20px 0 0;
+            border: 1px solid var(--card-border);
+            border-bottom: none;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow-y: auto;
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-handle {
+            width: 40px;
+            height: 4px;
+            background: var(--gray-700);
+            border-radius: 2px;
+            margin: 12px auto;
+        }
+
+        .modal-header {
+            padding: 0 20px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 18px;
+            letter-spacing: 2px;
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .modal-close svg {
+            width: 14px;
+            height: 14px;
+            fill: var(--gray-500);
+        }
+
+        .modal-body { padding: 0 20px 24px; }
+
+        .location-option {
+            padding: 14px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .location-option:hover {
+            border-color: var(--bb-green);
+        }
+
+        .location-option.selected {
+            border-color: var(--bb-green);
+            background: rgba(0, 200, 83, 0.05);
+        }
+
+        .location-option span { font-size: 13px; }
+
+        .location-check {
+            color: var(--bb-green);
+            font-weight: bold;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 85px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--card-bg);
+            border: 1px solid var(--bb-green);
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 12px;
+            z-index: 3000;
+            opacity: 0;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(0, 200, 83, 0.2);
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Global Smoke Background -->
+    <div class="smoke-bg">
+        <div class="smoke-cloud"></div>
+        <div class="smoke-cloud"></div>
+        <div class="smoke-cloud"></div>
+        <div class="smoke-cloud"></div>
+        <div class="smoke-cloud"></div>
+    </div>
+
+    <!-- Global Floating Chemistry -->
+    <div class="chem-float" id="chemFloat"></div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════════
+         INTRO
+         ═══════════════════════════════════════════════════════════════════════════ -->
+    <div class="intro" id="intro">
+        <div class="bb-logo">
+            <div class="bb-title-row">
+                <div class="periodic-el">
+                    <span class="atomic-num">35</span>
+                    <span class="symbol">Br</span>
+                    <span class="name">Bromine</span>
+                </div>
+                <span class="title-text">eaking</span>
+            </div>
+            <div class="bb-title-row second">
+                <div class="periodic-el">
+                    <span class="atomic-num">56</span>
+                    <span class="symbol">Ba</span>
+                    <span class="name">Barium</span>
+                </div>
+                <span class="title-text">d</span>
+            </div>
+        </div>
+        <p class="intro-tagline">Premium Distribution</p>
+        <p class="intro-quote">"I am the one who knocks."</p>
+        <button class="enter-btn" id="enterBtn">ENTER THE LAB</button>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════════
+         MAIN APP
+         ═══════════════════════════════════════════════════════════════════════════ -->
+    <div class="app hidden" id="app">
+        <div class="app-smoke">
+            <div class="smoke-cloud"></div>
+            <div class="smoke-cloud"></div>
+            <div class="smoke-cloud"></div>
+            <div class="smoke-cloud"></div>
+            <div class="smoke-cloud"></div>
+        </div>
+
+        <!-- Header -->
+        <header class="header">
+            <div class="header-bubbles" id="headerBubbles"></div>
+            
+            <div class="header-top">
+                <div class="brand">
+                    <div class="brand-elements">
+                        <div class="mini-el"><span class="num">35</span><span class="sym">Br</span></div>
+                        <div class="mini-el"><span class="num">56</span><span class="sym">Ba</span></div>
+                    </div>
+                    <div class="brand-title">
+                        <span class="brand-name">BREAKING BAD</span>
+                        <span class="brand-tagline">LABORATORY</span>
+                    </div>
+                </div>
+                <div class="header-balance">
+                    <div class="balance-label">Balance</div>
+                    <div class="balance-amount" id="balanceDisplay">$1,240,000</div>
+                </div>
+            </div>
+
+            <!-- Lab Equipment Animation -->
+            <div class="lab-equipment">
+                <div class="beaker"></div>
+                <div class="flask"></div>
+                <div class="test-tube"></div>
+                <div class="beaker"></div>
+                <div class="flask"></div>
+            </div>
+
+            <div class="location-bar">
+                <div class="location-btn" id="cityTrigger">
+                    <span id="cityDisplay">Albuquerque</span>
+                    <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+                </div>
+                <div class="location-btn" id="districtTrigger">
+                    <span id="districtDisplay">Desert Lab</span>
+                    <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <main class="content">
+            <section class="section active" id="labSection">
+                <div class="section-header">
+                    <h2 class="section-title">AVAILABLE PRODUCT</h2>
+                    <div class="section-line"></div>
+                </div>
+                <div class="products-grid" id="productsGrid"></div>
+            </section>
+
+            <section class="section" id="turfSection">
+                <div class="section-header">
+                    <h2 class="section-title">TERRITORY</h2>
+                    <div class="section-line"></div>
+                </div>
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                    </div>
+                    <h3 class="empty-title">TERRITORY EXPANSION</h3>
+                    <p class="empty-desc">Coming soon. Build your empire.</p>
+                </div>
+            </section>
+
+            <section class="section" id="barrelSection">
+                <div class="section-header">
+                    <h2 class="section-title">YOUR BARREL</h2>
+                    <div class="section-line"></div>
+                </div>
+                <div id="cartContent"></div>
+            </section>
+
+            <section class="section" id="profileSection">
+                <div class="section-header">
+                    <h2 class="section-title">PROFILE</h2>
+                    <div class="section-line"></div>
+                </div>
+                <div class="profile-card">
+                    <div class="profile-avatar">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+                    </div>
+                    <h2 class="profile-name">HEISENBERG</h2>
+                    <p class="profile-rank">RANK: KINGPIN</p>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card"><div class="stat-value">24</div><div class="stat-label">Orders</div></div>
+                    <div class="stat-card"><div class="stat-value">99.1%</div><div class="stat-label">Avg Purity</div></div>
+                    <div class="stat-card"><div class="stat-value">$48K</div><div class="stat-label">Spent</div></div>
+                    <div class="stat-card"><div class="stat-value">ELITE</div><div class="stat-label">Reputation</div></div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Bottom Nav -->
+        <nav class="bottom-nav">
+            <div class="nav-item active" data-section="lab">
+                <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M7 2v2h1v14c0 1.1.9 2 2 2h4c1.1 0 2-.9 2-2V4h1V2H7zm5 14h-2V8h2v8z"/></svg></div>
+                <span class="nav-label">Lab</span>
+            </div>
+            <div class="nav-item" data-section="turf">
+                <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></div>
+                <span class="nav-label">Turf</span>
+            </div>
+            <div class="nav-item" data-section="barrel">
+                <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M17 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-3l1.1-2h7.5c.7 0 1.3-.4 1.5-1l3.4-6.2c.2-.4-.1-.8-.5-.8H6.2l-.9-2H2v2h2l3.6 7.6L6.2 16c-.4.7.1 1.5 1 1.5h12v-2H7.4l.9-1.6z"/></svg></div>
+                <span class="nav-label">Barrel</span>
+                <span class="cart-badge hidden" id="cartBadge">0</span>
+            </div>
+            <div class="nav-item" data-section="profile">
+                <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+                <span class="nav-label">Profile</span>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="locationModal">
+        <div class="modal">
+            <div class="modal-handle"></div>
+            <div class="modal-header">
+                <span class="modal-title" id="modalTitle">SELECT CITY</span>
+                <button class="modal-close" onclick="closeModal()">
+                    <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                </button>
+            </div>
+            <div class="modal-body" id="modalContent"></div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const PRODUCTS = [
+            { id: 1, name: 'Blue Sky', type: 'Premium Crystal', purity: 99.1, price: 120, stock: 'In Stock', premium: true, color: '#4fc3f7' },
+            { id: 2, name: 'Chili P', type: 'Special Blend', purity: 96.2, price: 45, stock: '8 Left', stockLow: true, color: '#00c853' },
+            { id: 3, name: 'Los Pollos', type: 'Distribution', purity: 97.8, price: 70, stock: 'Available', color: '#ffc107' },
+            { id: 4, name: 'Madrigal', type: 'Industrial', purity: 91.0, price: 35, stock: 'Stocked', color: '#e91e63' },
+            { id: 5, name: 'Vamonos', type: 'Mobile Lab', purity: 98.5, price: 95, stock: 'Limited', premium: true, color: '#8bc34a' },
+            { id: 6, name: 'A1A Special', type: 'Car Wash', purity: 89.3, price: 28, stock: 'Bulk', color: '#ff9800' }
+        ];
+
+        const LOCATIONS = {
+            cities: ['Albuquerque', 'Santa Fe', 'El Paso', 'Phoenix'],
+            districts: {
+                'Albuquerque': ['Desert Lab', 'Los Pollos HQ', 'A1A Car Wash', 'Vamonos Pest'],
+                'Santa Fe': ['Downtown', 'North Side', 'Industrial'],
+                'El Paso': ['Border Zone', 'Cartel Alley', 'Safe House'],
+                'Phoenix': ['Metro', 'Desert', 'Distribution']
+            }
+        };
+
+        let state = { currentSection: 'lab', city: 'Albuquerque', district: 'Desert Lab', cart: [], balance: 1240000, modalType: null };
+
+        // Create floating chemistry symbols
+        function createChemistry() {
+            const container = document.getElementById('chemFloat');
+            const formulas = ['H₂O', 'CH₄', 'C₁₀H₁₅N', 'NaOH', 'HCl', 'NH₃', 'P', 'Li', 'I₂', 'Br', 'Ba', 'Na', 'K', 'Mg'];
+            for (let i = 0; i < 15; i++) {
+                const el = document.createElement('div');
+                el.className = 'chem-symbol';
+                el.textContent = formulas[Math.floor(Math.random() * formulas.length)];
+                el.style.left = Math.random() * 100 + '%';
+                el.style.fontSize = (10 + Math.random() * 8) + 'px';
+                el.style.animationDuration = (15 + Math.random() * 10) + 's';
+                el.style.animationDelay = Math.random() * 15 + 's';
+                container.appendChild(el);
+            }
+        }
+
+        // Create header bubbles
+        function createHeaderBubbles() {
+            const container = document.getElementById('headerBubbles');
+            for (let i = 0; i < 8; i++) {
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                const size = 4 + Math.random() * 8;
+                bubble.style.width = size + 'px';
+                bubble.style.height = size + 'px';
+                bubble.style.left = Math.random() * 100 + '%';
+                bubble.style.bottom = '0';
+                bubble.style.animationDuration = (4 + Math.random() * 4) + 's';
+                bubble.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(bubble);
+            }
+        }
+
+        // Create crystal particles
+        function createCrystals() {
+            const container = document.getElementById('chemFloat');
+            for (let i = 0; i < 10; i++) {
+                const crystal = document.createElement('div');
+                crystal.className = 'crystal-particle';
+                crystal.style.left = Math.random() * 100 + '%';
+                crystal.style.top = 50 + Math.random() * 40 + '%';
+                crystal.style.animationDuration = (10 + Math.random() * 10) + 's';
+                crystal.style.animationDelay = Math.random() * 10 + 's';
+                container.appendChild(crystal);
+            }
+        }
+
+        // Intro
+        document.getElementById('enterBtn').addEventListener('click', () => {
+            haptic('heavy');
+            document.getElementById('intro').classList.add('fade-out');
+            setTimeout(() => {
+                document.getElementById('intro').classList.add('hidden');
+                document.getElementById('app').classList.remove('hidden');
+                initApp();
+            }, 1000);
+        });
+
+        function initApp() {
+            createHeaderBubbles();
+            renderProducts();
+            renderCart();
+            setupNavigation();
+            setupLocationTriggers();
+        }
+
+        function renderProducts() {
+            document.getElementById('productsGrid').innerHTML = PRODUCTS.map(p => `
+                <div class="product-card">
+                    <span class="product-purity ${p.premium ? 'premium' : ''}">${p.purity}%</span>
+                    <div class="product-visual">
+                        <svg viewBox="0 0 24 24" style="fill: ${p.color}">
+                            <path d="M7 2v2h1v14c0 1.1.9 2 2 2h4c1.1 0 2-.9 2-2V4h1V2H7zm5 14h-2V8h2v8z"/>
+                        </svg>
+                    </div>
+                    <div class="product-name">${p.name}</div>
+                    <div class="product-type">${p.type}</div>
+                    <div class="purity-meter">
+                        <div class="purity-track"><div class="purity-fill" style="width: ${p.purity}%"></div></div>
+                    </div>
+                    <div class="product-price"><span class="price-currency">€</span><span class="price-main">${p.price}</span></div>
+                    <button class="add-btn" onclick="addToCart(${p.id})">+ ADD TO BARREL</button>
+                </div>
+            `).join('');
+        }
+
+        function addToCart(productId) {
+            haptic('medium');
+            const product = PRODUCTS.find(p => p.id === productId);
+            const existing = state.cart.find(item => item.id === productId);
+            if (existing) existing.qty++;
+            else state.cart.push({ ...product, qty: 1 });
+            updateCartBadge();
+            renderCart();
+            showToast(`${product.name} added!`);
+        }
+
+        function removeFromCart(productId) {
+            haptic('light');
+            state.cart = state.cart.filter(item => item.id !== productId);
+            updateCartBadge();
+            renderCart();
+        }
+
+        function updateCartBadge() {
+            const badge = document.getElementById('cartBadge');
+            const total = state.cart.reduce((sum, item) => sum + item.qty, 0);
+            badge.textContent = total;
+            badge.classList.toggle('hidden', total === 0);
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cartContent');
+            if (state.cart.length === 0) {
+                container.innerHTML = `<div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M17 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-3l1.1-2h7.5c.7 0 1.3-.4 1.5-1l3.4-6.2c.2-.4-.1-.8-.5-.8H6.2l-.9-2H2v2h2l3.6 7.6L6.2 16c-.4.7.1 1.5 1 1.5h12v-2H7.4l.9-1.6z"/></svg></div><h3 class="empty-title">BARREL IS EMPTY</h3><p class="empty-desc">Add products from the Lab</p></div>`;
+                return;
+            }
+            const total = state.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            container.innerHTML = `
+                ${state.cart.map(item => `<div class="cart-item"><div class="cart-item-visual"><svg viewBox="0 0 24 24" style="fill: ${item.color}"><path d="M7 2v2h1v14c0 1.1.9 2 2 2h4c1.1 0 2-.9 2-2V4h1V2H7z"/></svg></div><div class="cart-item-info"><div class="cart-item-name">${item.name}</div><div class="cart-item-qty">Qty: ${item.qty}</div></div><div class="cart-item-price">€${item.price * item.qty}</div><button class="cart-item-remove" onclick="removeFromCart(${item.id})"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></div>`).join('')}
+                <div class="cart-summary"><div class="cart-total"><span class="cart-total-label">TOTAL</span><span class="cart-total-amount">€${total.toLocaleString()}</span></div><button class="checkout-btn" onclick="checkout()">COOK THE ORDER</button></div>
+            `;
+        }
+
+        function checkout() {
+            if (state.cart.length === 0) return;
+            haptic('heavy');
+            const total = state.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            state.balance -= total;
+            state.cart = [];
+            updateCartBadge();
+            renderCart();
+            document.getElementById('balanceDisplay').textContent = '$' + state.balance.toLocaleString();
+            showToast('Yeah Science! Order placed.');
+            navigateTo('lab');
+        }
+
+        function setupNavigation() {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', () => navigateTo(item.dataset.section));
+            });
+        }
+
+        function navigateTo(section) {
+            haptic('light');
+            state.currentSection = section;
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.toggle('active', item.dataset.section === section));
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById(`${section}Section`).classList.add('active');
+        }
+
+        function setupLocationTriggers() {
+            document.getElementById('cityTrigger').addEventListener('click', () => { haptic('light'); state.modalType = 'city'; openLocationModal('city'); });
+            document.getElementById('districtTrigger').addEventListener('click', () => { haptic('light'); state.modalType = 'district'; openLocationModal('district'); });
+        }
+
+        function openLocationModal(type) {
+            const modal = document.getElementById('locationModal');
+            const title = document.getElementById('modalTitle');
+            const content = document.getElementById('modalContent');
+            if (type === 'city') {
+                title.textContent = 'SELECT CITY';
+                content.innerHTML = LOCATIONS.cities.map(city => `<div class="location-option ${state.city === city ? 'selected' : ''}" onclick="selectCity('${city}')"><span>${city}</span>${state.city === city ? '<span class="location-check">✓</span>' : ''}</div>`).join('');
+            } else {
+                title.textContent = 'SELECT DISTRICT';
+                content.innerHTML = (LOCATIONS.districts[state.city] || []).map(district => `<div class="location-option ${state.district === district ? 'selected' : ''}" onclick="selectDistrict('${district}')"><span>${district}</span>${state.district === district ? '<span class="location-check">✓</span>' : ''}</div>`).join('');
+            }
+            modal.classList.add('active');
+        }
+
+        function selectCity(city) { haptic('light'); state.city = city; state.district = LOCATIONS.districts[city][0]; document.getElementById('cityDisplay').textContent = city; document.getElementById('districtDisplay').textContent = state.district; closeModal(); }
+        function selectDistrict(district) { haptic('light'); state.district = district; document.getElementById('districtDisplay').textContent = district; closeModal(); }
+        function closeModal() { document.getElementById('locationModal').classList.remove('active'); }
+        document.getElementById('locationModal').addEventListener('click', (e) => { if (e.target.id === 'locationModal') closeModal(); });
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        function haptic(type) {
+            if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred(type);
+        }
+
+        if (window.Telegram?.WebApp) {
+            const tg = window.Telegram.WebApp;
+            tg.expand();
+            tg.enableClosingConfirmation();
+            tg.setHeaderColor('#000000');
+            tg.setBackgroundColor('#000000');
+        }
+
+        createChemistry();
+        createCrystals();
+    </script>
+</body>
+</html>
+
