@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Heisenberg's Lab</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Breaking Bad Authentic Palette */
+            --bb-green: #00D26A;
+            --bb-green-dark: #00A854;
+            --bb-green-glow: rgba(0, 210, 106, 0.5);
+            --bb-blue-meth: #77C3EC;
+            --bb-blue-crystal: #00B4D8;
+            --bb-blue-glow: rgba(119, 195, 236, 0.4);
+            --bb-yellow-hazmat: #F5C518;
+            --bb-yellow-glow: rgba(245, 197, 24, 0.3);
+            --bb-orange-desert: #D35400;
+            --bb-brown-desert: #8B4513;
+            --bb-red-danger: #E74C3C;
+            
+            /* Dark Theme */
+            --bg-void: #030303;
+            --bg-dark: #080808;
+            --bg-surface: #0f0f0f;
+            --bg-card: #151515;
+            --bg-elevated: #1a1a1a;
+            
+            --text-primary: #e8e8e8;
+            --text-secondary: #888888;
+            --text-muted: #444444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'VT323', monospace;
+            background: var(--bg-void);
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+            user-select: none;
+        }
+
+        .hidden { display: none !important; }
+
+        /* ════════════════════════════════════════════════════════════════
+           INTRO SCREEN - Breaking Bad Style
+           ════════════════════════════════════════════════════════════════ */
+        
+        .intro {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, #050a05 0%, #030303 50%, #050505 100%);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Green chemical glow overlay */
+        .intro::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 150%;
+            height: 150%;
+            background: radial-gradient(ellipse at center, 
+                rgba(0, 210, 106, 0.08) 0%, 
+                transparent 50%);
+            animation: glowPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        /* Floating smoke */
+        .smoke {
+            position: absolute;
+            bottom: -50px;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(ellipse at center, 
+                rgba(0, 210, 106, 0.15) 0%, 
+                transparent 70%);
+            border-radius: 50%;
+            animation: smokeRise 8s ease-out infinite;
+            filter: blur(20px);
+        }
+
+        @keyframes smokeRise {
+            0% { transform: translateY(0) scale(0.5); opacity: 0; }
+            20% { opacity: 0.8; }
+            100% { transform: translateY(-100vh) scale(2); opacity: 0; }
+        }
+
+        .smoke:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .smoke:nth-child(2) { left: 30%; animation-delay: 2s; width: 150px; height: 150px; }
+        .smoke:nth-child(3) { left: 50%; animation-delay: 1s; }
+        .smoke:nth-child(4) { left: 70%; animation-delay: 3s; width: 120px; height: 120px; }
+        .smoke:nth-child(5) { left: 90%; animation-delay: 1.5s; }
+
+        /* Floating chemical formulas */
+        .formula {
+            position: absolute;
+            font-family: 'VT323', monospace;
+            font-size: 14px;
+            color: var(--bb-green);
+            opacity: 0.2;
+            text-shadow: 0 0 10px var(--bb-green-glow);
+            animation: formulaDrift 15s linear infinite;
+        }
+
+        @keyframes formulaDrift {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-50px) rotate(360deg); opacity: 0; }
+        }
+
+        /* Periodic Table Logo */
+        .intro-logo {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 30px;
+            animation: logoReveal 1s ease 0.5s both;
+            perspective: 1000px;
+        }
+
+        @keyframes logoReveal {
+            0% { opacity: 0; transform: scale(0.5) rotateY(90deg); }
+            60% { transform: scale(1.1) rotateY(-10deg); }
+            100% { opacity: 1; transform: scale(1) rotateY(0deg); }
+        }
+
+        .periodic-el {
+            width: 70px;
+            height: 80px;
+            background: linear-gradient(180deg, #1a2a1a 0%, #0a150a 100%);
+            border: 2px solid var(--bb-green);
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 
+                0 0 20px var(--bb-green-glow),
+                inset 0 1px 0 rgba(255,255,255,0.1);
+            animation: elementGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes elementGlow {
+            0%, 100% { box-shadow: 0 0 20px var(--bb-green-glow); }
+            50% { box-shadow: 0 0 40px var(--bb-green-glow), 0 0 60px var(--bb-green-glow); }
+        }
+
+        .periodic-el .atomic-num {
+            position: absolute;
+            top: 5px;
+            left: 8px;
+            font-family: 'VT323', monospace;
+            font-size: 12px;
+            color: rgba(255,255,255,0.4);
+        }
+
+        .periodic-el .symbol {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 36px;
+            line-height: 1;
+        }
+
+        .periodic-el .name {
+            font-family: 'VT323', monospace;
+            font-size: 10px;
+            color: rgba(255,255,255,0.5);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .periodic-el.br .symbol { color: #A52A2A; text-shadow: 0 0 15px rgba(165, 42, 42, 0.5); }
+        .periodic-el.ba .symbol { color: var(--bb-green); text-shadow: 0 0 15px var(--bb-green-glow); }
+
+        .intro-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 28px;
+            color: var(--text-primary);
+            letter-spacing: 8px;
+            text-shadow: 0 0 30px rgba(255,255,255,0.2);
+            animation: titleFade 1s ease 1.2s both;
+        }
+
+        @keyframes titleFade {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .intro-quote {
+            font-family: 'VT323', monospace;
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-top: 10px;
+            animation: titleFade 1s ease 1.5s both;
+        }
+
+        /* Loading bar */
+        .intro-loader {
+            margin-top: 40px;
+            animation: titleFade 1s ease 1.8s both;
+        }
+
+        .loader-bar {
+            width: 180px;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .loader-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--bb-green) 0%, var(--bb-blue-meth) 100%);
+            border-radius: 2px;
+            animation: loaderGrow 2.5s ease forwards 2s;
+        }
+
+        @keyframes loaderGrow {
+            to { width: 100%; }
+        }
+
+        .loader-text {
+            font-family: 'VT323', monospace;
+            font-size: 14px;
+            color: var(--bb-green);
+            margin-top: 10px;
+            letter-spacing: 2px;
+        }
+
+        /* Enter Button */
+        .intro-btn {
+            margin-top: 40px;
+            padding: 15px 40px;
+            background: linear-gradient(180deg, var(--bb-green) 0%, var(--bb-green-dark) 100%);
+            border: none;
+            border-radius: 8px;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 18px;
+            color: #000;
+            letter-spacing: 4px;
+            cursor: pointer;
+            animation: btnAppear 0.5s ease 4.5s both;
+            box-shadow: 
+                0 5px 0 #006B35,
+                0 8px 20px rgba(0, 0, 0, 0.5),
+                0 0 30px var(--bb-green-glow);
+            transition: all 0.2s ease;
+        }
+
+        @keyframes btnAppear {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .intro-btn:hover {
+            background: linear-gradient(180deg, #00E676 0%, var(--bb-green) 100%);
+            box-shadow: 
+                0 5px 0 #006B35,
+                0 12px 30px rgba(0, 210, 106, 0.4),
+                0 0 50px var(--bb-green-glow);
+            transform: translateY(-2px);
+        }
+
+        .intro-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #006B35;
+        }
+
+        .intro.fade-out {
+            animation: introExit 0.8s ease forwards;
+        }
+
+        @keyframes introExit {
+            to { opacity: 0; transform: scale(1.1); }
+        }
+
+        /* ════════════════════════════════════════════════════════════════
+           MAIN APP
+           ════════════════════════════════════════════════════════════════ */
+        
+        .app {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
+
+        /* Background Layers */
+        .bg-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Desert gradient at bottom */
+        .desert-layer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 35%;
+            background: linear-gradient(180deg,
+                transparent 0%,
+                rgba(139, 69, 19, 0.03) 30%,
+                rgba(139, 69, 19, 0.08) 100%);
+        }
+
+        /* RV Silhouette */
+        .rv-silhouette {
+            position: absolute;
+            bottom: 80px;
+            right: 20px;
+            width: 60px;
+            height: 35px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px 5px 0 0;
+            opacity: 0.15;
+        }
+
+        .rv-silhouette::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: -10px;
+            width: 80px;
+            height: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 3px;
+        }
+
+        .rv-silhouette::after {
+            content: '🚐';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            opacity: 0.3;
+        }
+
+        /* Blue crystal glow */
+        .crystal-glow {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 150px;
+            background: radial-gradient(ellipse at center bottom,
+                rgba(119, 195, 236, 0.1) 0%,
+                transparent 70%);
+            animation: crystalPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes crystalPulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Floating molecules */
+        .molecule {
+            position: absolute;
+            font-family: 'VT323', monospace;
+            font-size: 11px;
+            color: var(--bb-green);
+            opacity: 0.12;
+            animation: molFloat 20s linear infinite;
+            text-shadow: 0 0 5px var(--bb-green-glow);
+        }
+
+        @keyframes molFloat {
+            0% { transform: translateY(100vh); opacity: 0; }
+            10% { opacity: 0.12; }
+            90% { opacity: 0.12; }
+            100% { transform: translateY(-50px); opacity: 0; }
+        }
+
+        /* Scanlines */
+        .scanlines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 0, 0, 0.03) 2px,
+                rgba(0, 0, 0, 0.03) 4px
+            );
+            pointer-events: none;
+        }
+
+        /* ════════════════════════════════════════════════════════════════
+           HEADER
+           ════════════════════════════════════════════════════════════════ */
+        
+        .header {
+            position: relative;
+            z-index: 100;
+            padding: 12px 15px;
+            background: linear-gradient(180deg, var(--bg-dark) 0%, transparent 100%);
+        }
+
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Mini Periodic Logo */
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mini-periodic {
+            display: flex;
+            gap: 2px;
+        }
+
+        .mini-el {
+            width: 24px;
+            height: 28px;
+            background: linear-gradient(180deg, #1a2a1a 0%, #0a150a 100%);
+            border: 1px solid var(--bb-green);
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 14px;
+            box-shadow: 0 0 8px var(--bb-green-glow);
+        }
+
+        .mini-el.br { color: #A52A2A; }
+        .mini-el.ba { color: var(--bb-green); }
+
+        .logo-text {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 14px;
+            letter-spacing: 3px;
+            color: var(--text-primary);
+        }
+
+        /* Balance Pill */
+        .balance {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: linear-gradient(135deg, rgba(119, 195, 236, 0.1) 0%, rgba(0, 180, 216, 0.05) 100%);
+            border: 1px solid rgba(119, 195, 236, 0.3);
+            border-radius: 20px;
+            box-shadow: 0 0 15px var(--bb-blue-glow);
+        }
+
+        .balance-icon {
+            font-size: 16px;
+            animation: iconFloat 2s ease-in-out infinite;
+        }
+
+        @keyframes iconFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-2px); }
+        }
+
+        .balance-amount {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--bb-blue-meth);
+            text-shadow: 0 0 10px var(--bb-blue-glow);
+        }
+
+        /* Location Selectors */
+        .location-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .location-select {
+            flex: 1;
+            position: relative;
+        }
+
+        .select-btn {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--bg-elevated);
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .select-btn:hover, .select-btn.active {
+            border-color: var(--bb-green);
+            box-shadow: 0 0 15px rgba(0, 210, 106, 0.15);
+        }
+
+        .select-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .select-label {
+            font-size: 9px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .select-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            color: var(--text-primary);
+            margin-top: 2px;
+        }
+
+        .select-arrow {
+            color: var(--bb-green);
+            font-size: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .select-btn.active .select-arrow {
+            transform: rotate(180deg);
+        }
+
+        .dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            margin-top: 4px;
+            background: var(--bg-card);
+            border: 1px solid var(--bb-green);
+            border-radius: 8px;
+            overflow: hidden;
+            z-index: 200;
+            display: none;
+            animation: dropIn 0.2s ease;
+        }
+
+        .dropdown.show { display: block; }
+
+        @keyframes dropIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dropdown-item {
+            padding: 10px 12px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .dropdown-item:last-child { border-bottom: none; }
+
+        .dropdown-item:hover {
+            background: rgba(0, 210, 106, 0.1);
+            color: var(--bb-green);
+        }
+
+        /* ════════════════════════════════════════════════════════════════
+           CONTENT
+           ════════════════════════════════════════════════════════════════ */
+        
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 0 12px 85px;
+            position: relative;
+            z-index: 10;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .section-icon {
+            font-size: 18px;
+        }
+
+        .section-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 16px;
+            letter-spacing: 4px;
+            color: var(--bb-green);
+            text-shadow: 0 0 10px var(--bb-green-glow);
+        }
+
+        .section-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--bb-green) 0%, transparent 100%);
+        }
+
+        /* ════════════════════════════════════════════════════════════════
+           PRODUCT CARDS - Lab Report Style
+           ════════════════════════════════════════════════════════════════ */
+        
+        .products {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .product {
+            background: linear-gradient(160deg, var(--bg-card) 0%, var(--bg-surface) 100%);
+            border: 1px solid var(--bg-elevated);
+            border-radius: 10px;
+            padding: 12px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            overflow: hidden;
+        }
+
+        /* Crystal shimmer overlay */
+        .product::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(119, 195, 236, 0.05) 50%, 
+                transparent 100%);
+            transition: left 0.5s ease;
+        }
+
+        .product:hover::before {
+            left: 100%;
+        }
+
+        .product:hover {
+            transform: translateY(-4px);
+            border-color: var(--bb-blue-meth);
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.4),
+                0 0 20px var(--bb-blue-glow);
+        }
+
+        .product:active {
+            transform: scale(0.98);
+        }
+
+        /* Purity Badge */
+        .purity-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            padding: 3px 6px;
+            background: rgba(119, 195, 236, 0.15);
+            border: 1px solid var(--bb-blue-meth);
+            border-radius: 4px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 9px;
+            font-weight: 700;
+            color: var(--bb-blue-meth);
+        }
+
+        .product-emoji {
+            font-size: 36px;
+            text-align: center;
+            margin: 8px 0 10px;
+            filter: drop-shadow(0 0 8px var(--bb-blue-glow));
+            animation: emojiHover 3s ease-in-out infinite;
+        }
+
+        @keyframes emojiHover {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-3px) rotate(2deg); }
+        }
+
+        .product-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 14px;
+            text-align: center;
+            letter-spacing: 2px;
+            color: var(--text-primary);
+        }
+
+        .product-formula {
+            font-family: 'VT323', monospace;
+            font-size: 12px;
+            text-align: center;
+            color: var(--bb-green);
+            opacity: 0.7;
+            margin-top: 2px;
+        }
+
+        /* Purity Meter */
+        .purity-meter {
+            margin: 10px 0 8px;
+        }
+
+        .meter-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 9px;
+            color: var(--text-muted);
+            margin-bottom: 3px;
+        }
+
+        .meter-bar {
+            height: 3px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .meter-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--bb-green) 0%, var(--bb-blue-meth) 100%);
+            border-radius: 2px;
+            position: relative;
+        }
+
+        /* Animated shine */
+        .meter-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%);
+            animation: meterShine 2s ease-in-out infinite;
+        }
+
+        @keyframes meterShine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .product-price {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            text-align: center;
+            color: var(--bb-green);
+            text-shadow: 0 0 8px var(--bb-green-glow);
+        }
+
+        .product-stock {
+            font-size: 10px;
+            text-align: center;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .product-stock.low {
+            color: var(--bb-orange-desert);
+        }
+
+        /* ════════════════════════════════════════════════════════════════
+           BOTTOM NAV - Hazmat Style
+           ════════════════════════════════════════════════════════════════ */
+        
+        .nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 65px;
+            background: linear-gradient(180deg, transparent 0%, var(--bg-dark) 40%);
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            padding-bottom: 8px;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            padding: 8px 18px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-icon {
+            font-size: 22px;
+            transition: all 0.3s ease;
+            filter: grayscale(100%) brightness(0.4);
+        }
+
+        .nav-label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 7px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            transition: color 0.3s ease;
+        }
+
+        .nav-item:hover .nav-icon,
+        .nav-item.active .nav-icon {
+            filter: none;
+        }
+
+        .nav-item.active .nav-icon {
+            transform: scale(1.15) translateY(-2px);
+        }
+
+        .nav-item.active .nav-label {
+            color: var(--bb-green);
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 2px;
+            background: var(--bb-green);
+            border-radius: 2px;
+            box-shadow: 0 0 8px var(--bb-green);
+        }
+
+        .nav-badge {
+            position: absolute;
+            top: 2px;
+            right: 10px;
+            min-width: 14px;
+            height: 14px;
+            background: var(--bb-red-danger);
+            border-radius: 7px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 8px;
+            font-weight: 700;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 8px rgba(231, 76, 60, 0.5);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 2px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--bb-green); border-radius: 2px; }
+    </style>
+</head>
+<body>
+    <!-- ════════════════════════════════════════════════════════════════
+         INTRO SCREEN
+         ════════════════════════════════════════════════════════════════ -->
+    <div class="intro" id="intro">
+        <!-- Smoke particles -->
+        <div class="smoke"></div>
+        <div class="smoke"></div>
+        <div class="smoke"></div>
+        <div class="smoke"></div>
+        <div class="smoke"></div>
+        
+        <!-- Floating formulas -->
+        <span class="formula" style="left: 8%; animation-delay: 0s;">C₁₀H₁₅N</span>
+        <span class="formula" style="left: 25%; animation-delay: 3s;">H₂SO₄</span>
+        <span class="formula" style="left: 45%; animation-delay: 6s;">P₂O₅</span>
+        <span class="formula" style="left: 65%; animation-delay: 2s;">NaOH</span>
+        <span class="formula" style="left: 85%; animation-delay: 5s;">HCl</span>
+        
+        <!-- Periodic Logo -->
+        <div class="intro-logo">
+            <div class="periodic-el br">
+                <span class="atomic-num">35</span>
+                <span class="symbol">Br</span>
+                <span class="name">Bromine</span>
+            </div>
+            <div class="periodic-el ba">
+                <span class="atomic-num">56</span>
+                <span class="symbol">Ba</span>
+                <span class="name">Barium</span>
+            </div>
+        </div>
+        
+        <h1 class="intro-title">HEISENBERG'S LAB</h1>
+        <p class="intro-quote">"Chemistry is the study of change."</p>
+        
+        <div class="intro-loader">
+            <div class="loader-bar">
+                <div class="loader-fill"></div>
+            </div>
+            <div class="loader-text">COOKING BATCH #4921...</div>
+        </div>
+        
+        <button class="intro-btn" id="enter-btn">⚗️ ENTER THE LAB ⚗️</button>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         MAIN APP
+         ════════════════════════════════════════════════════════════════ -->
+    <div class="app hidden" id="app">
+        
+        <!-- Background Layers -->
+        <div class="bg-layer">
+            <div class="desert-layer"></div>
+            <div class="rv-silhouette"></div>
+            <div class="crystal-glow"></div>
+            
+            <span class="molecule" style="left: 5%; animation-delay: 0s;">C₁₀H₁₅N</span>
+            <span class="molecule" style="left: 20%; animation-delay: 4s;">H₂SO₄</span>
+            <span class="molecule" style="left: 40%; animation-delay: 8s;">NaOH</span>
+            <span class="molecule" style="left: 60%; animation-delay: 2s;">CH₃NH₂</span>
+            <span class="molecule" style="left: 80%; animation-delay: 6s;">P₂O₅</span>
+            
+            <div class="scanlines"></div>
+        </div>
+
+        <!-- Header -->
+        <header class="header">
+            <div class="header-row">
+                <div class="logo">
+                    <div class="mini-periodic">
+                        <div class="mini-el br">Br</div>
+                        <div class="mini-el ba">Ba</div>
+                    </div>
+                    <span class="logo-text">LAB</span>
+                </div>
+                
+                <div class="balance">
+                    <span class="balance-icon">💎</span>
+                    <span class="balance-amount">€420.69</span>
+                </div>
+            </div>
+            
+            <div class="location-row">
+                <div class="location-select">
+                    <div class="select-btn" id="city-btn" onclick="toggleDropdown('city')">
+                        <div class="select-info">
+                            <span class="select-label">📍 City</span>
+                            <span class="select-value" id="city-value">Albuquerque</span>
+                        </div>
+                        <span class="select-arrow">▼</span>
+                    </div>
+                    <div class="dropdown" id="city-dropdown">
+                        <div class="dropdown-item" onclick="selectCity('Albuquerque')">🏜️ Albuquerque</div>
+                        <div class="dropdown-item" onclick="selectCity('El Paso')">🌵 El Paso</div>
+                        <div class="dropdown-item" onclick="selectCity('Phoenix')">☀️ Phoenix</div>
+                    </div>
+                </div>
+                
+                <div class="location-select">
+                    <div class="select-btn" id="district-btn" onclick="toggleDropdown('district')">
+                        <div class="select-info">
+                            <span class="select-label">🗺️ District</span>
+                            <span class="select-value" id="district-value">Desert Lab</span>
+                        </div>
+                        <span class="select-arrow">▼</span>
+                    </div>
+                    <div class="dropdown" id="district-dropdown">
+                        <div class="dropdown-item" onclick="selectDistrict('Desert Lab')">🏜️ Desert Lab</div>
+                        <div class="dropdown-item" onclick="selectDistrict('RV Route')">🚐 RV Route</div>
+                        <div class="dropdown-item" onclick="selectDistrict('Car Wash')">🚗 A1A Car Wash</div>
+                        <div class="dropdown-item" onclick="selectDistrict('Laundry')">👕 Lavandería</div>
+                        <div class="dropdown-item" onclick="selectDistrict('Los Pollos')">🐔 Los Pollos</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <main class="content">
+            <div class="section-header">
+                <span class="section-icon">⚗️</span>
+                <span class="section-title">BATCHES</span>
+                <div class="section-line"></div>
+            </div>
+            
+            <div class="products">
+                <div class="product">
+                    <span class="purity-badge">99.1%</span>
+                    <div class="product-emoji">💎</div>
+                    <div class="product-name">BLUE SKY</div>
+                    <div class="product-formula">C₁₀H₁₅N</div>
+                    <div class="purity-meter">
+                        <div class="meter-label">
+                            <span>PURITY</span>
+                            <span>99.1%</span>
+                        </div>
+                        <div class="meter-bar">
+                            <div class="meter-fill" style="width: 99.1%"></div>
+                        </div>
+                    </div>
+                    <div class="product-price">€80</div>
+                    <div class="product-stock">12 in stock</div>
+                </div>
+                
+                <div class="product">
+                    <span class="purity-badge">96.2%</span>
+                    <div class="product-emoji">🌿</div>
+                    <div class="product-name">CHILI P</div>
+                    <div class="product-formula">C₁₀H₁₅N+</div>
+                    <div class="purity-meter">
+                        <div class="meter-label">
+                            <span>PURITY</span>
+                            <span>96.2%</span>
+                        </div>
+                        <div class="meter-bar">
+                            <div class="meter-fill" style="width: 96.2%"></div>
+                        </div>
+                    </div>
+                    <div class="product-price">€45</div>
+                    <div class="product-stock">8 in stock</div>
+                </div>
+                
+                <div class="product">
+                    <span class="purity-badge">97.8%</span>
+                    <div class="product-emoji">🐔</div>
+                    <div class="product-name">LOS POLLOS</div>
+                    <div class="product-formula">C₁₀H₁₅N</div>
+                    <div class="purity-meter">
+                        <div class="meter-label">
+                            <span>PURITY</span>
+                            <span>97.8%</span>
+                        </div>
+                        <div class="meter-bar">
+                            <div class="meter-fill" style="width: 97.8%"></div>
+                        </div>
+                    </div>
+                    <div class="product-price">€70</div>
+                    <div class="product-stock">15 in stock</div>
+                </div>
+                
+                <div class="product">
+                    <span class="purity-badge">91.0%</span>
+                    <div class="product-emoji">💊</div>
+                    <div class="product-name">MADRIGAL</div>
+                    <div class="product-formula">C₂₀H₂₅N₃O</div>
+                    <div class="purity-meter">
+                        <div class="meter-label">
+                            <span>PURITY</span>
+                            <span>91.0%</span>
+                        </div>
+                        <div class="meter-bar">
+                            <div class="meter-fill" style="width: 91%"></div>
+                        </div>
+                    </div>
+                    <div class="product-price">€35</div>
+                    <div class="product-stock">20 in stock</div>
+                </div>
+                
+                <div class="product">
+                    <span class="purity-badge">88.5%</span>
+                    <div class="product-emoji">🍄</div>
+                    <div class="product-name">CAP'N COOK</div>
+                    <div class="product-formula">C₁₂H₁₇NO</div>
+                    <div class="purity-meter">
+                        <div class="meter-label">
+                            <span>PURITY</span>
+                            <span>88.5%</span>
+                        </div>
+                        <div class="meter-bar">
+                            <div class="meter-fill" style="width: 88.5%"></div>
+                        </div>
+                    </div>
+                    <div class="product-price">€55</div>
+                    <div class="product-stock low">3 left</div>
+                </div>
+                
+                <div class="product">
+                    <span class="purity-badge">95.5%</span>
+                    <div class="product-emoji">🧪</div>
+                    <div class="product-name">VAMONOS</div>
+                    <div class="product-formula">C₁₀H₁₅N</div>
+                    <div class="purity-meter">
+                        <div class="meter-label">
+                            <span>PURITY</span>
+                            <span>95.5%</span>
+                        </div>
+                        <div class="meter-bar">
+                            <div class="meter-fill" style="width: 95.5%"></div>
+                        </div>
+                    </div>
+                    <div class="product-price">€60</div>
+                    <div class="product-stock">7 in stock</div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Bottom Nav -->
+        <nav class="nav">
+            <div class="nav-item active">
+                <span class="nav-icon">🔬</span>
+                <span class="nav-label">LAB</span>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">🗺️</span>
+                <span class="nav-label">TURF</span>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">🛢️</span>
+                <span class="nav-label">BARREL</span>
+                <span class="nav-badge">2</span>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">👤</span>
+                <span class="nav-label">PROFILE</span>
+            </div>
+        </nav>
+    </div>
+
+    <script>
+        // Intro handler
+        document.getElementById('enter-btn').addEventListener('click', function() {
+            const intro = document.getElementById('intro');
+            const app = document.getElementById('app');
+            
+            intro.classList.add('fade-out');
+            
+            setTimeout(() => {
+                intro.classList.add('hidden');
+                app.classList.remove('hidden');
+            }, 800);
+            
+            // Haptic
+            if (window.Telegram?.WebApp?.HapticFeedback) {
+                window.Telegram.WebApp.HapticFeedback.impactOccurred('heavy');
+            }
+        });
+
+        // Dropdown handlers
+        function toggleDropdown(type) {
+            const dropdown = document.getElementById(`${type}-dropdown`);
+            const btn = document.getElementById(`${type}-btn`);
+            
+            document.querySelectorAll('.dropdown').forEach(d => {
+                if (d.id !== `${type}-dropdown`) d.classList.remove('show');
+            });
+            document.querySelectorAll('.select-btn').forEach(b => {
+                if (b.id !== `${type}-btn`) b.classList.remove('active');
+            });
+            
+            dropdown.classList.toggle('show');
+            btn.classList.toggle('active');
+        }
+
+        function selectCity(city) {
+            document.getElementById('city-value').textContent = city;
+            document.getElementById('city-dropdown').classList.remove('show');
+            document.getElementById('city-btn').classList.remove('active');
+            haptic('light');
+        }
+
+        function selectDistrict(district) {
+            document.getElementById('district-value').textContent = district;
+            document.getElementById('district-dropdown').classList.remove('show');
+            document.getElementById('district-btn').classList.remove('active');
+            haptic('light');
+        }
+
+        function haptic(type) {
+            if (window.Telegram?.WebApp?.HapticFeedback) {
+                window.Telegram.WebApp.HapticFeedback.impactOccurred(type);
+            }
+        }
+
+        // Close dropdowns on outside click
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.location-select')) {
+                document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('show'));
+                document.querySelectorAll('.select-btn').forEach(b => b.classList.remove('active'));
+            }
+        });
+
+        // Nav handlers
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                haptic('light');
+            });
+        });
+
+        // Product click
+        document.querySelectorAll('.product').forEach(p => {
+            p.addEventListener('click', () => haptic('medium'));
+        });
+    </script>
+</body>
+</html>
+
