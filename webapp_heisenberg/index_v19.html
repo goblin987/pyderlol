@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#000000">
+    <title>Breaking Bad</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --accent: #2ECC71;
+            --blue: #00B4D8;
+            --gold: #D4AF37;
+            --danger: #E74C3C;
+            --text: #FFFFFF;
+            --text-dim: rgba(255,255,255,0.6);
+            --text-muted: rgba(255,255,255,0.35);
+            --glass-bg: rgba(255,255,255,0.08);
+            --glass-border: rgba(255,255,255,0.12);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { height: 100%; overflow: hidden; }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: #0a0f0a;
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            user-select: none;
+        }
+        .hidden { display: none !important; }
+
+        /* ═══════════════════════════════════════════════════════════════
+           DEEP ALIVE GREEN SMOKE BACKGROUND
+           ═══════════════════════════════════════════════════════════════ */
+        .smoke-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(180deg, #0a1a0a 0%, #050a05 50%, #000 100%);
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .smoke-base {
+            position: absolute;
+            width: 100%; height: 100%;
+            background: radial-gradient(ellipse 120% 80% at 50% 120%, rgba(30,100,30,0.4) 0%, transparent 60%);
+        }
+
+        .smoke-layer {
+            position: absolute;
+            width: 300%;
+            height: 100%;
+            left: -100%;
+        }
+
+        .smoke-layer-1 {
+            background: 
+                radial-gradient(ellipse 30% 50% at 15% 90%, rgba(46,204,113,0.4) 0%, transparent 50%),
+                radial-gradient(ellipse 25% 40% at 40% 85%, rgba(34,139,34,0.35) 0%, transparent 45%),
+                radial-gradient(ellipse 35% 55% at 65% 95%, rgba(46,139,87,0.3) 0%, transparent 50%),
+                radial-gradient(ellipse 28% 45% at 85% 88%, rgba(46,204,113,0.35) 0%, transparent 48%);
+            filter: blur(25px);
+            animation: smokeFlow1 8s ease-in-out infinite;
+        }
+
+        .smoke-layer-2 {
+            background: 
+                radial-gradient(ellipse 35% 45% at 25% 80%, rgba(46,139,87,0.35) 0%, transparent 50%),
+                radial-gradient(ellipse 40% 50% at 55% 90%, rgba(34,139,34,0.3) 0%, transparent 55%),
+                radial-gradient(ellipse 30% 40% at 80% 85%, rgba(46,204,113,0.25) 0%, transparent 45%);
+            filter: blur(40px);
+            animation: smokeFlow2 12s ease-in-out infinite;
+        }
+
+        .smoke-layer-3 {
+            background: 
+                radial-gradient(ellipse 50% 60% at 35% 75%, rgba(0,100,50,0.3) 0%, transparent 60%),
+                radial-gradient(ellipse 45% 55% at 70% 80%, rgba(46,139,87,0.25) 0%, transparent 55%);
+            filter: blur(60px);
+            animation: smokeFlow3 16s ease-in-out infinite;
+        }
+
+        .smoke-layer-4 {
+            background: 
+                radial-gradient(ellipse 60% 70% at 50% 85%, rgba(0,80,40,0.2) 0%, transparent 65%);
+            filter: blur(80px);
+            animation: smokeFlow4 20s ease-in-out infinite;
+        }
+
+        @keyframes smokeFlow1 {
+            0%, 100% { transform: translateX(0) translateY(0) scale(1); opacity: 0.8; }
+            25% { transform: translateX(3%) translateY(-2%) scale(1.05); opacity: 1; }
+            50% { transform: translateX(-2%) translateY(-4%) scale(1.08); opacity: 0.9; }
+            75% { transform: translateX(-4%) translateY(-1%) scale(1.02); opacity: 1; }
+        }
+        @keyframes smokeFlow2 {
+            0%, 100% { transform: translateX(0) translateY(0) scale(1.1); opacity: 0.7; }
+            33% { transform: translateX(-5%) translateY(-3%) scale(1); opacity: 0.9; }
+            66% { transform: translateX(4%) translateY(-5%) scale(1.15); opacity: 0.8; }
+        }
+        @keyframes smokeFlow3 {
+            0%, 100% { transform: translateX(0) scale(1); opacity: 0.6; }
+            50% { transform: translateX(-6%) translateY(-4%) scale(1.2); opacity: 0.8; }
+        }
+        @keyframes smokeFlow4 {
+            0%, 100% { transform: translateX(0) scale(1); opacity: 0.5; }
+            50% { transform: translateX(5%) scale(1.3); opacity: 0.7; }
+        }
+
+        .smoke-wisp {
+            position: absolute;
+            background: radial-gradient(circle, rgba(46,204,113,0.6) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(3px);
+            animation: wispRise linear infinite;
+        }
+        .smoke-wisp:nth-child(1) { width: 10px; height: 10px; left: 10%; bottom: -5%; animation-duration: 8s; animation-delay: 0s; }
+        .smoke-wisp:nth-child(2) { width: 8px; height: 8px; left: 25%; bottom: -5%; animation-duration: 6s; animation-delay: 1s; }
+        .smoke-wisp:nth-child(3) { width: 12px; height: 12px; left: 40%; bottom: -5%; animation-duration: 10s; animation-delay: 0.5s; }
+        .smoke-wisp:nth-child(4) { width: 7px; height: 7px; left: 55%; bottom: -5%; animation-duration: 7s; animation-delay: 2s; }
+        .smoke-wisp:nth-child(5) { width: 9px; height: 9px; left: 70%; bottom: -5%; animation-duration: 9s; animation-delay: 1.5s; }
+        .smoke-wisp:nth-child(6) { width: 6px; height: 6px; left: 85%; bottom: -5%; animation-duration: 8s; animation-delay: 3s; }
+        .smoke-wisp:nth-child(7) { width: 11px; height: 11px; left: 15%; bottom: -5%; animation-duration: 11s; animation-delay: 4s; }
+        .smoke-wisp:nth-child(8) { width: 8px; height: 8px; left: 60%; bottom: -5%; animation-duration: 7s; animation-delay: 2.5s; }
+        
+        @keyframes wispRise {
+            0% { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+            10% { opacity: 0.7; }
+            50% { transform: translateY(-50vh) translateX(20px) scale(0.8); opacity: 0.4; }
+            100% { transform: translateY(-110vh) translateX(-10px) scale(0.3); opacity: 0; }
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           CHEMICAL STRUCTURE BACKGROUND PATTERN
+           ═══════════════════════════════════════════════════════════════ */
+        .chemical-pattern {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0.08;
+            background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%232ECC71' stroke-width='0.5' fill='none'%3E%3Ccircle cx='50' cy='50' r='15'/%3E%3Ccircle cx='150' cy='50' r='15'/%3E%3Ccircle cx='100' cy='100' r='15'/%3E%3Ccircle cx='50' cy='150' r='15'/%3E%3Ccircle cx='150' cy='150' r='15'/%3E%3Cline x1='65' y1='50' x2='135' y2='50'/%3E%3Cline x1='100' y1='65' x2='100' y2='85'/%3E%3Cline x1='65' y1='150' x2='135' y2='150'/%3E%3Cline x1='50' y1='65' x2='50' y2='135'/%3E%3Cline x1='150' y1='65' x2='150' y2='135'/%3E%3Cline x1='65' y1='50' x2='50' y2='65'/%3E%3Cline x1='135' y1='50' x2='150' y2='65'/%3E%3Cline x1='65' y1='150' x2='50' y2='135'/%3E%3Cline x1='135' y1='150' x2='150' y2='135'/%3E%3C/g%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 200px 200px;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           FILM GRAIN + ENHANCED RETRO TV SCANLINES
+           ═══════════════════════════════════════════════════════════════ */
+        .film-grain {
+            position: fixed;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            pointer-events: none;
+            z-index: 9998;
+            opacity: 0.06;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            animation: grainShift 0.15s steps(2) infinite;
+        }
+        @keyframes grainShift {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(-3%, -3%); }
+            100% { transform: translate(3%, 3%); }
+        }
+
+        .scanlines {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 9997;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent 0px,
+                transparent 1px,
+                rgba(0,0,0,0.15) 1px,
+                rgba(0,0,0,0.15) 2px
+            );
+            animation: scanlineFlicker 0.1s linear infinite;
+        }
+        @keyframes scanlineFlicker {
+            0%, 100% { opacity: 1; transform: translateY(0); }
+            50% { opacity: 0.95; transform: translateY(1px); }
+        }
+
+        .vignette {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,0.8) 100%);
+            pointer-events: none;
+            z-index: 9996;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           INTRO - AUTHENTIC BREAKING BAD LOGO
+           ═══════════════════════════════════════════════════════════════ */
+        .intro {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 24px;
+        }
+
+        .intro-logo {
+            text-align: center;
+            animation: logoReveal 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+        }
+        @keyframes logoReveal { 
+            0% { opacity: 0; transform: scale(0.9) translateY(30px); } 
+            100% { opacity: 1; transform: scale(1) translateY(0); } 
+        }
+
+        .logo-line {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            font-family: 'Oswald', sans-serif;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .logo-line.breaking { font-size: 2.8em; }
+        .logo-line.bad { font-size: 2.8em; margin-top: -8px; }
+
+        .element-box {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(175deg, #4CAF50 0%, #2E7D32 50%, #1B5E20 100%);
+            min-width: 48px;
+            height: 54px;
+            padding: 4px 8px;
+            border-radius: 3px;
+            margin: 0 1px;
+            position: relative;
+            box-shadow: 
+                0 2px 0 #145214,
+                0 4px 15px rgba(46,125,50,0.5);
+        }
+        .element-box .atomic {
+            position: absolute;
+            top: 2px; left: 4px;
+            font-size: 9px;
+            font-weight: 500;
+            opacity: 0.85;
+        }
+        .element-box .symbol {
+            font-size: 1.5em;
+            font-weight: 700;
+            line-height: 1;
+            margin-top: 6px;
+        }
+
+        .logo-text { color: var(--text); }
+        .logo-subtitle { margin-top: 40px; animation: subtitleFade 1s ease 1.2s both; }
+        @keyframes subtitleFade { from { opacity: 0; } to { opacity: 1; } }
+        .logo-subtitle .tagline {
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .intro-btn {
+            margin-top: 50px;
+            padding: 16px 50px;
+            background: transparent;
+            border: 2px solid var(--accent);
+            border-radius: 4px;
+            font-family: 'Oswald', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--accent);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            cursor: pointer;
+            animation: btnFade 1s ease 1.5s both;
+            transition: all 0.3s ease;
+        }
+        @keyframes btnFade { from { opacity: 0; } to { opacity: 1; } }
+        .intro-btn:active {
+            background: var(--accent);
+            color: #000;
+            transform: scale(0.98);
+        }
+
+        .intro.fade-out { animation: fadeOut 0.6s ease forwards; }
+        @keyframes fadeOut { to { opacity: 0; pointer-events: none; } }
+
+        /* ═══════════════════════════════════════════════════════════════
+           APP - iPhone 2030 GLASSMORPHISM
+           ═══════════════════════════════════════════════════════════════ */
+        .app {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 10;
+        }
+
+        .header {
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(20,30,20,0.6);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.3);
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-elements {
+            display: flex;
+            gap: 2px;
+        }
+        .header-el {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(175deg, #4CAF50, #1B5E20);
+            width: 22px; height: 26px;
+            border-radius: 2px;
+            box-shadow: 0 2px 8px rgba(46,125,50,0.4);
+        }
+        .header-el .num {
+            font-size: 5px;
+            font-weight: 500;
+            opacity: 0.8;
+            margin-top: 1px;
+        }
+        .header-el .sym {
+            font-family: 'Oswald', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .header-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .header-balance {
+            padding: 10px 18px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+        }
+        .header-balance span {
+            font-family: 'Oswald', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            padding-bottom: calc(90px + var(--safe-bottom));
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .section { display: none; }
+        .section.active { display: block; animation: sectionIn 0.4s ease; }
+        @keyframes sectionIn { from { opacity: 0; transform: translateY(20px); } }
+
+        .location-nav { margin-bottom: 24px; }
+        .location-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .location-dropdown {
+            flex: 1;
+            padding: 14px 16px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text);
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%232ECC71' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+        }
+        .location-dropdown option {
+            background: #1a1f1a;
+            color: var(--text);
+        }
+
+        .location-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background: rgba(46,204,113,0.06);
+            border: 1px solid rgba(46,204,113,0.12);
+            border-radius: 12px;
+            font-size: 12px;
+            color: var(--text-dim);
+        }
+        .location-info .highlight { color: var(--accent); font-weight: 600; }
+
+        /* ═══════════════════════════════════════════════════════════════
+           PRODUCT CARDS - WITH DEPTH SHADOWS & CHEMICAL SPILLS
+           ═══════════════════════════════════════════════════════════════ */
+        .products {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .product {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 20px 16px;
+            position: relative;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            
+            /* Multi-layer depth shadows with green glow */
+            box-shadow: 
+                0 8px 32px rgba(0,0,0,0.4),
+                0 4px 16px rgba(0,0,0,0.3),
+                0 0 20px rgba(46,204,113,0.15),
+                inset 0 1px 0 rgba(255,255,255,0.05);
+        }
+        .product:active {
+            transform: scale(0.98);
+            border-color: rgba(46,204,113,0.3);
+            background: rgba(255,255,255,0.12);
+            box-shadow: 
+                0 4px 16px rgba(0,0,0,0.3),
+                0 0 30px rgba(46,204,113,0.25);
+        }
+
+        /* Chemical spill gradient overlays at corners */
+        .product::before {
+            content: '';
+            position: absolute;
+            top: -30px; right: -30px;
+            width: 80px; height: 80px;
+            background: radial-gradient(circle, rgba(46,204,113,0.12) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .product::after {
+            content: '';
+            position: absolute;
+            bottom: -20px; left: -20px;
+            width: 60px; height: 60px;
+            background: radial-gradient(circle, rgba(34,139,34,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .product.featured {
+            grid-row: span 2;
+            background: linear-gradient(180deg, rgba(0,180,216,0.1) 0%, var(--glass-bg) 100%);
+            border-color: rgba(0,180,216,0.2);
+            padding: 28px 20px;
+            box-shadow: 
+                0 12px 40px rgba(0,0,0,0.5),
+                0 6px 20px rgba(0,0,0,0.4),
+                0 0 30px rgba(0,180,216,0.2),
+                inset 0 1px 0 rgba(255,255,255,0.05);
+        }
+        .product.featured .product-icon { font-size: 4em; margin-bottom: 24px; }
+        .product.featured .product-name { font-size: 20px; }
+        .product.featured .product-price { font-size: 26px; }
+
+        .product.wide {
+            grid-column: span 2;
+            flex-direction: row;
+            align-items: center;
+            gap: 18px;
+            padding: 20px 24px;
+        }
+        .product.wide .product-icon { font-size: 2.8em; margin-bottom: 0; }
+        .product.wide .product-info { flex: 1; }
+        .product.wide .product-footer { flex-direction: column; align-items: flex-end; }
+
+        .product-icon {
+            font-size: 2.8em;
+            margin-bottom: 16px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .product-info { flex: 1; position: relative; z-index: 1; }
+        .product-name {
+            font-family: 'Oswald', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        .product-meta {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 18px;
+            position: relative;
+            z-index: 1;
+        }
+        .product-price {
+            font-family: 'Oswald', sans-serif;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--accent);
+        }
+        
+        /* Depth shadows on add button */
+        .product-add {
+            width: 42px; height: 42px;
+            background: var(--accent);
+            border: none;
+            border-radius: 50%;
+            color: #000;
+            font-size: 22px;
+            font-weight: 400;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 
+                0 6px 20px rgba(46,204,113,0.5),
+                0 3px 10px rgba(0,0,0,0.3),
+                0 0 15px rgba(46,204,113,0.3);
+            transition: all 0.2s ease;
+        }
+        .product-add:active { 
+            transform: scale(0.9);
+            box-shadow: 
+                0 2px 10px rgba(46,204,113,0.4),
+                0 0 25px rgba(46,204,113,0.5);
+        }
+        .product-add:disabled { 
+            background: rgba(255,255,255,0.1); 
+            color: var(--text-muted); 
+            box-shadow: none; 
+        }
+
+        .product.out-of-stock { opacity: 0.4; }
+        .product.out-of-stock::after {
+            content: 'SOLD OUT';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotate(-12deg);
+            font-family: 'Oswald', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--danger);
+            letter-spacing: 2px;
+            padding: 6px 14px;
+            border: 2px solid var(--danger);
+            background: rgba(0,0,0,0.8);
+            z-index: 10;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           GREEN SMOKE PARTICLE TRAILS
+           ═══════════════════════════════════════════════════════════════ */
+        .smoke-trail {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, rgba(46,204,113,0.6) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 998;
+            filter: blur(2px);
+            animation: trailFade 1.5s ease-out forwards;
+        }
+        @keyframes trailFade {
+            0% { opacity: 0.8; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0.3); }
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           CART & OTHER SECTIONS
+           ═══════════════════════════════════════════════════════════════ */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        .empty-state .icon { font-size: 48px; margin-bottom: 16px; opacity: 0.25; }
+        .empty-state p { color: var(--text-muted); font-size: 14px; }
+
+        .cart-list { display: flex; flex-direction: column; gap: 12px; }
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            box-shadow: 
+                0 4px 16px rgba(0,0,0,0.3),
+                0 0 15px rgba(46,204,113,0.1);
+        }
+        .cart-item-icon { font-size: 28px; }
+        .cart-item-info { flex: 1; }
+        .cart-item-name { font-family: 'Oswald', sans-serif; font-size: 15px; font-weight: 500; }
+        .cart-item-qty { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+        .cart-item-price { font-family: 'Oswald', sans-serif; font-size: 17px; font-weight: 600; color: var(--accent); }
+        .cart-item-remove {
+            width: 34px; height: 34px;
+            background: rgba(231,76,60,0.12);
+            border: 1px solid rgba(231,76,60,0.2);
+            border-radius: 50%;
+            color: var(--danger);
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .cart-total {
+            margin-top: 24px;
+            padding: 22px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: 
+                0 6px 24px rgba(0,0,0,0.3),
+                0 0 20px rgba(46,204,113,0.1);
+        }
+        .cart-total-row { display: flex; justify-content: space-between; margin-bottom: 14px; font-size: 14px; }
+        .cart-total-row span:first-child { color: var(--text-muted); }
+        .cart-total-row.final { padding-top: 14px; border-top: 1px solid var(--glass-border); font-size: 18px; }
+        .cart-total-row.final span:last-child { font-family: 'Oswald', sans-serif; color: var(--accent); font-weight: 600; }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 18px;
+            margin-top: 16px;
+            background: var(--accent);
+            border: none;
+            border-radius: 14px;
+            font-family: 'Oswald', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: #000;
+            cursor: pointer;
+            box-shadow: 
+                0 6px 20px rgba(46,204,113,0.5),
+                0 3px 10px rgba(0,0,0,0.3),
+                0 0 15px rgba(46,204,113,0.3);
+            transition: all 0.2s ease;
+        }
+        .checkout-btn:active {
+            transform: scale(0.98);
+            box-shadow: 
+                0 2px 10px rgba(46,204,113,0.4),
+                0 0 20px rgba(46,204,113,0.4);
+        }
+
+        .profile-header { text-align: center; padding: 30px 0; }
+        .profile-avatar {
+            width: 90px; height: 90px;
+            background: linear-gradient(135deg, var(--gold), #B8860B);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin: 0 auto 18px;
+            box-shadow: 
+                0 8px 30px rgba(212,175,55,0.3),
+                0 4px 15px rgba(0,0,0,0.3);
+        }
+        .profile-name { font-family: 'Oswald', sans-serif; font-size: 24px; font-weight: 600; letter-spacing: 1px; }
+        .profile-rank { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 24px; }
+        .stat-card {
+            padding: 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 
+                0 4px 16px rgba(0,0,0,0.3),
+                0 0 15px rgba(46,204,113,0.1);
+        }
+        .stat-value { font-family: 'Oswald', sans-serif; font-size: 24px; font-weight: 600; color: var(--blue); }
+        .stat-label { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+        .nav {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            padding: 14px 24px calc(14px + var(--safe-bottom));
+            background: rgba(10,15,10,0.8);
+            backdrop-filter: blur(40px) saturate(150%);
+            -webkit-backdrop-filter: blur(40px) saturate(150%);
+            border-top: 1px solid rgba(255,255,255,0.06);
+            display: flex;
+            justify-content: space-around;
+            z-index: 100;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 18px;
+            cursor: pointer;
+            position: relative;
+        }
+        .nav-icon { font-size: 24px; opacity: 0.4; transition: all 0.2s ease; }
+        .nav-label { font-size: 10px; font-weight: 500; color: var(--text-muted); letter-spacing: 0.5px; }
+        .nav-item.active .nav-icon { opacity: 1; }
+        .nav-item.active .nav-label { color: var(--text); }
+        .nav-badge {
+            position: absolute;
+            top: 2px; right: 10px;
+            min-width: 18px; height: 18px;
+            background: var(--accent);
+            border-radius: 9px;
+            font-size: 10px;
+            font-weight: 700;
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 110px;
+            left: 50%; transform: translateX(-50%);
+            padding: 14px 28px;
+            background: var(--text);
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #000;
+            z-index: 1000;
+            animation: toastIn 0.3s ease;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+        }
+        @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(20px); } }
+
+        .success-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 500;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .success-overlay.active { display: flex; }
+        .success-icon { font-size: 72px; margin-bottom: 24px; animation: successPop 0.5s ease; }
+        @keyframes successPop { 0% { transform: scale(0); } 60% { transform: scale(1.2); } 100% { transform: scale(1); } }
+        .success-title { font-family: 'Oswald', sans-serif; font-size: 26px; font-weight: 600; letter-spacing: 3px; }
+        .success-sub { color: var(--text-muted); margin-top: 8px; }
+
+        .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 999; }
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            animation: particleBurst 0.8s ease-out forwards;
+        }
+        @keyframes particleBurst { 0% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--x), var(--y)) scale(0); } }
+    </style>
+</head>
+<body>
+    <!-- Deep Alive Green Smoke Background -->
+    <div class="smoke-bg">
+        <div class="smoke-base"></div>
+        <div class="smoke-layer smoke-layer-4"></div>
+        <div class="smoke-layer smoke-layer-3"></div>
+        <div class="smoke-layer smoke-layer-2"></div>
+        <div class="smoke-layer smoke-layer-1"></div>
+        <div class="smoke-wisp"></div>
+        <div class="smoke-wisp"></div>
+        <div class="smoke-wisp"></div>
+        <div class="smoke-wisp"></div>
+        <div class="smoke-wisp"></div>
+        <div class="smoke-wisp"></div>
+        <div class="smoke-wisp"></div>
+        <div class="smoke-wisp"></div>
+    </div>
+    
+    <!-- Chemical Structure Pattern -->
+    <div class="chemical-pattern"></div>
+    
+    <!-- Film Grain + Enhanced Scanlines -->
+    <div class="scanlines"></div>
+    <div class="film-grain"></div>
+    <div class="vignette"></div>
+    
+    <div class="particles" id="particles"></div>
+
+    <!-- Authentic Breaking Bad Intro -->
+    <div class="intro" id="intro">
+        <div class="intro-logo">
+            <div class="logo-line breaking">
+                <span class="logo-text">B</span>
+                <span class="element-box">
+                    <span class="atomic">35</span>
+                    <span class="symbol">r</span>
+                </span>
+                <span class="logo-text">eaking</span>
+            </div>
+            <div class="logo-line bad">
+                <span class="element-box">
+                    <span class="atomic">56</span>
+                    <span class="symbol">Ba</span>
+                </span>
+                <span class="logo-text">d</span>
+            </div>
+            <div class="logo-subtitle">
+                <div class="tagline">Shop</div>
+            </div>
+        </div>
+        <button class="intro-btn" id="enter-btn">Enter</button>
+    </div>
+
+    <!-- App -->
+    <div class="app hidden" id="app">
+        <header class="header">
+            <div class="header-logo">
+                <div class="header-elements">
+                    <div class="header-el">
+                        <span class="num">35</span>
+                        <span class="sym">Br</span>
+                    </div>
+                    <div class="header-el">
+                        <span class="num">56</span>
+                        <span class="sym">Ba</span>
+                    </div>
+                </div>
+                <span class="header-title">SHOP</span>
+            </div>
+            <div class="header-balance">
+                <span>€420.69</span>
+            </div>
+        </header>
+
+        <main class="content" id="main-content">
+            <section class="section active" id="sec-lab">
+                <div class="location-nav">
+                    <div class="location-selector">
+                        <select class="location-dropdown" id="city-select">
+                            <option value="all">All Cities</option>
+                            <option value="albuquerque">Albuquerque</option>
+                            <option value="santa-fe">Santa Fe</option>
+                            <option value="el-paso">El Paso</option>
+                        </select>
+                        <select class="location-dropdown" id="district-select">
+                            <option value="all">All Districts</option>
+                            <option value="downtown">Downtown</option>
+                            <option value="westside">Westside</option>
+                            <option value="heights">Heights</option>
+                            <option value="south-valley">South Valley</option>
+                        </select>
+                    </div>
+                    <div class="location-info">
+                        <span>📍</span>
+                        <span>Showing products in <span class="highlight" id="location-display">All Locations</span></span>
+                    </div>
+                </div>
+                
+                <div class="products" id="products"></div>
+            </section>
+
+            <section class="section" id="sec-turf">
+                <div class="empty-state">
+                    <div class="icon">🗺️</div>
+                    <p>Territory map coming soon</p>
+                </div>
+            </section>
+
+            <section class="section" id="sec-cart">
+                <div id="cart-content">
+                    <div class="empty-state">
+                        <div class="icon">🛒</div>
+                        <p>Your cart is empty</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="sec-profile">
+                <div class="profile-header">
+                    <div class="profile-avatar">👨‍🔬</div>
+                    <div class="profile-name">PINKMAN</div>
+                    <div class="profile-rank">Level 3 • Distributor</div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card"><div class="stat-value">12</div><div class="stat-label">Orders</div></div>
+                    <div class="stat-card"><div class="stat-value">€1.2k</div><div class="stat-label">Spent</div></div>
+                    <div class="stat-card"><div class="stat-value">VIP</div><div class="stat-label">Status</div></div>
+                </div>
+            </section>
+        </main>
+
+        <nav class="nav">
+            <div class="nav-item active" data-nav="lab"><span class="nav-icon">🔬</span><span class="nav-label">LAB</span></div>
+            <div class="nav-item" data-nav="turf"><span class="nav-icon">🗺️</span><span class="nav-label">TURF</span></div>
+            <div class="nav-item" data-nav="cart"><span class="nav-icon">🛒</span><span class="nav-label">CART</span><span class="nav-badge hidden" id="cart-badge">0</span></div>
+            <div class="nav-item" data-nav="profile"><span class="nav-icon">👤</span><span class="nav-label">PROFILE</span></div>
+        </nav>
+    </div>
+
+    <div class="success-overlay" id="success">
+        <div class="success-icon">✓</div>
+        <div class="success-title">ORDER CONFIRMED</div>
+        <div class="success-sub">Delivery in progress</div>
+    </div>
+
+    <script>
+        const products = [
+            { id: 1, name: 'Blue Sky', icon: '💎', price: 80, stock: 12, layout: 'featured', city: 'albuquerque', district: 'downtown' },
+            { id: 2, name: 'Chili P', icon: '🌿', price: 45, stock: 8, city: 'albuquerque', district: 'westside' },
+            { id: 3, name: 'Madrigal', icon: '💊', price: 35, stock: 20, city: 'santa-fe', district: 'downtown' },
+            { id: 4, name: 'Los Pollos Hermanos', icon: '🐔', price: 70, stock: 15, layout: 'wide', city: 'albuquerque', district: 'heights' },
+            { id: 5, name: "Cap'n Cook", icon: '🍄', price: 55, stock: 3, city: 'el-paso', district: 'south-valley' },
+            { id: 6, name: 'Vamonos Pest', icon: '🧪', price: 60, stock: 0, city: 'albuquerque', district: 'south-valley' }
+        ];
+
+        let cart = [];
+        let currentCity = 'all';
+        let currentDistrict = 'all';
+        let lastTouchX = 0;
+        let lastTouchY = 0;
+        let trailTimeout = null;
+
+        // Green smoke particle trails on scroll/touch
+        function createSmokeTrail(x, y) {
+            const trail = document.createElement('div');
+            trail.className = 'smoke-trail';
+            trail.style.left = x + 'px';
+            trail.style.top = y + 'px';
+            document.body.appendChild(trail);
+            setTimeout(() => trail.remove(), 1500);
+        }
+
+        // Track scroll for smoke trails
+        const content = document.getElementById('main-content');
+        let lastScrollY = 0;
+        content.addEventListener('scroll', () => {
+            const scrollY = content.scrollTop;
+            if (Math.abs(scrollY - lastScrollY) > 5) {
+                const viewportHeight = window.innerHeight;
+                const centerX = window.innerWidth / 2;
+                const centerY = viewportHeight / 2 + scrollY;
+                createSmokeTrail(centerX + (Math.random() - 0.5) * 100, centerY + (Math.random() - 0.5) * 50);
+                lastScrollY = scrollY;
+            }
+        });
+
+        // Track touch movement for smoke trails
+        document.addEventListener('touchmove', (e) => {
+            if (trailTimeout) clearTimeout(trailTimeout);
+            trailTimeout = setTimeout(() => {
+                const touch = e.touches[0];
+                if (touch) {
+                    createSmokeTrail(touch.clientX, touch.clientY);
+                }
+            }, 50);
+        }, { passive: true });
+
+        // Track mouse movement for smoke trails (desktop)
+        document.addEventListener('mousemove', (e) => {
+            if (trailTimeout) clearTimeout(trailTimeout);
+            trailTimeout = setTimeout(() => {
+                createSmokeTrail(e.clientX, e.clientY);
+            }, 100);
+        });
+
+        function render() {
+            let list = products;
+            if (currentCity !== 'all') list = list.filter(p => p.city === currentCity);
+            if (currentDistrict !== 'all') list = list.filter(p => p.district === currentDistrict);
+
+            if (list.length === 0) {
+                document.getElementById('products').innerHTML = `
+                    <div style="grid-column: span 2; text-align: center; padding: 50px 20px;">
+                        <div style="font-size: 48px; opacity: 0.2; margin-bottom: 16px;">🔍</div>
+                        <p style="color: var(--text-muted); font-size: 14px;">No products in this location</p>
+                    </div>
+                `;
+                return;
+            }
+
+            document.getElementById('products').innerHTML = list.map(p => {
+                const layoutClass = p.layout || '';
+                const outClass = p.stock === 0 ? 'out-of-stock' : '';
+                
+                if (p.layout === 'wide') {
+                    return `
+                        <div class="product wide ${outClass}" data-id="${p.id}">
+                            <div class="product-icon">${p.icon}</div>
+                            <div class="product-info">
+                                <div class="product-name">${p.name}</div>
+                                <div class="product-meta">Premium Quality</div>
+                            </div>
+                            <div class="product-footer">
+                                <div class="product-price">€${p.price}</div>
+                                <button class="product-add" onclick="addToCart(${p.id}, event)" ${p.stock === 0 ? 'disabled' : ''}>+</button>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                return `
+                    <div class="product ${layoutClass} ${outClass}" data-id="${p.id}">
+                        <div class="product-icon">${p.icon}</div>
+                        <div class="product-info">
+                            <div class="product-name">${p.name}</div>
+                            <div class="product-meta">Premium Quality</div>
+                        </div>
+                        <div class="product-footer">
+                            <div class="product-price">€${p.price}</div>
+                            <button class="product-add" onclick="addToCart(${p.id}, event)" ${p.stock === 0 ? 'disabled' : ''}>+</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateLocationDisplay() {
+            const cityText = currentCity === 'all' ? 'All Cities' : document.querySelector(`#city-select option[value="${currentCity}"]`).textContent;
+            const districtText = currentDistrict === 'all' ? '' : `, ${document.querySelector(`#district-select option[value="${currentDistrict}"]`).textContent}`;
+            document.getElementById('location-display').textContent = cityText + districtText || 'All Locations';
+        }
+
+        function addToCart(id, e) {
+            const p = products.find(x => x.id === id);
+            if (!p || p.stock === 0) return;
+            const existing = cart.find(x => x.id === id);
+            if (existing) existing.qty++;
+            else cart.push({ ...p, qty: 1 });
+            updateCart();
+            toast(p.name + ' added');
+            burst(e.clientX, e.clientY);
+            haptic();
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(x => x.id !== id);
+            updateCart();
+            haptic();
+        }
+
+        function updateCart() {
+            const total = cart.reduce((s, x) => s + x.qty, 0);
+            const badge = document.getElementById('cart-badge');
+            badge.textContent = total;
+            badge.classList.toggle('hidden', total === 0);
+            renderCart();
+        }
+
+        function renderCart() {
+            const el = document.getElementById('cart-content');
+            if (cart.length === 0) {
+                el.innerHTML = '<div class="empty-state"><div class="icon">🛒</div><p>Your cart is empty</p></div>';
+                return;
+            }
+            const sum = cart.reduce((s, x) => s + x.price * x.qty, 0);
+            el.innerHTML = `
+                <div class="cart-list">
+                    ${cart.map(x => `
+                        <div class="cart-item">
+                            <div class="cart-item-icon">${x.icon}</div>
+                            <div class="cart-item-info">
+                                <div class="cart-item-name">${x.name}</div>
+                                <div class="cart-item-qty">Qty: ${x.qty}</div>
+                            </div>
+                            <div class="cart-item-price">€${(x.price * x.qty).toFixed(2)}</div>
+                            <button class="cart-item-remove" onclick="removeFromCart(${x.id})">×</button>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="cart-total">
+                    <div class="cart-total-row"><span>Subtotal</span><span>€${sum.toFixed(2)}</span></div>
+                    <div class="cart-total-row final"><span>Total</span><span>€${sum.toFixed(2)}</span></div>
+                    <button class="checkout-btn" onclick="checkout()">COMPLETE ORDER</button>
+                </div>
+            `;
+        }
+
+        function checkout() {
+            if (cart.length === 0) return;
+            document.getElementById('success').classList.add('active');
+            haptic();
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => burst(
+                    window.innerWidth / 2 + (Math.random() - 0.5) * 200,
+                    window.innerHeight / 2 + (Math.random() - 0.5) * 200
+                ), i * 100);
+            }
+            cart = [];
+            updateCart();
+            setTimeout(() => {
+                document.getElementById('success').classList.remove('active');
+                navigate('lab');
+            }, 2500);
+        }
+
+        function navigate(section) {
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.nav === section));
+            document.querySelectorAll('.section').forEach(s => s.classList.toggle('active', s.id === 'sec-' + section));
+            haptic();
+        }
+
+        function toast(msg) {
+            document.querySelectorAll('.toast').forEach(t => t.remove());
+            const t = document.createElement('div');
+            t.className = 'toast';
+            t.textContent = msg;
+            document.body.appendChild(t);
+            setTimeout(() => t.remove(), 2000);
+        }
+
+        function haptic() {
+            if ('vibrate' in navigator) navigator.vibrate(10);
+        }
+
+        function burst(x, y) {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 12; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.background = Math.random() > 0.5 ? 'var(--accent)' : 'var(--blue)';
+                const size = 5 + Math.random() * 10;
+                const angle = (Math.PI * 2 / 12) * i;
+                const dist = 50 + Math.random() * 70;
+                p.style.cssText += `left:${x}px;top:${y}px;width:${size}px;height:${size}px;--x:${Math.cos(angle)*dist}px;--y:${Math.sin(angle)*dist}px;`;
+                container.appendChild(p);
+                setTimeout(() => p.remove(), 800);
+            }
+        }
+
+        document.getElementById('enter-btn').addEventListener('click', () => {
+            haptic();
+            document.getElementById('intro').classList.add('fade-out');
+            setTimeout(() => {
+                document.getElementById('intro').style.display = 'none';
+                document.getElementById('app').classList.remove('hidden');
+                render();
+            }, 600);
+        });
+
+        document.querySelectorAll('.nav-item').forEach(n => {
+            n.addEventListener('click', () => navigate(n.dataset.nav));
+        });
+
+        document.getElementById('city-select').addEventListener('change', (e) => {
+            currentCity = e.target.value;
+            updateLocationDisplay();
+            render();
+            haptic();
+        });
+
+        document.getElementById('district-select').addEventListener('change', (e) => {
+            currentDistrict = e.target.value;
+            updateLocationDisplay();
+            render();
+            haptic();
+        });
+    </script>
+</body>
+</html>
+
