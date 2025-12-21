@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#000000">
+    <title>Breaking Bad</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --accent: #2ECC71;
+            --accent-dim: rgba(46,204,113,0.15);
+            --blue: #00D4FF;
+            --gold: #D4AF37;
+            --amber: #F59E0B;
+            --danger: #E74C3C;
+            --text: #FFFFFF;
+            --text-dim: rgba(255,255,255,0.6);
+            --text-muted: rgba(255,255,255,0.35);
+            --glass-bg: rgba(0,0,0,0.4);
+            --glass-border: rgba(255,255,255,0.08);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { height: 100%; overflow: hidden; }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: #000;
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            user-select: none;
+        }
+        .hidden { display: none !important; }
+
+        /* ═══════════════════════════════════════════════════════════════
+           DEEP GREEN SMOKE BACKGROUND
+           ═══════════════════════════════════════════════════════════════ */
+        .smoke-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(180deg, #0a1a0a 0%, #050a05 50%, #000 100%);
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .smoke-base {
+            position: absolute;
+            width: 100%; height: 100%;
+            background: radial-gradient(ellipse 120% 80% at 50% 120%, rgba(30,100,30,0.5) 0%, transparent 60%);
+        }
+
+        .smoke-layer {
+            position: absolute;
+            width: 300%; height: 100%;
+            left: -100%;
+        }
+
+        .smoke-layer-1 {
+            background: 
+                radial-gradient(ellipse 30% 50% at 15% 90%, rgba(46,204,113,0.4) 0%, transparent 50%),
+                radial-gradient(ellipse 25% 40% at 40% 85%, rgba(34,139,34,0.35) 0%, transparent 45%),
+                radial-gradient(ellipse 35% 55% at 65% 95%, rgba(46,139,87,0.3) 0%, transparent 50%);
+            filter: blur(25px);
+            animation: smokeFlow1 8s ease-in-out infinite;
+        }
+
+        .smoke-layer-2 {
+            background: 
+                radial-gradient(ellipse 35% 45% at 25% 80%, rgba(46,139,87,0.35) 0%, transparent 50%),
+                radial-gradient(ellipse 40% 50% at 55% 90%, rgba(34,139,34,0.3) 0%, transparent 55%);
+            filter: blur(40px);
+            animation: smokeFlow2 12s ease-in-out infinite;
+        }
+
+        @keyframes smokeFlow1 {
+            0%, 100% { transform: translateX(0) translateY(0) scale(1); opacity: 0.8; }
+            50% { transform: translateX(-2%) translateY(-4%) scale(1.08); opacity: 1; }
+        }
+        @keyframes smokeFlow2 {
+            0%, 100% { transform: translateX(0) scale(1.1); opacity: 0.7; }
+            50% { transform: translateX(4%) translateY(-5%) scale(1.15); opacity: 0.9; }
+        }
+
+        .smoke-wisp {
+            position: absolute;
+            background: radial-gradient(circle, rgba(46,204,113,0.6) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(3px);
+            animation: wispRise linear infinite;
+        }
+        .smoke-wisp:nth-child(1) { width: 10px; height: 10px; left: 10%; bottom: -5%; animation-duration: 8s; }
+        .smoke-wisp:nth-child(2) { width: 8px; height: 8px; left: 30%; bottom: -5%; animation-duration: 6s; animation-delay: 1s; }
+        .smoke-wisp:nth-child(3) { width: 12px; height: 12px; left: 50%; bottom: -5%; animation-duration: 10s; animation-delay: 0.5s; }
+        .smoke-wisp:nth-child(4) { width: 7px; height: 7px; left: 70%; bottom: -5%; animation-duration: 7s; animation-delay: 2s; }
+        .smoke-wisp:nth-child(5) { width: 9px; height: 9px; left: 90%; bottom: -5%; animation-duration: 9s; animation-delay: 1.5s; }
+        
+        @keyframes wispRise {
+            0% { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+            10% { opacity: 0.7; }
+            50% { transform: translateY(-50vh) translateX(20px) scale(0.8); opacity: 0.4; }
+            100% { transform: translateY(-110vh) translateX(-10px) scale(0.3); opacity: 0; }
+        }
+
+        /* Chemical pattern */
+        .chemical-pattern {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Cg fill='none' stroke='%232ECC71' stroke-width='1'%3E%3Cpolygon points='50,20 70,30 70,50 50,60 30,50 30,30'/%3E%3Ccircle cx='50' cy='40' r='10'/%3E%3Cpolygon points='150,80 170,90 170,110 150,120 130,110 130,90'/%3E%3Ccircle cx='150' cy='100' r='10'/%3E%3Cline x1='70' y1='40' x2='130' y2='90'/%3E%3C/g%3E%3C/svg%3E");
+            animation: patternDrift 60s linear infinite;
+        }
+        @keyframes patternDrift { 0% { background-position: 0 0; } 100% { background-position: 200px 200px; } }
+
+        /* Film effects */
+        .film-grain {
+            position: fixed;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            pointer-events: none;
+            z-index: 9998;
+            opacity: 0.05;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            animation: grainShift 0.15s steps(2) infinite;
+        }
+        @keyframes grainShift { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-3%, -3%); } }
+
+        .scanlines {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 9997;
+            background: repeating-linear-gradient(0deg, transparent 0px, transparent 1px, rgba(0,0,0,0.1) 1px, rgba(0,0,0,0.1) 2px);
+        }
+
+        .vignette {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,0.85) 100%);
+            pointer-events: none;
+            z-index: 9996;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           INTRO
+           ═══════════════════════════════════════════════════════════════ */
+        .intro {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 24px;
+        }
+
+        .intro-logo {
+            text-align: center;
+            animation: logoReveal 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+        }
+        @keyframes logoReveal { 
+            0% { opacity: 0; transform: scale(0.9) translateY(30px); } 
+            100% { opacity: 1; transform: scale(1) translateY(0); } 
+        }
+
+        .logo-line {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            font-family: 'Oswald', sans-serif;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .logo-line.breaking { font-size: 2.8em; }
+        .logo-line.bad { font-size: 2.8em; margin-top: -8px; }
+
+        .element-box {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(175deg, #4CAF50 0%, #2E7D32 50%, #1B5E20 100%);
+            min-width: 48px;
+            height: 54px;
+            padding: 4px 8px;
+            border-radius: 3px;
+            margin: 0 1px;
+            position: relative;
+            box-shadow: 0 0 25px rgba(46,204,113,0.5), 0 2px 0 #145214;
+        }
+        .element-box .atomic { position: absolute; top: 2px; left: 4px; font-size: 9px; font-weight: 500; opacity: 0.85; }
+        .element-box .symbol { font-size: 1.5em; font-weight: 700; line-height: 1; margin-top: 6px; }
+        .logo-text { color: var(--text); }
+
+        .logo-subtitle { margin-top: 40px; animation: subtitleFade 1s ease 1.2s both; }
+        @keyframes subtitleFade { from { opacity: 0; } to { opacity: 1; } }
+        .logo-subtitle .tagline { font-size: 11px; font-weight: 400; letter-spacing: 8px; text-transform: uppercase; color: var(--text-muted); }
+
+        .intro-btn {
+            margin-top: 50px;
+            padding: 16px 50px;
+            background: transparent;
+            border: 2px solid var(--accent);
+            border-radius: 4px;
+            font-family: 'Oswald', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--accent);
+            letter-spacing: 4px;
+            cursor: pointer;
+            animation: btnFade 1s ease 1.5s both;
+            box-shadow: 0 0 25px rgba(46,204,113,0.3);
+        }
+        @keyframes btnFade { from { opacity: 0; } to { opacity: 1; } }
+        .intro-btn:active { background: var(--accent); color: #000; }
+        .intro.fade-out { animation: fadeOut 0.6s ease forwards; }
+        @keyframes fadeOut { to { opacity: 0; pointer-events: none; } }
+
+        /* ═══════════════════════════════════════════════════════════════
+           APP LAYOUT
+           ═══════════════════════════════════════════════════════════════ */
+        .app {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           PREMIUM HEADER - COMPLETE REDESIGN
+           ═══════════════════════════════════════════════════════════════ */
+        .header {
+            padding: 0;
+            background: transparent;
+            position: relative;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px 12px;
+            background: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 70%, transparent 100%);
+        }
+
+        /* Breaking Bad Logo - Premium style */
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-logo-box {
+            display: flex;
+            gap: 3px;
+        }
+
+        .h-element {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(175deg, #4CAF50 0%, #1B5E20 100%);
+            width: 28px; height: 32px;
+            border-radius: 3px;
+            position: relative;
+            box-shadow: 0 0 15px rgba(46,204,113,0.5), 0 2px 8px rgba(0,0,0,0.5);
+        }
+        .h-element .atomic {
+            position: absolute;
+            top: 1px; left: 3px;
+            font-size: 6px;
+            font-weight: 600;
+            opacity: 0.7;
+        }
+        .h-element .sym {
+            font-family: 'Oswald', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1;
+            margin-top: 4px;
+        }
+
+        .header-brand-text {
+            display: flex;
+            flex-direction: column;
+        }
+        .header-brand-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            line-height: 1;
+            background: linear-gradient(180deg, #fff 0%, #aaa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header-brand-sub {
+            font-size: 8px;
+            font-weight: 500;
+            letter-spacing: 3px;
+            color: var(--accent);
+            margin-top: 2px;
+        }
+
+        /* Balance chip */
+        .header-balance {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            background: rgba(46,204,113,0.1);
+            border: 1px solid rgba(46,204,113,0.3);
+            border-radius: 24px;
+            box-shadow: 0 0 20px rgba(46,204,113,0.2), inset 0 0 15px rgba(46,204,113,0.05);
+        }
+        .balance-icon {
+            width: 20px; height: 20px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+        .balance-amount {
+            font-family: 'Oswald', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--accent);
+            text-shadow: 0 0 10px rgba(46,204,113,0.5);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           TERRITORY SELECTOR - COMPLETE REDESIGN
+           ═══════════════════════════════════════════════════════════════ */
+        .territory-bar {
+            padding: 12px 16px 16px;
+            background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.3) 100%);
+        }
+
+        .territory-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .territory-icon {
+            font-size: 14px;
+        }
+        .territory-label {
+            font-family: 'Oswald', sans-serif;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+        }
+        .territory-current {
+            margin-left: auto;
+            font-size: 11px;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* City Pills - Horizontal scrollable */
+        .territory-cities {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .territory-cities::-webkit-scrollbar { display: none; }
+
+        .city-pill {
+            flex-shrink: 0;
+            padding: 10px 18px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            font-family: 'Oswald', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        .city-pill.active {
+            background: linear-gradient(135deg, rgba(46,204,113,0.2) 0%, rgba(46,204,113,0.1) 100%);
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 0 15px rgba(46,204,113,0.3);
+        }
+        .city-pill:active { transform: scale(0.95); }
+
+        /* District chips - Second row */
+        .territory-districts {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .district-chip {
+            padding: 6px 12px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 500;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .district-chip.active {
+            background: rgba(0,212,255,0.1);
+            border-color: rgba(0,212,255,0.3);
+            color: var(--blue);
+        }
+        .district-chip:active { transform: scale(0.95); }
+
+        /* ═══════════════════════════════════════════════════════════════
+           CONTENT AREA
+           ═══════════════════════════════════════════════════════════════ */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 16px 16px;
+            padding-bottom: calc(90px + var(--safe-bottom));
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .section { display: none; }
+        .section.active { display: block; animation: sectionIn 0.4s ease; }
+        @keyframes sectionIn { from { opacity: 0; transform: translateY(20px); } }
+
+        /* ═══════════════════════════════════════════════════════════════
+           PRODUCT CARDS - Clean minimal design
+           ═══════════════════════════════════════════════════════════════ */
+        .products {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .product {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 16px;
+            position: relative;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+        
+        .product::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 60px; height: 60px;
+            background: radial-gradient(circle at 0 0, rgba(46,204,113,0.12) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        
+        .product:active {
+            transform: scale(0.98);
+            border-color: rgba(46,204,113,0.3);
+        }
+
+        .product.featured {
+            grid-row: span 2;
+            background: linear-gradient(180deg, rgba(0,212,255,0.08) 0%, var(--glass-bg) 100%);
+            border-color: rgba(0,212,255,0.15);
+            padding: 20px;
+        }
+        .product.featured::before {
+            background: radial-gradient(circle at 0 0, rgba(0,212,255,0.15) 0%, transparent 70%);
+        }
+        .product.featured .product-icon { font-size: 3.5em; margin-bottom: 20px; }
+        .product.featured .product-name { font-size: 18px; }
+        .product.featured .product-price { font-size: 24px; }
+
+        .product.wide {
+            grid-column: span 2;
+            flex-direction: row;
+            align-items: center;
+            gap: 16px;
+        }
+        .product.wide .product-icon { font-size: 2.5em; margin-bottom: 0; }
+        .product.wide .product-info { flex: 1; }
+        .product.wide .product-footer { flex-direction: column; align-items: flex-end; }
+
+        .product-icon {
+            font-size: 2.5em;
+            margin-bottom: 12px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .product-info { flex: 1; position: relative; z-index: 2; }
+        .product-name {
+            font-family: 'Oswald', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            margin-bottom: 3px;
+        }
+        .product-meta {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 14px;
+            position: relative;
+            z-index: 2;
+        }
+        .product-price {
+            font-family: 'Oswald', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--accent);
+            text-shadow: 0 0 10px rgba(46,204,113,0.3);
+        }
+        .product-add {
+            width: 36px; height: 36px;
+            background: var(--accent);
+            border: none;
+            border-radius: 50%;
+            color: #000;
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(46,204,113,0.4);
+            transition: all 0.2s ease;
+        }
+        .product-add:active { transform: scale(0.9); }
+        .product-add:disabled { background: rgba(255,255,255,0.1); color: var(--text-muted); box-shadow: none; }
+
+        .product.out-of-stock { opacity: 0.4; }
+        .product.out-of-stock::after {
+            content: 'SOLD OUT';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotate(-12deg);
+            font-family: 'Oswald', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--danger);
+            letter-spacing: 2px;
+            padding: 5px 12px;
+            border: 2px solid var(--danger);
+            background: rgba(0,0,0,0.9);
+            border-radius: 4px;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           CART & OTHER SECTIONS
+           ═══════════════════════════════════════════════════════════════ */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        .empty-state .icon { font-size: 48px; margin-bottom: 16px; opacity: 0.25; }
+        .empty-state p { color: var(--text-muted); font-size: 14px; }
+
+        .cart-list { display: flex; flex-direction: column; gap: 10px; }
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+        }
+        .cart-item-icon { font-size: 26px; }
+        .cart-item-info { flex: 1; }
+        .cart-item-name { font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 500; }
+        .cart-item-qty { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+        .cart-item-price { font-family: 'Oswald', sans-serif; font-size: 16px; font-weight: 600; color: var(--accent); }
+        .cart-item-remove {
+            width: 30px; height: 30px;
+            background: rgba(231,76,60,0.12);
+            border: 1px solid rgba(231,76,60,0.2);
+            border-radius: 50%;
+            color: var(--danger);
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .cart-total {
+            margin-top: 20px;
+            padding: 18px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+        }
+        .cart-total-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 13px; }
+        .cart-total-row span:first-child { color: var(--text-muted); }
+        .cart-total-row.final { padding-top: 12px; border-top: 1px solid var(--glass-border); font-size: 16px; }
+        .cart-total-row.final span:last-child { font-family: 'Oswald', sans-serif; color: var(--accent); font-weight: 600; }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 16px;
+            margin-top: 14px;
+            background: var(--accent);
+            border: none;
+            border-radius: 12px;
+            font-family: 'Oswald', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: #000;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(46,204,113,0.4);
+        }
+
+        /* Profile */
+        .profile-header { text-align: center; padding: 24px 0; }
+        .profile-avatar {
+            width: 80px; height: 80px;
+            background: linear-gradient(135deg, var(--gold), #B8860B);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            margin: 0 auto 16px;
+            box-shadow: 0 0 25px rgba(212,175,55,0.4);
+        }
+        .profile-name { font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 600; letter-spacing: 1px; }
+        .profile-rank { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
+        .stat-card {
+            padding: 16px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            text-align: center;
+        }
+        .stat-value { font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 600; color: var(--blue); }
+        .stat-label { font-size: 10px; color: var(--text-muted); margin-top: 4px; }
+
+        /* ═══════════════════════════════════════════════════════════════
+           BOTTOM NAVIGATION
+           ═══════════════════════════════════════════════════════════════ */
+        .nav {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            padding: 12px 20px calc(12px + var(--safe-bottom));
+            background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.95) 30%);
+            display: flex;
+            justify-content: space-around;
+            z-index: 100;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 16px;
+            cursor: pointer;
+            position: relative;
+        }
+        .nav-icon { font-size: 22px; opacity: 0.4; transition: all 0.2s ease; }
+        .nav-label { font-size: 9px; font-weight: 500; color: var(--text-muted); letter-spacing: 0.5px; }
+        .nav-item.active .nav-icon { opacity: 1; filter: drop-shadow(0 0 8px rgba(46,204,113,0.6)); }
+        .nav-item.active .nav-label { color: var(--text); }
+        .nav-badge {
+            position: absolute;
+            top: 2px; right: 8px;
+            min-width: 16px; height: 16px;
+            background: var(--accent);
+            border-radius: 8px;
+            font-size: 9px;
+            font-weight: 700;
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Toast & Success */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%; transform: translateX(-50%);
+            padding: 12px 24px;
+            background: var(--text);
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #000;
+            z-index: 1000;
+            animation: toastIn 0.3s ease;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+        }
+        @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(20px); } }
+
+        .success-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 500;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .success-overlay.active { display: flex; }
+        .success-icon { font-size: 64px; margin-bottom: 20px; animation: successPop 0.5s ease; filter: drop-shadow(0 0 30px rgba(46,204,113,0.6)); }
+        @keyframes successPop { 0% { transform: scale(0); } 60% { transform: scale(1.2); } 100% { transform: scale(1); } }
+        .success-title { font-family: 'Oswald', sans-serif; font-size: 24px; font-weight: 600; letter-spacing: 3px; }
+        .success-sub { color: var(--text-muted); margin-top: 8px; font-size: 13px; }
+
+        .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 999; }
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            animation: particleBurst 0.8s ease-out forwards;
+        }
+        @keyframes particleBurst { 0% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--x), var(--y)) scale(0); } }
+    </style>
+</head>
+<body>
+    <!-- Background layers -->
+    <div class="smoke-bg">
+        <div class="smoke-base"></div>
+        <div class="smoke-layer smoke-layer-2"></div>
+        <div class="smoke-layer smoke-layer-1"></div>
+        <div class="smoke-wisp"></div>
+        <div class="smoke-wisp"></div>
+        <div class="smoke-wisp"></div>
+        <div class="smoke-wisp"></div>
+        <div class="smoke-wisp"></div>
+    </div>
+    <div class="chemical-pattern"></div>
+    <div class="scanlines"></div>
+    <div class="film-grain"></div>
+    <div class="vignette"></div>
+    <div class="particles" id="particles"></div>
+
+    <!-- Intro -->
+    <div class="intro" id="intro">
+        <div class="intro-logo">
+            <div class="logo-line breaking">
+                <span class="logo-text">B</span>
+                <span class="element-box">
+                    <span class="atomic">35</span>
+                    <span class="symbol">r</span>
+                </span>
+                <span class="logo-text">eaking</span>
+            </div>
+            <div class="logo-line bad">
+                <span class="element-box">
+                    <span class="atomic">56</span>
+                    <span class="symbol">Ba</span>
+                </span>
+                <span class="logo-text">d</span>
+            </div>
+            <div class="logo-subtitle">
+                <div class="tagline">Shop</div>
+            </div>
+        </div>
+        <button class="intro-btn" id="enter-btn">Enter</button>
+    </div>
+
+    <!-- App -->
+    <div class="app hidden" id="app">
+        <!-- REDESIGNED HEADER -->
+        <header class="header">
+            <div class="header-top">
+                <div class="header-brand">
+                    <div class="header-logo-box">
+                        <div class="h-element">
+                            <span class="atomic">35</span>
+                            <span class="sym">Br</span>
+                        </div>
+                        <div class="h-element">
+                            <span class="atomic">56</span>
+                            <span class="sym">Ba</span>
+                        </div>
+                    </div>
+                    <div class="header-brand-text">
+                        <span class="header-brand-title">BREAKING BAD</span>
+                        <span class="header-brand-sub">LABORATORY</span>
+                    </div>
+                </div>
+                <div class="header-balance">
+                    <div class="balance-icon">💎</div>
+                    <span class="balance-amount">€420.69</span>
+                </div>
+            </div>
+
+            <!-- REDESIGNED TERRITORY SELECTOR -->
+            <div class="territory-bar">
+                <div class="territory-title">
+                    <span class="territory-icon">📍</span>
+                    <span class="territory-label">TERRITORY</span>
+                    <span class="territory-current" id="territory-display">All Locations</span>
+                </div>
+                
+                <div class="territory-cities" id="city-pills">
+                    <div class="city-pill active" data-city="all">All</div>
+                    <div class="city-pill" data-city="albuquerque">Albuquerque</div>
+                    <div class="city-pill" data-city="santa-fe">Santa Fe</div>
+                    <div class="city-pill" data-city="el-paso">El Paso</div>
+                </div>
+
+                <div class="territory-districts" id="district-chips">
+                    <div class="district-chip active" data-district="all">All Areas</div>
+                    <div class="district-chip" data-district="downtown">Downtown</div>
+                    <div class="district-chip" data-district="westside">Westside</div>
+                    <div class="district-chip" data-district="heights">Heights</div>
+                    <div class="district-chip" data-district="south-valley">South Valley</div>
+                </div>
+            </div>
+        </header>
+
+        <main class="content" id="main-content">
+            <section class="section active" id="sec-lab">
+                <div class="products" id="products"></div>
+            </section>
+
+            <section class="section" id="sec-turf">
+                <div class="empty-state">
+                    <div class="icon">🗺️</div>
+                    <p>Territory map coming soon</p>
+                </div>
+            </section>
+
+            <section class="section" id="sec-cart">
+                <div id="cart-content">
+                    <div class="empty-state">
+                        <div class="icon">🛒</div>
+                        <p>Your cart is empty</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="sec-profile">
+                <div class="profile-header">
+                    <div class="profile-avatar">👨‍🔬</div>
+                    <div class="profile-name">PINKMAN</div>
+                    <div class="profile-rank">Level 3 • Distributor</div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card"><div class="stat-value">12</div><div class="stat-label">Orders</div></div>
+                    <div class="stat-card"><div class="stat-value">€1.2k</div><div class="stat-label">Spent</div></div>
+                    <div class="stat-card"><div class="stat-value">VIP</div><div class="stat-label">Status</div></div>
+                </div>
+            </section>
+        </main>
+
+        <nav class="nav">
+            <div class="nav-item active" data-nav="lab"><span class="nav-icon">🔬</span><span class="nav-label">LAB</span></div>
+            <div class="nav-item" data-nav="turf"><span class="nav-icon">🗺️</span><span class="nav-label">TURF</span></div>
+            <div class="nav-item" data-nav="cart"><span class="nav-icon">🛒</span><span class="nav-label">CART</span><span class="nav-badge hidden" id="cart-badge">0</span></div>
+            <div class="nav-item" data-nav="profile"><span class="nav-icon">👤</span><span class="nav-label">PROFILE</span></div>
+        </nav>
+    </div>
+
+    <div class="success-overlay" id="success">
+        <div class="success-icon">✓</div>
+        <div class="success-title">ORDER CONFIRMED</div>
+        <div class="success-sub">Delivery in progress</div>
+    </div>
+
+    <script>
+        const products = [
+            { id: 1, name: 'Blue Sky', icon: '💎', price: 80, stock: 12, layout: 'featured', city: 'albuquerque', district: 'downtown' },
+            { id: 2, name: 'Chili P', icon: '🌿', price: 45, stock: 8, city: 'albuquerque', district: 'westside' },
+            { id: 3, name: 'Madrigal', icon: '💊', price: 35, stock: 20, city: 'santa-fe', district: 'downtown' },
+            { id: 4, name: 'Los Pollos Hermanos', icon: '🐔', price: 70, stock: 15, layout: 'wide', city: 'albuquerque', district: 'heights' },
+            { id: 5, name: "Cap'n Cook", icon: '🍄', price: 55, stock: 3, city: 'el-paso', district: 'south-valley' },
+            { id: 6, name: 'Vamonos Pest', icon: '🧪', price: 60, stock: 0, city: 'albuquerque', district: 'south-valley' }
+        ];
+
+        let cart = [];
+        let currentCity = 'all';
+        let currentDistrict = 'all';
+
+        function render() {
+            let list = products;
+            if (currentCity !== 'all') list = list.filter(p => p.city === currentCity);
+            if (currentDistrict !== 'all') list = list.filter(p => p.district === currentDistrict);
+
+            if (list.length === 0) {
+                document.getElementById('products').innerHTML = `
+                    <div style="grid-column: span 2; text-align: center; padding: 50px 20px;">
+                        <div style="font-size: 48px; opacity: 0.2; margin-bottom: 16px;">🔍</div>
+                        <p style="color: var(--text-muted); font-size: 14px;">No products in this territory</p>
+                    </div>
+                `;
+                return;
+            }
+
+            document.getElementById('products').innerHTML = list.map(p => {
+                const layoutClass = p.layout || '';
+                const outClass = p.stock === 0 ? 'out-of-stock' : '';
+                
+                if (p.layout === 'wide') {
+                    return `
+                        <div class="product wide ${outClass}" data-id="${p.id}">
+                            <div class="product-icon">${p.icon}</div>
+                            <div class="product-info">
+                                <div class="product-name">${p.name}</div>
+                                <div class="product-meta">Premium Grade</div>
+                            </div>
+                            <div class="product-footer">
+                                <div class="product-price">€${p.price}</div>
+                                <button class="product-add" onclick="addToCart(${p.id}, event)" ${p.stock === 0 ? 'disabled' : ''}>+</button>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                return `
+                    <div class="product ${layoutClass} ${outClass}" data-id="${p.id}">
+                        <div class="product-icon">${p.icon}</div>
+                        <div class="product-info">
+                            <div class="product-name">${p.name}</div>
+                            <div class="product-meta">Premium Grade</div>
+                        </div>
+                        <div class="product-footer">
+                            <div class="product-price">€${p.price}</div>
+                            <button class="product-add" onclick="addToCart(${p.id}, event)" ${p.stock === 0 ? 'disabled' : ''}>+</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateTerritoryDisplay() {
+            const cityEl = document.querySelector(`.city-pill[data-city="${currentCity}"]`);
+            const districtEl = document.querySelector(`.district-chip[data-district="${currentDistrict}"]`);
+            const cityText = cityEl ? cityEl.textContent : 'All';
+            const districtText = currentDistrict === 'all' ? '' : ` • ${districtEl.textContent}`;
+            document.getElementById('territory-display').textContent = cityText + districtText;
+        }
+
+        function addToCart(id, e) {
+            const p = products.find(x => x.id === id);
+            if (!p || p.stock === 0) return;
+            const existing = cart.find(x => x.id === id);
+            if (existing) existing.qty++;
+            else cart.push({ ...p, qty: 1 });
+            updateCart();
+            toast(p.name + ' added');
+            burst(e.clientX, e.clientY);
+            haptic();
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(x => x.id !== id);
+            updateCart();
+            haptic();
+        }
+
+        function updateCart() {
+            const total = cart.reduce((s, x) => s + x.qty, 0);
+            const badge = document.getElementById('cart-badge');
+            badge.textContent = total;
+            badge.classList.toggle('hidden', total === 0);
+            renderCart();
+        }
+
+        function renderCart() {
+            const el = document.getElementById('cart-content');
+            if (cart.length === 0) {
+                el.innerHTML = '<div class="empty-state"><div class="icon">🛒</div><p>Your cart is empty</p></div>';
+                return;
+            }
+            const sum = cart.reduce((s, x) => s + x.price * x.qty, 0);
+            el.innerHTML = `
+                <div class="cart-list">
+                    ${cart.map(x => `
+                        <div class="cart-item">
+                            <div class="cart-item-icon">${x.icon}</div>
+                            <div class="cart-item-info">
+                                <div class="cart-item-name">${x.name}</div>
+                                <div class="cart-item-qty">Qty: ${x.qty}</div>
+                            </div>
+                            <div class="cart-item-price">€${(x.price * x.qty).toFixed(2)}</div>
+                            <button class="cart-item-remove" onclick="removeFromCart(${x.id})">×</button>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="cart-total">
+                    <div class="cart-total-row"><span>Subtotal</span><span>€${sum.toFixed(2)}</span></div>
+                    <div class="cart-total-row final"><span>Total</span><span>€${sum.toFixed(2)}</span></div>
+                    <button class="checkout-btn" onclick="checkout()">COMPLETE ORDER</button>
+                </div>
+            `;
+        }
+
+        function checkout() {
+            if (cart.length === 0) return;
+            document.getElementById('success').classList.add('active');
+            haptic();
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => burst(
+                    window.innerWidth / 2 + (Math.random() - 0.5) * 200,
+                    window.innerHeight / 2 + (Math.random() - 0.5) * 200
+                ), i * 100);
+            }
+            cart = [];
+            updateCart();
+            setTimeout(() => {
+                document.getElementById('success').classList.remove('active');
+                navigate('lab');
+            }, 2500);
+        }
+
+        function navigate(section) {
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.nav === section));
+            document.querySelectorAll('.section').forEach(s => s.classList.toggle('active', s.id === 'sec-' + section));
+            
+            // Show/hide territory bar based on section
+            const territoryBar = document.querySelector('.territory-bar');
+            if (territoryBar) {
+                territoryBar.style.display = section === 'lab' ? 'block' : 'none';
+            }
+            haptic();
+        }
+
+        function toast(msg) {
+            document.querySelectorAll('.toast').forEach(t => t.remove());
+            const t = document.createElement('div');
+            t.className = 'toast';
+            t.textContent = msg;
+            document.body.appendChild(t);
+            setTimeout(() => t.remove(), 2000);
+        }
+
+        function haptic() {
+            if ('vibrate' in navigator) navigator.vibrate(10);
+        }
+
+        function burst(x, y) {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 12; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.background = Math.random() > 0.5 ? 'var(--accent)' : 'var(--blue)';
+                const size = 5 + Math.random() * 10;
+                const angle = (Math.PI * 2 / 12) * i;
+                const dist = 50 + Math.random() * 70;
+                p.style.cssText += `left:${x}px;top:${y}px;width:${size}px;height:${size}px;--x:${Math.cos(angle)*dist}px;--y:${Math.sin(angle)*dist}px;`;
+                container.appendChild(p);
+                setTimeout(() => p.remove(), 800);
+            }
+        }
+
+        // Event listeners
+        document.getElementById('enter-btn').addEventListener('click', () => {
+            haptic();
+            document.getElementById('intro').classList.add('fade-out');
+            setTimeout(() => {
+                document.getElementById('intro').style.display = 'none';
+                document.getElementById('app').classList.remove('hidden');
+                render();
+            }, 600);
+        });
+
+        document.querySelectorAll('.nav-item').forEach(n => {
+            n.addEventListener('click', () => navigate(n.dataset.nav));
+        });
+
+        // City pills
+        document.querySelectorAll('.city-pill').forEach(pill => {
+            pill.addEventListener('click', () => {
+                document.querySelectorAll('.city-pill').forEach(p => p.classList.remove('active'));
+                pill.classList.add('active');
+                currentCity = pill.dataset.city;
+                updateTerritoryDisplay();
+                render();
+                haptic();
+            });
+        });
+
+        // District chips
+        document.querySelectorAll('.district-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                document.querySelectorAll('.district-chip').forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+                currentDistrict = chip.dataset.district;
+                updateTerritoryDisplay();
+                render();
+                haptic();
+            });
+        });
+    </script>
+</body>
+</html>
+
